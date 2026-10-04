@@ -1,8 +1,9 @@
 /* ───────── VOTE ─────────
    "How would you quantify happiness?" — light exactly six windows, one per measure.
-   Options are shuffled on every visit so earlier positions aren't favoured. The vote is saved by
-   recordVote(); loadVote() reads this browser's vote back; fetchVotes() returns every vote for the results page. */
-const VOTE_PICK = 6, VOTE_KEY = "untold.vote.v1";
+   Every time the screen opens it resets: all windows off, options reshuffled (so earlier positions aren't
+   favoured). Each Done adds a new entry via recordVote(); loadVote() returns the latest entry, fetchVotes()
+   every entry for the results page. */
+const VOTE_PICK = 6, VOTES_KEY = "untold.votes.v1", OLD_VOTE_KEY = "untold.vote.v1";
 const VOTE_LABELS = [
   "How often you laugh or smile", "How often you feel sad", "How often you feel angry", "How often you feel worried",
   "Physical pain", "Life satisfaction", "Sense of meaning and purpose", "Optimism about the future",
@@ -24,47 +25,52 @@ const VOTE_OPTIONS = VOTE_LABELS.map((label, i) => ({
   label, pane: PANES[i % 10], size: SHAPES[(i * 3 + Math.floor(i / 10)) % 10],
 }));
 
-function loadVote() { try { return JSON.parse(localStorage.getItem(VOTE_KEY)); } catch { return null; } }
-// Storage. Votes currently live only in this browser (one vote per browser; voting again replaces it).
+// Storage: entries live only in this browser, as a list (each Done appends one).
 // To pool votes across visitors, swap a shared backend into recordVote() and fetchVotes() — nothing else changes.
-function recordVote(rec) { try { localStorage.setItem(VOTE_KEY, JSON.stringify(rec)); return true; } catch { return false; } }
-function fetchVotes() { const v = loadVote(); return v ? [v] : []; }
+function fetchVotes() {
+  try {
+    const all = JSON.parse(localStorage.getItem(VOTES_KEY));
+    if (Array.isArray(all)) return all;
+    const old = JSON.parse(localStorage.getItem(OLD_VOTE_KEY)); // single vote saved by the earlier version
+    return old ? [old] : [];
+  } catch { return []; }
+}
+function recordVote(rec) { try { localStorage.setItem(VOTES_KEY, JSON.stringify([...fetchVotes(), rec])); return true; } catch { return false; } }
+function loadVote() { const all = fetchVotes(); return all[all.length - 1] || null; }
 
-(() => {
-  const grid = document.getElementById("vgrid"), count = document.getElementById("vcount"), done = document.getElementById("vdone");
-  const order = VOTE_OPTIONS.map(o => o.id);
-  for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; } // Fisher–Yates
-  const byId = Object.fromEntries(VOTE_OPTIONS.map(o => [o.id, o]));
-  // restore an earlier vote, ignoring any option that has since been removed from the list
-  const saved = loadVote(), lit = new Set((saved?.choices || []).filter(id => byId[id]));
-  let recorded = !!saved && lit.size === VOTE_PICK;
+const byId = Object.fromEntries(VOTE_OPTIONS.map(o => [o.id, o]));
+const voteGrid = document.getElementById("vgrid"), voteCount = document.getElementById("vcount"), voteDone = document.getElementById("vdone");
+let voteOrder = [], lit = new Set();
 
-  grid.innerHTML = order.map(id => {
+// fresh entry: everything off, new random order (called by go("vote"))
+function resetVote() {
+  voteOrder = VOTE_OPTIONS.map(o => o.id);
+  for (let i = voteOrder.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [voteOrder[i], voteOrder[j]] = [voteOrder[j], voteOrder[i]]; } // Fisher–Yates
+  lit = new Set();
+  voteGrid.innerHTML = voteOrder.map(id => {
     const o = byId[id], [w, h] = o.size;
     return `<button class="vopt" data-id="${id}" aria-pressed="false"><span class="vicon"><span class="cw" style="width:${w}px;height:${h}px">${o.pane === "plain" ? "" : mull(o.pane, w, h)}</span></span><span class="vlab">${o.label}</span></button>`;
   }).join("");
-
-  function update() {
-    grid.querySelectorAll(".vopt").forEach(b => { const on = lit.has(b.dataset.id); b.setAttribute("aria-pressed", on); b.firstChild.firstChild.classList.toggle("sel", on); });
-    const n = lit.size;
-    done.disabled = n !== VOTE_PICK;
-    done.textContent = recorded ? "See results" : "Done";
-    count.textContent = recorded ? "Thanks — your choices are recorded." : n === VOTE_PICK ? "6 of 6 lit — ready" : `${n} of ${VOTE_PICK} lit`;
-  }
-  grid.addEventListener("click", e => {
-    const b = e.target.closest(".vopt"); if (!b) return;
-    const id = b.dataset.id;
-    if (lit.has(id)) lit.delete(id);
-    else if (lit.size >= VOTE_PICK) { toast("Six windows lit — turn one off to choose another"); return; }
-    else lit.add(id);
-    recorded = false; update();
-  });
-  done.addEventListener("click", () => {
-    if (lit.size !== VOTE_PICK) return;
-    if (recorded) { go("results"); return; } // already saved — button reads "See results"
-    const ok = recordVote({ v: 1, choices: order.filter(id => lit.has(id)), shown: order, at: new Date().toISOString() });
-    if (!ok) { toast("Couldn't save your choices in this browser"); return; }
-    recorded = true; update(); go("results");
-  });
-  update();
-})();
+  updateVote();
+}
+function updateVote() {
+  voteGrid.querySelectorAll(".vopt").forEach(b => { const on = lit.has(b.dataset.id); b.setAttribute("aria-pressed", on); b.firstChild.firstChild.classList.toggle("sel", on); });
+  const n = lit.size;
+  voteDone.disabled = n !== VOTE_PICK;
+  voteCount.textContent = n === VOTE_PICK ? "6 of 6 lit — ready" : `${n} of ${VOTE_PICK} lit`;
+}
+voteGrid.addEventListener("click", e => {
+  const b = e.target.closest(".vopt"); if (!b) return;
+  const id = b.dataset.id;
+  if (lit.has(id)) lit.delete(id);
+  else if (lit.size >= VOTE_PICK) { toast("Six windows lit — turn one off to choose another"); return; }
+  else lit.add(id);
+  updateVote();
+});
+voteDone.addEventListener("click", () => {
+  if (lit.size !== VOTE_PICK) return;
+  const ok = recordVote({ v: 1, choices: voteOrder.filter(id => lit.has(id)), shown: voteOrder, at: new Date().toISOString() });
+  if (!ok) { toast("Couldn't save your choices in this browser"); return; }
+  go("results");
+});
+resetVote();

@@ -15,6 +15,7 @@ function go(id){
   if(id==="ranking"||id==="ribbon") lastData=id;
   if(id==="ribbon") drawChart();
   if(id==="results") showResults();
+  if(id==="vote") resetVote(); // every visit starts a fresh entry
 }
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
 // top-right View Data / Vote toggle
