@@ -17,10 +17,7 @@ function searchGo(fromEnter) {
   if (ci < 0) { if (fromEnter) toast("No country matches “" + searchBox.value.trim() + "”"); return; }
   searchBox.value = COUNTRIES[ci].c;
   select(ci);
-  if (mode === "fit") { scrollTo({ top: chartTop(), behavior: "smooth" }); return; } // whole chart in view
-  // detailed: scroll so the country's topmost box sits about a third of the way down the window
-  const top = Math.min(...[...boxG[ci].querySelectorAll("rect")].map(r => r.getBoundingClientRect().top));
-  scrollTo({ top: scrollY + top - innerHeight / 3, behavior: "smooth" });
+  scrollTo({ top: chartTop(), behavior: "smooth" }); // whole chart in view
 }
 
 // "change" fires when an option is picked from the list or the box loses focus

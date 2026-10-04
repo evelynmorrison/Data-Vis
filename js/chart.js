@@ -1,12 +1,11 @@
 /* ───────── RIBBON CHART ─────────
-   Two layouts (toggle above the chart):
-     fit   every row fits in the window below the pinned column titles: thin ribbons, no labels.
-           The hovered/selected country is redrawn on top at full size with names and ranks.
-     full  24px rows with names on every box; the page scrolls through them. */
+   Every row fits in the window below the pinned column titles. With nothing hovered, each country is a
+   thin line (width/brightness = how much its rankings disagree). The hovered/selected country is redrawn
+   on top as a full ribbon with boxes, names and ranks. */
 const NS="http://www.w3.org/2000/svg", svg=document.getElementById("chart"), head=document.getElementById("chartHead");
-const X=[40,347.5,655,962.5,1270], W=130, TOP=8, HEAD_H=66, FULL={gap:24, h:17};
+const X=[40,347.5,655,962.5,1270], W=130, TOP=8, HEAD_H=66, RIBBON_H=17; // RIBBON_H: hovered ribbon thickness
 const ROWS=Math.max(...ORDERS.map(o=>o.length));
-let mode="fit", L=FULL;
+let L={gap:24}; // row spacing, recomputed from the window height in render()
 const yc=p=>TOP+(p+.5)*L.gap; // centre line of row p
 const mk=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e};
 function bez(p0,p3,t){const m=(p0.x+p3.x)/2,u=1-t;
@@ -35,13 +34,13 @@ const GEO=COUNTRIES.map((_,ci)=>{
 
 // disagreement: spread between a country's best and worst position across the columns it's ranked in,
 // each position taken as a share of that column's list so 134-, 147- and 164-country columns compare fairly.
-// Scaled 0..1 against the most-disagreeing country; drives line width and brightness in fit mode.
+// Scaled 0..1 against the most-disagreeing country; drives line width and brightness.
 const DIS=(()=>{
   const raw=GEO.map(({pos,cols})=>{ if(cols.length<2) return 0; const s=cols.map(j=>pos[j]/(ORDERS[j].length-1)); return Math.max(...s)-Math.min(...s); });
   const top=Math.max(...raw); return raw.map(v=>v/top);
 })();
 
-// fit mode, nothing hovered: one smooth line per country through its rank in each column (column centres,
+// nothing hovered: one smooth line per country through its rank in each column (column centres,
 // level at each column), wider and brighter the more its rankings disagree
 function drawLine(ci,g){
   const {pos,cols}=GEO[ci], pts=cols.map(j=>[X[j]+W/2,yc(pos[j])]), t=DIS[ci]**2; // squared: only the strongest disagreements stand out
@@ -58,8 +57,8 @@ function drawGrid(){
   });
 }
 
-// draw one country's ribbons into gRib and boxes (+labels) into gBox
-function drawCountry(ci,gRib,gBox,H,labels){
+// draw one country's full ribbon into gRib and its boxes + labels into gBox (the hovered/selected country)
+function drawCountry(ci,gRib,gBox,H){
   const d=COUNTRIES[ci], {pos,cols,segs}=GEO[ci];
   // light (data-f=1) where the country rises or holds vs the previous column it's ranked in, dark where it falls.
   // A segment leaves in the colour of the box it starts from and arrives in its own direction's colour;
@@ -74,13 +73,12 @@ function drawCountry(ci,gRib,gBox,H,labels){
   cols.forEach(j=>{
     const c=yc(pos[j]);
     mk("rect",{x:X[j],y:c-H/2,width:W,height:H,"data-f":faces[j]?1:0},gBox);
-    if(!labels) return;
     mk("text",{class:"lbl",x:X[j]+W/2,y:c+3.6,"text-anchor":"middle"},gBox).textContent=d.c;
     mk("text",{class:"lbl rn",x:X[j]+8,y:c+3.6,"font-weight":700,opacity:0},gBox).textContent=d[SOURCES[j].key];
   });
 }
 
-let drawn=false, ribG={}, boxG={}, focus=null, hovered=null;
+let drawn=false, lineG={}, focus=null, hovered=null;
 function drawChart(){
   if(drawn){ apply(); return; } drawn=true;
   mk("defs",{}).innerHTML=`<linearGradient id="dimF" x1="0" x2="1"><stop offset="0" stop-color="#8e93c4"/><stop offset=".5" stop-color="#5d6298"/><stop offset="1" stop-color="#8e93c4"/></linearGradient>
@@ -125,37 +123,21 @@ function headTip(g,info,n,anchor){
   g.addEventListener("mouseleave",()=>tip.classList.remove("on"));
 }
 
-// (re)build every country for the current mode
+// (re)build the chart; rows share the window height left under the pinned titles
 function render(){
-  if(mode==="fit"){ // rows share the window height left under the pinned titles
-    const z=parseFloat(stage.style.zoom)||1, gap=Math.max(2,(innerHeight/z-HEAD_H-2*TOP)/ROWS);
-    L={gap, h:Math.max(1.2,gap*.55)};
-  } else L=FULL;
-  svg.querySelectorAll("#grid,#ribs,#boxes,#focus").forEach(e=>e.remove());
-  ribbonEl.dataset.mode=mode; // shows/hides the fit-mode legend
+  const z=parseFloat(stage.style.zoom)||1;
+  L={gap:Math.max(2,(innerHeight/z-HEAD_H-2*TOP)/ROWS)};
+  svg.querySelectorAll("#grid,#lines,#focus").forEach(e=>e.remove());
   const ht=TOP*2+ROWS*L.gap; svg.setAttribute("height",ht); svg.setAttribute("viewBox",`0 0 1440 ${ht}`);
-  if(mode==="fit"){
-    drawGrid();
-    const ribs=mk("g",{id:"ribs"}), boxes=mk("g",{id:"boxes"});
-    // most-disagreeing countries drawn last so their brighter lines sit on top
-    COUNTRIES.map((_,ci)=>ci).sort((a,b)=>DIS[a]-DIS[b]).forEach(ci=>{
-      ribG[ci]=mk("g",{class:"rib","data-ci":ci},ribs); boxG[ci]=mk("g",{},boxes); drawLine(ci,ribG[ci]);
-    });
-  } else {
-    // boxes sit in a layer above every ribbon, so a ribbon that jumps over a column can't hide its boxes
-    const ribs=mk("g",{id:"ribs"}), boxes=mk("g",{id:"boxes"});
-    COUNTRIES.forEach((_,ci)=>{
-      ribG[ci]=mk("g",{class:"rib","data-ci":ci,filter:"url(#sh)"},ribs);
-      boxG[ci]=mk("g",{class:"rib","data-ci":ci,filter:"url(#sh)"},boxes);
-      drawCountry(ci,ribG[ci],boxG[ci],L.h,true);
-    });
-  }
-  focus=mk("g",{id:"focus",class:"rib",filter:"url(#sh)"}); // full-size copy of the hovered country (fit mode)
+  drawGrid();
+  const lines=mk("g",{id:"lines"});
+  // most-disagreeing countries drawn last so their brighter lines sit on top
+  COUNTRIES.map((_,ci)=>ci).sort((a,b)=>DIS[a]-DIS[b]).forEach(ci=>{ lineG[ci]=mk("g",{class:"rib","data-ci":ci},lines); drawLine(ci,lineG[ci]); });
+  focus=mk("g",{id:"focus",class:"rib",filter:"url(#sh)"}); // full ribbon of the hovered/selected country
   hovered=null; apply();
 }
 
-// state: hi (hovered/selected) | dim (everyone else while one is hovered) | idle (nothing hovered)
-// idle uses the same bright colours as hi; only hovering fades the others
+// colour a full ribbon (used for the hovered/selected country): light/dark faces, labels, rank numbers
 function paintGroups(gs,state){
   const bright=state!=="dim";
   for(const e of gs){
@@ -166,18 +148,15 @@ function paintGroups(gs,state){
     e.querySelectorAll("text:not(.rn)").forEach(t=>{const f=t.previousSibling.dataset.f==="1";t.setAttribute("fill",bright?(f?"#1a1f6e":"#eef0f8"):"#d6d8ee");t.setAttribute("font-weight",state==="hi"?600:400)});
   }
 }
-function paint(ci,state){
-  const g=ribG[ci], bx=boxG[ci]; if(!g) return;
-  if(mode==="fit"){ g.style.opacity=state==="dim"?.3:1; return; } // lines keep their own width/brightness; the hovered one is drawn in #focus
-  paintGroups([g,bx],state);
-  if(state==="hi") for(const e of [g,bx]) if(e.nextSibling) e.parentNode.appendChild(e); // highlighted country on top
-}
+// state: hi (hovered/selected) | dim (everyone else while one is hovered) | idle (nothing hovered).
+// Lines keep their own width/brightness; others fade while a country is hovered, which is drawn in #focus
+function paint(ci,state){ const g=lineG[ci]; if(g) g.style.opacity=state==="dim"?.3:1; }
 function setFocus(ci){
   if(!focus) return; focus.innerHTML="";
-  if(ci===null||mode!=="fit") return;
+  if(ci===null) return;
   focus.dataset.ci=ci;
   const r=mk("g",{},focus), b=mk("g",{},focus);
-  drawCountry(ci,r,b,FULL.h,true); paintGroups([r,b],"hi");
+  drawCountry(ci,r,b,RIBBON_H); paintGroups([r,b],"hi");
 }
 function preview(ci){ hovered=ci; COUNTRIES.forEach((_,i)=>paint(i,i===ci?"hi":"dim")); setFocus(ci); }
 function apply(){
@@ -201,10 +180,4 @@ svg.addEventListener("pointerup",e=>{ const ci=ciAt(e); if(ci===null) return; se
 // scroll target that puts the chart directly under the pinned titles
 function chartTop(){ const z=parseFloat(stage.style.zoom)||1; return scrollY+svg.getBoundingClientRect().top-HEAD_H*z; }
 
-function setMode(m){
-  if(m===mode) return; mode=m;
-  document.querySelectorAll(".ctoggle button").forEach(b=>b.classList.toggle("on",b.dataset.mode===m));
-  if(drawn){ render(); scrollTo(0,0); }
-}
-document.querySelectorAll(".ctoggle button").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
-let resizeT; addEventListener("resize",()=>{ if(drawn&&mode==="fit"){ clearTimeout(resizeT); resizeT=setTimeout(render,150); } });
+let resizeT; addEventListener("resize",()=>{ if(drawn){ clearTimeout(resizeT); resizeT=setTimeout(render,150); } });
