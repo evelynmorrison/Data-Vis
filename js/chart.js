@@ -12,34 +12,32 @@ const mk=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.set
 function bez(p0,p3,t){const m=(p0.x+p3.x)/2,u=1-t;
   return{x:u*u*u*p0.x+3*u*u*t*m+3*u*t*t*m+t*t*t*p3.x, y:u*u*u*p0.y+3*u*u*t*p0.y+3*u*t*t*p3.y+t*t*t*p3.y,
          dx:3*u*u*(m-p0.x)+6*u*t*0+3*t*t*(p3.x-m), dy:6*u*t*(p3.y-p0.y)}}
-let seed=7; const rnd=()=> (seed=(seed*16807)%2147483647)/2147483647;
-function band(p0,p3,twist,tc,t0,t1,H,N=48){
+function band(p0,p3,H,N=48){ // ribbon of thickness H along the curve, swelling slightly mid-way
   const top=[],bot=[];
   for(let k=0;k<=N;k++){
-    const t=t0+(t1-t0)*k/N,b=bez(p0,p3,t),Ln=Math.hypot(b.dx,b.dy)||1,nx=-b.dy/Ln,ny=b.dx/Ln;
-    let f=1+.3*Math.sin(Math.PI*t);
-    if(twist){const u=Math.max(0,Math.min(1,(t-(tc-.2))/.4)),c=Math.cos(Math.PI*u); f=Math.sign(c||1)*Math.max(Math.abs(c),.14)*(1+.3*Math.sin(Math.PI*t)*Math.abs(c));}
-    const h=H/2*f; top.push(`${(b.x+nx*h).toFixed(1)},${(b.y+ny*h).toFixed(1)}`); bot.push(`${(b.x-nx*h).toFixed(1)},${(b.y-ny*h).toFixed(1)}`);
+    const t=k/N,b=bez(p0,p3,t),Ln=Math.hypot(b.dx,b.dy)||1,nx=-b.dy/Ln,ny=b.dx/Ln;
+    const h=H/2*(1+.3*Math.sin(Math.PI*t)); top.push(`${(b.x+nx*h).toFixed(1)},${(b.y+ny*h).toFixed(1)}`); bot.push(`${(b.x-nx*h).toFixed(1)},${(b.y-ny*h).toFixed(1)}`);
   }
   return "M"+top.join("L")+"L"+bot.reverse().join("L")+"Z";
 }
 
-// per-country geometry that doesn't depend on the layout: row in each column, segments, twist points
+// per-country geometry that doesn't depend on the layout: row in each column and the segments between them
 const GEO=COUNTRIES.map((_,ci)=>{
   const pos=ORDERS.map(o=>o.indexOf(ci)), cols=pos.map((p,j)=>j).filter(j=>pos[j]>=0); // ribbon jumps unranked columns
-  const segs=[]; for(let k=1;k<cols.length;k++){const a=cols[k-1],b=cols[k]; segs.push({a,b,tw:Math.abs(pos[b]-pos[a])>=3,tc:.36+.28*rnd()});}
+  const segs=[]; for(let k=1;k<cols.length;k++) segs.push({a:cols[k-1],b:cols[k]});
   return {pos,cols,segs};
 });
 
 // draw one country's ribbons into gRib and boxes (+labels) into gBox
 function drawCountry(ci,gRib,gBox,H,labels){
   const d=COUNTRIES[ci], {pos,cols,segs}=GEO[ci];
-  let face=true; const faces={[cols[0]]:true};
-  for(const {a,b,tw,tc} of segs){
-    const p0={x:X[a]+W,y:yc(pos[a])},p3={x:X[b],y:yc(pos[b])};
-    if(tw){ mk("path",{d:band(p0,p3,true,tc,0,tc,H),"data-f":face?1:0},gRib); mk("path",{d:band(p0,p3,true,tc,tc,1,H),"data-f":face?0:1},gRib); face=!face; }
-    else mk("path",{d:band(p0,p3,false,tc,0,1,H),"data-f":face?1:0},gRib);
-    faces[b]=face;
+  // light (data-f=1) where the country rises or holds vs the previous column it's ranked in, dark where it falls;
+  // the segment and the box it lands in share the colour. The first column has no previous, so it's light.
+  const faces={[cols[0]]:true};
+  for(const {a,b} of segs){
+    const rise=pos[b]<=pos[a];
+    mk("path",{d:band({x:X[a]+W,y:yc(pos[a])},{x:X[b],y:yc(pos[b])},H),"data-f":rise?1:0},gRib);
+    faces[b]=rise;
   }
   cols.forEach(j=>{
     const c=yc(pos[j]);
