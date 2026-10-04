@@ -52,17 +52,18 @@ const BLURB={
  "Taiwan":"an island in East Asia, known for its mountainous landscapes, vibrant cities, and night markets",
  "Czechia":"a Central European country of around 11 million people, known for historic towns and beer culture"};
 function fillGlance(i){
-  const d=COUNTRIES[i], ch=d.prev==null?0:d.prev-d.rank;
+  // most countries have no blurb, and some are unranked by WHR — show "–" for missing values
+  const d=COUNTRIES[i], ch=d.prev==null||d.rank==null?0:d.prev-d.rank;
   document.getElementById("gEye").textContent=`${d.c} at a glance`;
-  document.getElementById("gDesc").textContent=`${d.c} is ${BLURB[d.c]}.`;
+  document.getElementById("gDesc").textContent=BLURB[d.c]?`${d.c} is ${BLURB[d.c]}.`:"";
   const third = d.c==="Taiwan"
     ? `<div class="g-big">#1</div><div class="g-lab">Happiness rank in East Asia</div><div class="g-sub">2026 report</div>`
     : d.c==="Finland"
     ? `<div class="g-big">9 years</div><div class="g-lab">Consecutive years at #1</div><div class="g-sub">2018–2026</div>`
-    : `<div class="g-big">${ch>0?"▲ "+ch:ch<0?"▼ "+(-ch):"–"}</div><div class="g-lab">Change from 2025</div><div class="g-sub">was #${d.prev} in 2025</div>`;
+    : `<div class="g-big">${ch>0?"▲ "+ch:ch<0?"▼ "+(-ch):"–"}</div><div class="g-lab">Change from 2025</div><div class="g-sub">${d.prev==null?"not ranked in 2025":`was #${d.prev} in 2025`}</div>`;
   document.getElementById("gStats").innerHTML=
-   `<div class="g-stat"><div class="g-big">#${d.rank}</div><div class="g-lab">World happiness rank</div><div class="g-sub">2026 report</div></div>
-    <div class="g-stat"><div class="g-big">${d.score.toFixed(3)}<small>/ 10</small></div><div class="g-lab">Life evaluation score</div><div class="g-sub">2023–2025 average</div></div>
+   `<div class="g-stat"><div class="g-big">${d.rank==null?"–":"#"+d.rank}</div><div class="g-lab">World happiness rank</div><div class="g-sub">2026 report</div></div>
+    <div class="g-stat"><div class="g-big">${d.score==null?"–":d.score.toFixed(3)+"<small>/ 10</small>"}</div><div class="g-lab">Life evaluation score</div><div class="g-sub">2023–2025 average</div></div>
     <div class="g-stat">${third}</div>`;
   document.getElementById("glance").classList.remove("off");
 }
@@ -81,7 +82,7 @@ function barChart(){
 function showDim(k,d){
   const dim=DIMS[k], det=document.getElementById("det");
   document.getElementById("dtag").textContent=dim;
-  document.getElementById("dctx").innerHTML=`#${d.rank} of ${TOTAL} countries · World Happiness Report 2026<br>Life evaluation ${d.score.toFixed(2)} / 10 (2023–2025 average)`;
+  document.getElementById("dctx").innerHTML=d.rank==null?"Not ranked in the World Happiness Report 2026":`#${d.rank} of ${TOTAL} countries · World Happiness Report 2026<br>Life evaluation ${d.score.toFixed(2)} / 10 (2023–2025 average)`;
   const body=document.getElementById("dbody");
   if(d.c==="Finland" && dim==="Mental health"){
     document.getElementById("dhead").textContent="9.8% of the population uses antidepressants";

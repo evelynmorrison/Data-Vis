@@ -35,7 +35,10 @@ header h1{margin:0;font:700 24px var(--font-heading)}
 .row .sc{margin-left:auto;font:700 14px var(--font-heading);color:var(--ink)}
 .flag{width:28px;height:20px;display:block;border-radius:2px;outline:1px solid rgba(255,255,255,.15)}
 /* ribbon */
-#chartWrap{position:absolute;left:0;top:100px;width:1440px;height:800px}
+#chartHead{position:absolute;left:0;top:200px}
+#chartWrap{position:absolute;left:0;top:232px;width:1440px;height:568px;overflow-y:auto;overscroll-behavior:contain}
+#chartWrap::-webkit-scrollbar{width:6px}#chartWrap::-webkit-scrollbar-thumb{background:#2c3050;border-radius:3px}
+#chart{display:block}
 .hint{pointer-events:none;position:absolute;left:48px;top:140px;background:var(--note);color:#2a2410;font:600 13px var(--font-sans);padding:9px 14px;border-radius:6px;transition:opacity .4s}
 .hint::after{content:"";position:absolute;left:18px;bottom:-8px;border:8px solid transparent;border-top-color:var(--note);border-bottom:0}
 .colh{font:500 13px var(--font-sans);fill:var(--ink)}
@@ -46,7 +49,7 @@ header h1{margin:0;font:700 24px var(--font-heading)}
 .card .ranks{display:flex;gap:18px;margin-top:8px;font-size:12px;color:#444}
 .card .ranks span b{color:#111}
 .ctitle{pointer-events:none;position:absolute;left:48px;top:150px;font:700 26px var(--font-heading);letter-spacing:.04em;transition:opacity .3s}
-.band{pointer-events:none;position:absolute;left:0;right:0;top:130px;height:620px;background:rgba(5,7,24,.35)}
+.band{pointer-events:none;position:absolute;left:0;right:0;top:190px;height:620px;background:rgba(5,7,24,.35)}
 .scrimM{position:absolute;inset:0;background:rgba(6,8,26,.6);opacity:0;pointer-events:none;transition:opacity .35s}
 .scrimM.on{opacity:1;pointer-events:auto}
 .modal{position:absolute;left:77px;right:69px;top:106px;bottom:117px;display:grid;grid-template-columns:438px 1fr;border:1px solid rgba(238,240,248,.22);border-radius:14px;overflow:hidden;
