@@ -23,10 +23,14 @@
 
   <!-- 2 · Ranking -->
   <section class="screen" id="ranking">
-    <header><h1>Untold stories of the “Happiest Countries”</h1><div class="tabs"><button class="on">View Data</button><button>Vote</button></div></header>
-    <div class="list">
-      <div class="lh"><h2>World Happiness (Gallup)</h2><p>World Happiness Report 2026 · top 20 by life evaluation (2023–2025)</p></div>
-      <div id="rows"></div>
+    <header><h1>World Happiness Report</h1><div class="tabs"><button class="on">View Data</button><button>Vote</button></div></header>
+    <div class="rsub">
+      <p class="byline">University of Oxford’s Wellbeing Research Centre, Gallup, UN Sustainable Development Solutions Network</p>
+      <p class="caption">Highest and lowest ranking · 3-year average 2023–2025</p>
+    </div>
+    <div class="ranklists">
+      <div class="ranklist"><div id="rowsTop"></div></div>
+      <div class="ranklist"><div id="rowsBottom"></div></div>
     </div>
     <nav class="pager"><button class="prev" data-go="intro"><svg width="8" height="14" viewBox="0 0 8 14"><path d="M7 1 L1 7 L7 13" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Previous</button><button class="prev fwd" data-go="ribbon">Next<svg width="8" height="14" viewBox="0 0 8 14"><path d="M1 1 L7 7 L1 13" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></nav>
   </section>

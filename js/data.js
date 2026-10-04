@@ -35,3 +35,19 @@ const ORDERS = [
   [1,4,0,9,2,6,18,5,10,13,8,20,12,16,14,19,17,11,3,7,15],
 ];
 const TOTAL = 147;
+
+/* lowest-ranking 10 of 147 · World Happiness Report 2026, life evaluation
+   average (3-year, 2023–2025) · source: 2world_happiness_all_measures.xlsx,
+   "Data" + "Rankings" tabs */
+const LOWEST10 = [
+  {c:"Tanzania",      code:"tz", score:3.902, rank:138},
+  {c:"Egypt",         code:"eg", score:3.862, rank:139},
+  {c:"DR Congo",      code:"cd", score:3.761, rank:140},
+  {c:"Lebanon",       code:"lb", score:3.723, rank:141},
+  {c:"Yemen",         code:"ye", score:3.532, rank:142},
+  {c:"Botswana",      code:"bw", score:3.464, rank:143},
+  {c:"Zimbabwe",      code:"zw", score:3.346, rank:144},
+  {c:"Malawi",        code:"mw", score:3.284, rank:145},
+  {c:"Sierra Leone",  code:"sl", score:3.251, rank:146},
+  {c:"Afghanistan",   code:"af", score:1.446, rank:147},
+];
