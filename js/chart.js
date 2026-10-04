@@ -92,13 +92,16 @@ function render(){
   hovered=null; apply();
 }
 
-function paintGroups(gs,state){ // state: hi | dim | idle
+// state: hi (hovered/selected) | dim (everyone else while one is hovered) | idle (nothing hovered)
+// idle uses the same bright colours as hi; only hovering fades the others
+function paintGroups(gs,state){
+  const bright=state!=="dim";
   for(const e of gs){
-    e.style.opacity=state==="dim"?.32:state==="hi"?1:.55;
+    e.style.opacity=bright?1:.32;
     e.querySelectorAll("path,rect").forEach(e=>{const f=e.dataset.f==="1";
-      e.setAttribute("fill",state==="hi"?(f?"url(#hiF)":"url(#hiB)"):(f?"url(#dimF)":"url(#dimB)"));});
+      e.setAttribute("fill",bright?(f?"url(#hiF)":"url(#hiB)"):(f?"url(#dimF)":"url(#dimB)"));});
     e.querySelectorAll("text.rn").forEach(t=>{const f=t.previousSibling.previousSibling.dataset.f==="1";t.setAttribute("opacity",state==="hi"?1:0);t.setAttribute("fill",f?"#1a1f6e":"#eef0f8")});
-    e.querySelectorAll("text:not(.rn)").forEach(t=>{const f=t.previousSibling.dataset.f==="1";t.setAttribute("fill",state==="hi"?(f?"#1a1f6e":"#eef0f8"):"#d6d8ee");t.setAttribute("font-weight",state==="hi"?600:400)});
+    e.querySelectorAll("text:not(.rn)").forEach(t=>{const f=t.previousSibling.dataset.f==="1";t.setAttribute("fill",bright?(f?"#1a1f6e":"#eef0f8"):"#d6d8ee");t.setAttribute("font-weight",state==="hi"?600:400)});
   }
 }
 function paint(ci,state){
