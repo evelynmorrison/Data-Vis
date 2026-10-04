@@ -7,11 +7,13 @@
 
   --font-sans:    body copy, UI labels, chrome (tabs, buttons, axis labels)
   --font-heading: page/section titles (h1-style headings)
-  --font-plex:    modal/detail "typewriter" copy
+  --font-plex:    modal/detail "typewriter" labels and numbers
+  --font-body:    paragraph text (every <p>), Inter
 */
 
 :root {
   --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --font-heading: "Space Mono", monospace;
   --font-plex: "IBM Plex Mono", monospace;
+  --font-body: var(--font-sans); /* paragraph / body copy everywhere, including inside mono-styled panels */
 }

@@ -1,5 +1,6 @@
 :root{--bg:#11132b;--row:#1f2238;--ink:#eef0f8;--muted:#8d93b3;--line:rgba(238,240,248,.14);--acc:#2f80ff;--note:#f3e6a8}
 *{box-sizing:border-box}
+p{font-family:var(--font-body)} /* all paragraph text is Inter, even inside mono-styled containers */
 html,body{margin:0;height:100%;background:#0a0b1c;color:var(--ink);font-family:var(--font-sans);overflow:hidden}
 #stage{position:absolute;left:50%;top:50%;width:1440px;height:900px;background:var(--bg);transform-origin:center;overflow:hidden}
 .screen{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .5s}
@@ -113,7 +114,7 @@ html.tall .toast{position:fixed}
 .glance.off{opacity:0;pointer-events:none}
 /* landing panel stacks top to bottom; empty parts collapse */
 .g-body{position:absolute;left:63px;right:40px;top:86px;bottom:84px;display:flex;flex-direction:column;gap:30px} /* bottom: clear of the source line */
-.g-story{flex:1;min-height:0;overflow-y:auto;padding-right:14px;font:400 13px/1.7 var(--font-plex);color:#c9cce0;letter-spacing:.02em}
+.g-story{flex:1;min-height:0;overflow-y:auto;padding-right:14px;font:400 14px/1.65 var(--font-body);color:#c9cce0}
 .g-story:empty{display:none}
 .g-story p{margin:0 0 14px}
 .g-story.more{-webkit-mask-image:linear-gradient(#000 calc(100% - 36px),transparent);mask-image:linear-gradient(#000 calc(100% - 36px),transparent)} /* fade hints there is more to scroll */
