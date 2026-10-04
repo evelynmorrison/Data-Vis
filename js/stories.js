@@ -8,4 +8,8 @@ const STORIES = {
     "Digging further, roughly 1,600 alcohol-related deaths a year, and a suicide rate halved since the 1990s yet still high for Western Europe. Students born abroad face discrimination at 51%, against 31% of Finnish-born peers. In the EU's survey of Black residents, Finland recorded the highest rate of racist violence of any country measured.",
     "There is also sisu — the national virtue of enduring hardship without complaint. A culture that prizes not complaining will score well on a survey that asks people to complain.",
   ],
+  "Taiwan": [
+    "Taiwan ranks #1 of 164 on the Wellbeing Rankings. Taiwan reports the lowest sadness in the world at 7.3%, second-lowest worry at 17.8%, and second-lowest physical pain at 17.3%. Enjoyment and laughter both sit near 84%. Universal health insurance since 1995 and a life expectancy of 81.2 years underwrite it.",
+    "But Taiwan's own data undercuts this ranking. Suicide returned to Taiwan's top ten causes of death in 2024 for the first time in fourteen years, at 17.4 per 100,000 — nearly double the global average of nine. Among those 65 and older, 25.5. Antidepressant use reached 1.65 million people, up 320,000 in five years, yet only 1.92% of the population is recorded as having treated depression and roughly 20% of those with depression seek help at all. Taiwanese work 2,008 hours a year against an OECD average of 1,683; overwork-related cardiovascular disease accounts for 10% of occupational illness cases but up to 81% of occupational deaths. The fertility rate is 0.695, the world's lowest.",
+  ],
 };
