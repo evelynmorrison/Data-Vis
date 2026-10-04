@@ -33,6 +33,31 @@ const GEO=COUNTRIES.map((_,ci)=>{
   return {pos,cols,segs};
 });
 
+// disagreement: spread between a country's best and worst position across the columns it's ranked in,
+// each position taken as a share of that column's list so 134-, 147- and 164-country columns compare fairly.
+// Scaled 0..1 against the most-disagreeing country; drives line width and brightness in fit mode.
+const DIS=(()=>{
+  const raw=GEO.map(({pos,cols})=>{ if(cols.length<2) return 0; const s=cols.map(j=>pos[j]/(ORDERS[j].length-1)); return Math.max(...s)-Math.min(...s); });
+  const top=Math.max(...raw); return raw.map(v=>v/top);
+})();
+
+// fit mode, nothing hovered: one smooth line per country through its rank in each column (column centres,
+// level at each column), wider and brighter the more its rankings disagree
+function drawLine(ci,g){
+  const {pos,cols}=GEO[ci], pts=cols.map(j=>[X[j]+W/2,yc(pos[j])]), t=DIS[ci]**2; // squared: only the strongest disagreements stand out
+  let d=`M${pts[0][0]},${pts[0][1].toFixed(1)}`;
+  for(let k=1;k<pts.length;k++){ const [x0,y0]=pts[k-1],[x1,y1]=pts[k],m=(x0+x1)/2; d+=`C${m},${y0.toFixed(1)} ${m},${y1.toFixed(1)} ${x1},${y1.toFixed(1)}`; }
+  mk("path",{class:"ln",d,"stroke-width":(.5+3*t).toFixed(2),"stroke-opacity":(.1+.75*t).toFixed(2)},g);
+}
+function drawGrid(){
+  const g=mk("g",{id:"grid"}), y0=yc(0), y1=yc(ROWS-1);
+  X.forEach(x=>mk("line",{class:"gcol",x1:x+W/2,x2:x+W/2,y1:y0,y2:y1},g));
+  [1,50,100,150].filter(r=>r<=ROWS).forEach(r=>{
+    mk("line",{class:"grow",x1:X[0],x2:X[X.length-1]+W,y1:yc(r-1),y2:yc(r-1)},g);
+    mk("text",{class:"gaxis",x:X[0]-8,y:yc(r-1)+3.5,"text-anchor":"end"},g).textContent=r;
+  });
+}
+
 // draw one country's ribbons into gRib and boxes (+labels) into gBox
 function drawCountry(ci,gRib,gBox,H,labels){
   const d=COUNTRIES[ci], {pos,cols,segs}=GEO[ci];
@@ -106,16 +131,25 @@ function render(){
     const z=parseFloat(stage.style.zoom)||1, gap=Math.max(2,(innerHeight/z-HEAD_H-2*TOP)/ROWS);
     L={gap, h:Math.max(1.2,gap*.55)};
   } else L=FULL;
-  svg.querySelectorAll("#ribs,#boxes,#focus").forEach(e=>e.remove());
+  svg.querySelectorAll("#grid,#ribs,#boxes,#focus").forEach(e=>e.remove());
+  ribbonEl.dataset.mode=mode; // shows/hides the fit-mode legend
   const ht=TOP*2+ROWS*L.gap; svg.setAttribute("height",ht); svg.setAttribute("viewBox",`0 0 1440 ${ht}`);
-  // boxes sit in a layer above every ribbon, so a ribbon that jumps over a column can't hide its boxes
-  const shadow=mode==="full"?{filter:"url(#sh)"}:{};
-  const ribs=mk("g",{id:"ribs"}), boxes=mk("g",{id:"boxes"});
-  COUNTRIES.forEach((_,ci)=>{
-    ribG[ci]=mk("g",{class:"rib","data-ci":ci,...shadow},ribs);
-    boxG[ci]=mk("g",{class:"rib","data-ci":ci,...shadow},boxes);
-    drawCountry(ci,ribG[ci],boxG[ci],L.h,mode==="full");
-  });
+  if(mode==="fit"){
+    drawGrid();
+    const ribs=mk("g",{id:"ribs"}), boxes=mk("g",{id:"boxes"});
+    // most-disagreeing countries drawn last so their brighter lines sit on top
+    COUNTRIES.map((_,ci)=>ci).sort((a,b)=>DIS[a]-DIS[b]).forEach(ci=>{
+      ribG[ci]=mk("g",{class:"rib","data-ci":ci},ribs); boxG[ci]=mk("g",{},boxes); drawLine(ci,ribG[ci]);
+    });
+  } else {
+    // boxes sit in a layer above every ribbon, so a ribbon that jumps over a column can't hide its boxes
+    const ribs=mk("g",{id:"ribs"}), boxes=mk("g",{id:"boxes"});
+    COUNTRIES.forEach((_,ci)=>{
+      ribG[ci]=mk("g",{class:"rib","data-ci":ci,filter:"url(#sh)"},ribs);
+      boxG[ci]=mk("g",{class:"rib","data-ci":ci,filter:"url(#sh)"},boxes);
+      drawCountry(ci,ribG[ci],boxG[ci],L.h,true);
+    });
+  }
   focus=mk("g",{id:"focus",class:"rib",filter:"url(#sh)"}); // full-size copy of the hovered country (fit mode)
   hovered=null; apply();
 }
@@ -134,6 +168,7 @@ function paintGroups(gs,state){
 }
 function paint(ci,state){
   const g=ribG[ci], bx=boxG[ci]; if(!g) return;
+  if(mode==="fit"){ g.style.opacity=state==="dim"?.3:1; return; } // lines keep their own width/brightness; the hovered one is drawn in #focus
   paintGroups([g,bx],state);
   if(state==="hi") for(const e of [g,bx]) if(e.nextSibling) e.parentNode.appendChild(e); // highlighted country on top
 }
