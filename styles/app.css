@@ -43,7 +43,8 @@ header .hsub{margin:8px 0 0;font-size:13px;color:var(--muted)}
 html.tall{height:auto;overflow-y:auto}
 html.tall body{height:auto;overflow:visible}
 html.tall #stage{position:relative;left:auto;top:auto;height:auto;min-height:900px;margin:0 auto;overflow:visible}
-html.tall #ribbon{position:relative;inset:auto;padding:200px 0 110px}
+html.tall #ribbon.on{position:relative;inset:auto;padding:200px 0 110px}
+html.tall #vote.on{position:relative;inset:auto;padding:96px 0 90px}
 html.tall .toast{position:fixed}
 #chartHead{display:block;position:sticky;top:0;z-index:2;background:var(--bg)}
 #chart{display:block}
@@ -153,3 +154,21 @@ html.tall .toast{position:fixed}
 .prev svg{display:block}
 .prev.fwd{background:#e6e7ee;color:var(--bg);border-color:#e6e7ee;padding:9px 16px 9px 20px}
 .prev.fwd:hover{background:#fff;color:var(--bg)}
+
+/* vote */
+.vhead{margin:0 56px}
+.v-eye{font:700 18px var(--font-plex);letter-spacing:.02em}
+.vhead h2{margin:30px 0 10px;font:700 34px var(--font-heading)}
+.vhead p{margin:0;max-width:760px;font-size:16px;line-height:1.55;color:#c9cce0}
+.vgrid{display:flex;flex-wrap:wrap;justify-content:center;gap:44px 20px;max-width:1260px;margin:64px auto 0}
+.vopt{width:190px;display:flex;flex-direction:column;align-items:center;gap:16px;background:none;border:0;padding:0;color:var(--ink);cursor:pointer}
+.vicon{height:80px;display:flex;align-items:flex-end}
+.vopt .cw{position:relative;display:block}
+.vopt:hover .cw{transform:translateY(-2px);box-shadow:0 0 18px rgba(245,226,160,.45)}
+.vopt:focus-visible{outline:none}.vopt:focus-visible .vlab{text-decoration:underline;text-underline-offset:4px}
+.vlab{font:600 14px/1.45 var(--font-plex);letter-spacing:.01em;text-align:center}
+.vopt[aria-pressed="true"] .vlab{color:#f3e09d}
+.vfoot{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:64px}
+.vdone{min-width:206px;padding:20px 40px;border:0;border-radius:2px;background:#e6e7ee;color:var(--bg);font:600 16px var(--font-sans);cursor:pointer}
+.vdone:disabled{background:#4a5068;color:#c9cce0;cursor:default}
+.vcount{font-size:13px;color:var(--muted)}
