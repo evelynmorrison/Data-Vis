@@ -35,10 +35,16 @@ header h1{margin:0;font:700 24px var(--font-heading)}
 .row .sc{margin-left:auto;font:700 14px var(--font-heading);color:var(--ink)}
 .flag{width:28px;height:20px;display:block;border-radius:2px;outline:1px solid rgba(255,255,255,.15)}
 /* ribbon */
-#chartHead{position:absolute;left:0;top:200px}
-#chartWrap{position:absolute;left:0;top:232px;width:1440px;height:568px;overflow-y:auto;overscroll-behavior:contain}
-#chartWrap::-webkit-scrollbar{width:6px}#chartWrap::-webkit-scrollbar-thumb{background:#2c3050;border-radius:3px}
+/* ribbon screen is a long page: html.tall (set in nav.js) lets the document scroll,
+   the stage grows to the chart's height, and the column titles stick to the top */
+html.tall{height:auto;overflow-y:auto}
+html.tall body{height:auto;overflow:visible}
+html.tall #stage{position:relative;left:auto;top:auto;height:auto;min-height:900px;margin:0 auto;overflow:visible}
+html.tall #ribbon{position:relative;inset:auto;padding:200px 0 110px}
+html.tall .toast{position:fixed}
+#chartHead{display:block;position:sticky;top:0;z-index:2;background:var(--bg)}
 #chart{display:block}
+.band{bottom:90px}
 .hint{pointer-events:none;position:absolute;left:48px;top:140px;background:var(--note);color:#2a2410;font:600 13px var(--font-sans);padding:9px 14px;border-radius:6px;transition:opacity .4s}
 .hint::after{content:"";position:absolute;left:18px;bottom:-8px;border:8px solid transparent;border-top-color:var(--note);border-bottom:0}
 .colh{font:500 13px var(--font-sans);fill:var(--ink)}
@@ -49,10 +55,10 @@ header h1{margin:0;font:700 24px var(--font-heading)}
 .card .ranks{display:flex;gap:18px;margin-top:8px;font-size:12px;color:#444}
 .card .ranks span b{color:#111}
 .ctitle{pointer-events:none;position:absolute;left:48px;top:150px;font:700 26px var(--font-heading);letter-spacing:.04em;transition:opacity .3s}
-.band{pointer-events:none;position:absolute;left:0;right:0;top:190px;height:620px;background:rgba(5,7,24,.35)}
-.scrimM{position:absolute;inset:0;background:rgba(6,8,26,.6);opacity:0;pointer-events:none;transition:opacity .35s}
+.band{pointer-events:none;position:absolute;left:0;right:0;top:190px;background:rgba(5,7,24,.35)}
+.scrimM{position:absolute;inset:0;z-index:5;background:rgba(6,8,26,.6);opacity:0;pointer-events:none;transition:opacity .35s}
 .scrimM.on{opacity:1;pointer-events:auto}
-.modal{position:absolute;left:77px;right:69px;top:106px;bottom:117px;display:grid;grid-template-columns:438px 1fr;border:1px solid rgba(238,240,248,.22);border-radius:14px;overflow:hidden;
+.modal{position:absolute;z-index:6;left:77px;right:69px;top:106px;bottom:117px;display:grid;grid-template-columns:438px 1fr;border:1px solid rgba(238,240,248,.22);border-radius:14px;overflow:hidden;
   box-shadow:0 30px 80px rgba(0,0,0,.45);opacity:0;transform:translateY(14px);transition:opacity .35s,transform .35s;pointer-events:none}
 .modal.on{opacity:1;transform:none;pointer-events:auto}
 .mleft{background:#1b2154;position:relative}
@@ -61,7 +67,7 @@ header h1{margin:0;font:700 24px var(--font-heading)}
 .mname{position:absolute;left:40px;top:56px;font:400 28px var(--font-plex);letter-spacing:.06em;letter-spacing:.02em;color:#f2f3fb}
 .wgrid{position:absolute;left:104px;top:186px;width:226px;height:296px}
 .mhint{position:absolute;left:106px;right:30px;top:552px;text-align:left;font:400 17px/25px var(--font-plex);color:#f2f3fb;letter-spacing:.03em}
-.mclose{position:absolute;top:22px;right:23px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(238,240,248,.35);background:none;color:var(--ink);cursor:pointer;font-size:14px;line-height:1}
+.mclose{position:absolute;z-index:2;top:22px;right:23px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(238,240,248,.35);background:none;color:var(--ink);cursor:pointer;font-size:14px;line-height:1}
 .mclose:hover{border-color:rgba(238,240,248,.7)}
 .mback{position:absolute;right:39px;bottom:39px;background:#e3e3e6;color:#1d1d2a;border:0;border-radius:10px;font:600 14px var(--font-sans);padding:12px 28px;cursor:pointer}
 .mback:hover{background:#fff}

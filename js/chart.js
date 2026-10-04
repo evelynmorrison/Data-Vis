@@ -1,5 +1,5 @@
 /* ───────── RIBBON CHART ───────── */
-// #chart holds the ribbons and scrolls inside #chartWrap; #chartHead keeps the column titles pinned above it
+// #chart holds the ribbons (the page scrolls through it); #chartHead keeps the column titles pinned above it
 const NS="http://www.w3.org/2000/svg", svg=document.getElementById("chart"), head=document.getElementById("chartHead");
 const X=[40,347.5,655,962.5,1270], W=130, H=17, TOP=8, GAP=24;
 const cy=i=>TOP+i*GAP;

@@ -121,10 +121,15 @@ function openModal(){
       document.getElementById("glance").classList.add("off");
       showDim(k,d);};
     g.appendChild(b);});
-  document.getElementById("scrimM").classList.add("on"); document.getElementById("modal").classList.add("on");
+  // the ribbon screen scrolls, so open the modal centred on the current view and freeze scrolling
+  const z=parseFloat(stage.style.zoom)||1, m=document.getElementById("modal");
+  Object.assign(m.style,{top:(scrollY/z+Math.max(0,(innerHeight/z-677)/2))+"px",bottom:"auto",height:"677px"});
+  m._y=scrollY; document.documentElement.style.overflow="hidden";
+  document.getElementById("scrimM").classList.add("on"); m.classList.add("on");
   document.querySelector("#ribbon .pager").style.opacity=0;
 }
-function closeModal(){ modalOpen=false; document.getElementById("scrimM").classList.remove("on"); document.getElementById("modal").classList.remove("on"); document.querySelector("#ribbon .pager").style.opacity=1; }
+function closeModal(){ modalOpen=false; const m=document.getElementById("modal"); document.documentElement.style.overflow=""; scrollTo(0,m._y||0); // unlocking can jump to top
+  document.getElementById("scrimM").classList.remove("on"); document.getElementById("modal").classList.remove("on"); document.querySelector("#ribbon .pager").style.opacity=1; }
 document.getElementById("mclose").onclick=closeModal; document.getElementById("gBack").onclick=closeModal; document.getElementById("scrimM").onclick=closeModal;
 // generous hit area: anywhere inside a column's row band counts as that country
 function nearest(e){
