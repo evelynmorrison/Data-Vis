@@ -7,6 +7,8 @@ html,body{margin:0;height:100%;background:#0a0b1c;color:var(--ink);font-family:v
 .mono{font-family:var(--font-heading)}
 header{position:absolute;left:56px;right:40px;top:36px;display:flex;justify-content:space-between;align-items:center}
 header h1{margin:0;font:700 24px var(--font-heading)}
+header .hsub{margin:8px 0 0;font-size:13px;color:var(--muted)}
+#ribbon header{align-items:flex-start} /* keep tabs level with the title, as on the other screens */
 .tabs{display:flex;border:1px solid rgba(238,240,248,.8);border-radius:8px;padding:4px;gap:4px}
 .tabs button{border:0;background:none;color:var(--ink);font:600 14px var(--font-sans);padding:6px 22px;border-radius:5px;cursor:pointer}
 .tabs button.on{background:#e6e7ee;color:var(--bg)}
