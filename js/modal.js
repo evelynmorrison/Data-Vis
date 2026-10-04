@@ -128,21 +128,7 @@ function openModal(){
   document.querySelector("#ribbon .pager").style.opacity=0;
 }
 function closeModal(){ modalOpen=false; const m=document.getElementById("modal"); document.documentElement.style.overflow=""; scrollTo(0,m._y||0); // unlocking can jump to top
-  document.getElementById("scrimM").classList.remove("on"); document.getElementById("modal").classList.remove("on"); document.querySelector("#ribbon .pager").style.opacity=1; }
+  document.getElementById("scrimM").classList.remove("on"); document.getElementById("modal").classList.remove("on"); document.querySelector("#ribbon .pager").style.opacity=1;
+  // back to hover-exploring: drop the selection so other ribbons respond again
+  selected=null; csearch.value=""; document.querySelectorAll(".row").forEach(r=>r.classList.remove("sel")); apply(); }
 document.getElementById("mclose").onclick=closeModal; document.getElementById("gBack").onclick=closeModal; document.getElementById("scrimM").onclick=closeModal;
-// generous hit area: anywhere inside a column's row band counts as that country
-function nearest(e){
-  const r=svg.getBoundingClientRect(), sx=1440/r.width, x=(e.clientX-r.left)*sx, y=(e.clientY-r.top)*sx;
-  const row=Math.floor((y-TOP+ (GAP-H)/2)/GAP); if(row<0||row>=COUNTRIES.length) return null;
-  let j=0,best=1e9; X.forEach((cx,k)=>{const d=Math.abs(x-(cx+W/2)); if(d<best){best=d;j=k;}});
-  if(best>W/2+60) return null; return ORDERS[j][row] ?? null; // shorter columns have empty rows
-}
-svg.addEventListener("pointermove",e=>{ if(selected!==null||modalOpen) return; if(e.target.closest(".rib")) return; const ci=nearest(e); if(ci!==null) preview(ci); });
-svg.style.cursor="pointer";
-document.getElementById("chart").addEventListener("pointerup",e=>{
-  const g=e.target.closest(".rib");
-  let ci=g?+g.dataset.ci:nearest(e);
-  if(ci===null) return;
-  select(ci); openModal();
-});
-document.getElementById("chart").addEventListener("click",e=>{ if(e.target.tagName==="rect" && !e.target.closest(".rib")){selected=null;document.querySelectorAll(".row").forEach(r=>r.classList.remove("sel"));apply();}});
