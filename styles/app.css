@@ -44,6 +44,7 @@ html.tall body{height:auto;overflow:visible}
 html.tall #stage{position:relative;left:auto;top:auto;height:auto;min-height:900px;margin:0 auto;overflow:visible}
 html.tall #ribbon.on{position:relative;inset:auto;padding:200px 0 110px}
 html.tall #vote.on{position:relative;inset:auto;padding:96px 0 90px}
+html.tall #results.on{position:relative;inset:auto;padding:96px 0 90px}
 html.tall .toast{position:fixed}
 #chartHead{display:block;position:sticky;top:0;z-index:2;background:var(--bg)}
 #chart{display:block}
@@ -171,3 +172,21 @@ html.tall .toast{position:fixed}
 .vdone{min-width:206px;padding:20px 40px;border:0;border-radius:2px;background:#e6e7ee;color:var(--bg);font:600 16px var(--font-sans);cursor:pointer}
 .vdone:disabled{background:#4a5068;color:#c9cce0;cursor:default}
 .vcount{font-size:13px;color:var(--muted)}
+
+/* results */
+.rhead{margin:0 56px}
+.r-eye{font:400 15px var(--font-plex);color:#9aa0c8;letter-spacing:.02em}
+.rhead h2{margin:14px 0 10px;font:700 34px var(--font-heading)}
+.rhead p{margin:0;font-size:15px;color:#9aa0c8}
+.rlist{list-style:none;margin:48px 56px 0;padding:0;max-width:1040px;display:flex;flex-direction:column;gap:22px}
+.rrow{display:grid;grid-template-columns:44px 1fr;column-gap:12px}
+.rnum{grid-row:span 2;padding-top:3px;font:400 13px var(--font-plex);color:#9aa0c8}
+.rname{display:flex;align-items:center;gap:14px;font:600 16px var(--font-plex);letter-spacing:.01em}
+.ryou{padding:2px 14px;border:1.5px solid #f3e09d;border-radius:999px;color:#f3e09d;font:600 11px var(--font-sans)}
+.rbar{display:flex;align-items:center;gap:7px;margin-top:10px}
+.rbar .cw{position:relative;display:block;flex:none;width:26px;height:28px;cursor:default;transition:none}
+.rbar .cw.sel{box-shadow:none}
+.rpct{margin-left:22px;font:700 22px var(--font-heading)}
+.rrow:first-child .rpct{color:#f3e09d}
+.rback{background:none;border:1px solid var(--line);border-radius:999px;color:var(--muted);font:500 13px var(--font-sans);padding:9px 20px;cursor:pointer}
+.rback:hover{color:var(--ink);border-color:rgba(238,240,248,.45)}

@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Untold stories · Prototype</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Poppins:ital,wght@1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles/theme.css?v=20261004194528">
-<link rel="stylesheet" href="styles/app.css?v=20261004194528">
+<link rel="stylesheet" href="styles/theme.css?v=20261004195151">
+<link rel="stylesheet" href="styles/app.css?v=20261004195151">
 </head>
 <body>
 <div id="stage">
@@ -84,19 +84,32 @@
     <div class="vfoot"><button class="vdone" id="vdone" disabled>Done</button><div class="vcount" id="vcount" aria-live="polite"></div></div>
   </section>
 
+  <!-- 5 · Results -->
+  <section class="screen" id="results">
+    <header><div></div><div class="tabs"><button data-tab="data">View Data</button><button class="on" data-tab="vote">Vote</button></div></header>
+    <div class="rhead">
+      <div class="r-eye" id="rEye">Results</div>
+      <h2>Here’s what lights up for everyone.</h2>
+      <p>Each row is a window you could switch on. The more people chose it, the more lights are on.</p>
+    </div>
+    <ol class="rlist" id="rlist"></ol>
+    <div class="vfoot"><button class="rback" data-goto="vote">← Change my choices</button></div>
+  </section>
+
   <div class="toast" id="toast"></div>
 </div>
 
-<script src="js/countries.js?v=20261004194528"></script>
-<script src="js/shapes.js?v=20261004194528"></script>
-<script src="js/data.js?v=20261004194528"></script>
-<script src="js/flags.js?v=20261004194528"></script>
-<script src="js/nav.js?v=20261004194528"></script>
-<script src="js/ranking.js?v=20261004194528"></script>
-<script src="js/chart.js?v=20261004194528"></script>
-<script src="js/search.js?v=20261004194528"></script>
-<script src="js/stories.js?v=20261004194528"></script>
-<script src="js/modal.js?v=20261004194528"></script>
-<script src="js/vote.js?v=20261004194528"></script>
+<script src="js/countries.js?v=20261004195151"></script>
+<script src="js/shapes.js?v=20261004195151"></script>
+<script src="js/data.js?v=20261004195151"></script>
+<script src="js/flags.js?v=20261004195151"></script>
+<script src="js/nav.js?v=20261004195151"></script>
+<script src="js/ranking.js?v=20261004195151"></script>
+<script src="js/chart.js?v=20261004195151"></script>
+<script src="js/search.js?v=20261004195151"></script>
+<script src="js/stories.js?v=20261004195151"></script>
+<script src="js/modal.js?v=20261004195151"></script>
+<script src="js/vote.js?v=20261004195151"></script>
+<script src="js/results.js?v=20261004195151"></script>
 </body>
 </html>

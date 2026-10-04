@@ -8,15 +8,17 @@ function fit(){
 }
 addEventListener("resize",fit);fit();
 let selected=null, lastData="ranking"; // lastData: the data screen "View Data" returns to
-const TALL=["ribbon","vote"]; // screens that scroll as a long page
+const TALL=["ribbon","vote","results"]; // screens that scroll as a long page
 function go(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));
   document.documentElement.classList.toggle("tall",TALL.includes(id)); fit(); scrollTo(0,0);
   if(id==="ranking"||id==="ribbon") lastData=id;
   if(id==="ribbon") drawChart();
+  if(id==="results") showResults();
 }
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
 // top-right View Data / Vote toggle
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>go(b.dataset.tab==="vote"?"vote":lastData));
+document.querySelectorAll("[data-goto]").forEach(b=>b.onclick=()=>go(b.dataset.goto));
 
 const toast=m=>{const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),2200)};
