@@ -12,7 +12,7 @@ const VOTE_LABELS = [
   "Working hours", "Unpaid care work", "Commute length", "Access to healthcare",
   "Financial security against emergencies", "Housing affordability and quality", "Education access",
   "Care accessible in old age", "Personal safety from violence", "Freedom from discrimination",
-  "Cultural participation and traditions", "A say in decisions that affect you", "Trust in government",
+  "Cultural participation and traditions", "Trust in government",
   "Access to nature and green space", "Air and water quality", "Ecological footprint per person",
   "GDP per person", "Life expectancy", "Employment rate", "Hours of sunlight per year",
 ];
@@ -33,8 +33,9 @@ function recordVote(rec) { try { localStorage.setItem(VOTE_KEY, JSON.stringify(r
   const order = VOTE_OPTIONS.map(o => o.id);
   for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; } // Fisher–Yates
   const byId = Object.fromEntries(VOTE_OPTIONS.map(o => [o.id, o]));
-  const saved = loadVote(), lit = new Set(saved?.choices || []);
-  let recorded = !!saved;
+  // restore an earlier vote, ignoring any option that has since been removed from the list
+  const saved = loadVote(), lit = new Set((saved?.choices || []).filter(id => byId[id]));
+  let recorded = !!saved && lit.size === VOTE_PICK;
 
   grid.innerHTML = order.map(id => {
     const o = byId[id], [w, h] = o.size;
