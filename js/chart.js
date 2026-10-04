@@ -40,17 +40,21 @@ const DIS=(()=>{
   const top=Math.max(...raw); return raw.map(v=>v/top);
 })();
 
-// nothing hovered: one smooth line per country through its rank in each column (column centres,
-// level at each column), wider and brighter the more its rankings disagree
+// x where lines cross column j: the outer columns reach the outer edges of the column titles
+// (first title is left-aligned, last right-aligned); inner columns sit under their centred titles
+const lineX=j=>j===0?X[0]:j===X.length-1?X[j]+W:X[j]+W/2;
+
+// nothing hovered: one smooth line per country through its rank in each column (level at each column),
+// wider and brighter the more its rankings disagree
 function drawLine(ci,g){
-  const {pos,cols}=GEO[ci], pts=cols.map(j=>[X[j]+W/2,yc(pos[j])]), t=DIS[ci]**2; // squared: only the strongest disagreements stand out
+  const {pos,cols}=GEO[ci], pts=cols.map(j=>[lineX(j),yc(pos[j])]), t=DIS[ci]**2; // squared: only the strongest disagreements stand out
   let d=`M${pts[0][0]},${pts[0][1].toFixed(1)}`;
   for(let k=1;k<pts.length;k++){ const [x0,y0]=pts[k-1],[x1,y1]=pts[k],m=(x0+x1)/2; d+=`C${m},${y0.toFixed(1)} ${m},${y1.toFixed(1)} ${x1},${y1.toFixed(1)}`; }
   mk("path",{class:"ln",d,"stroke-width":(.5+3*t).toFixed(2),"stroke-opacity":(.1+.75*t).toFixed(2)},g);
 }
 function drawGrid(){
   const g=mk("g",{id:"grid"}), y0=yc(0), y1=yc(ROWS-1);
-  X.forEach(x=>mk("line",{class:"gcol",x1:x+W/2,x2:x+W/2,y1:y0,y2:y1},g));
+  X.forEach((_,j)=>mk("line",{class:"gcol",x1:lineX(j),x2:lineX(j),y1:y0,y2:y1},g));
   [1,50,100,150].filter(r=>r<=ROWS).forEach(r=>{
     mk("line",{class:"grow",x1:X[0],x2:X[X.length-1]+W,y1:yc(r-1),y2:yc(r-1)},g);
     mk("text",{class:"gaxis",x:X[0]-8,y:yc(r-1)+3.5,"text-anchor":"end"},g).textContent=r;
