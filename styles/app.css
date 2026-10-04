@@ -45,9 +45,15 @@ html.tall .toast{position:fixed}
 #chartHead{display:block;position:sticky;top:0;z-index:2;background:var(--bg)}
 #chart{display:block}
 .band{bottom:90px}
-.hint{pointer-events:none;position:absolute;left:48px;top:140px;background:var(--note);color:#2a2410;font:600 13px var(--font-sans);padding:9px 14px;border-radius:6px;transition:opacity .4s}
-.hint::after{content:"";position:absolute;left:18px;bottom:-8px;border:8px solid transparent;border-top-color:var(--note);border-bottom:0}
-.colh{font:500 13px var(--font-sans);fill:var(--ink)}
+.csearch{position:absolute;left:56px;top:120px}
+.csearch input{width:280px;padding:9px 16px 9px 38px;border:1px solid rgba(238,240,248,.35);border-radius:999px;color:var(--ink);font:500 13px var(--font-sans);outline:none;
+  background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%238d93b3' stroke-width='1.6'%3E%3Ccircle cx='6' cy='6' r='4.8'/%3E%3Cpath d='M9.6 9.6 13 13'/%3E%3C/svg%3E") no-repeat 15px center}
+.csearch input::placeholder{color:var(--muted)}
+.csearch input:focus{border-color:rgba(238,240,248,.75)}
+.colh{font:600 13px var(--font-sans);fill:var(--ink)}
+.colnote{font:400 11px var(--font-sans);fill:var(--muted)}
+.colsub{font:500 12px var(--font-sans);fill:var(--ink)}
+.colrule{stroke:rgba(238,240,248,.25);stroke-width:1}
 .lbl{font:400 10.5px var(--font-sans);pointer-events:none}
 .rib{cursor:pointer;transition:opacity .35s}
 .card{pointer-events:none;position:absolute;left:56px;bottom:40px;background:#fff;color:#111;padding:16px 20px;border-radius:2px;font-size:12.5px;line-height:1.6;min-width:360px;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:opacity .3s}

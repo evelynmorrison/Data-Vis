@@ -97,10 +97,9 @@ function showDim(k,d){
   }
   det.classList.add("on");
 }
-function hideInfo(){ document.getElementById("hint").style.opacity=1; document.getElementById("ctitle").style.opacity=0; document.getElementById("card").style.opacity=0; }
+function hideInfo(){ document.getElementById("ctitle").style.opacity=0; document.getElementById("card").style.opacity=0; }
 function showInfo(i){
   const d=COUNTRIES[i];
-  document.getElementById("hint").style.opacity=1;
   document.getElementById("ctitle").style.opacity=0;
   document.getElementById("card").style.opacity=0;
 }

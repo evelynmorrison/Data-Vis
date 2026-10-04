@@ -30,8 +30,17 @@ function drawChart(){
   
   const rows=Math.max(...ORDERS.map(o=>o.length)), ht=cy(rows)+8;
   svg.setAttribute("height",ht); svg.setAttribute("viewBox",`0 0 1440 ${ht}`);
-  const last=COLS.length-1;
-  COLS.forEach((t,j)=>mk("text",{class:"colh",x:X[j]+(j===last?W:0),y:22,"text-anchor":j===0?"start":j===last?"end":"middle",dx:j>0&&j<last?W/2:0},head).textContent=t);
+  // first group left-aligned, last right-aligned, others centred over their columns
+  HEAD.forEach((h,gi)=>{
+    const a=h.cols[0], b=h.cols[h.cols.length-1];
+    const [x,anchor]=gi===0?[X[a],"start"]:gi===HEAD.length-1?[X[b]+W,"end"]:[(X[a]+X[b]+W)/2,"middle"];
+    mk("text",{class:"colh",x,y:17,"text-anchor":anchor},head).textContent=h.title;
+    mk("text",{class:"colnote",x,y:32,"text-anchor":anchor},head).textContent=h.note;
+    if(h.subs){
+      mk("line",{class:"colrule",x1:X[a],x2:X[b]+W,y1:41,y2:41},head);
+      h.subs.forEach((t,k)=>mk("text",{class:"colsub",x:X[h.cols[k]]+W/2,y:58,"text-anchor":"middle"},head).textContent=t);
+    }
+  });
   // boxes + labels sit in their own layer above every ribbon, so a ribbon that
   // jumps over a column (country unranked there) can't cover that column's boxes
   const layer=mk("g",{id:"ribs"}), boxLayer=mk("g",{id:"boxes"});

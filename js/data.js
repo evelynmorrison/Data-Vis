@@ -16,13 +16,18 @@ const COUNTRIES = ALL_COUNTRIES.map(d=>({...d, rank:d.whr, code:FLAG_CODES[d.c]|
 
 // ribbon-chart columns, left to right
 const SOURCES = [
-  {key:"whr", label:"World Happiness Report (Gallup Analytics)", total:147},
-  {key:"wb",  label:"Wellbeing (overall)",                       total:164},
-  {key:"pos", label:"Wellbeing (positive affect)",               total:164},
-  {key:"neg", label:"Wellbeing (negative affect)",               total:164},
-  {key:"hpi", label:"Happy Planet Index",                        total:134},
+  {key:"whr", total:147},
+  {key:"wb",  total:164},
+  {key:"pos", total:164},
+  {key:"neg", total:164},
+  {key:"hpi", total:134},
 ];
-const COLS = SOURCES.map(s=>s.label);
+// column titles: each group spans one or more SOURCES columns; subs label each column in the group
+const HEAD = [
+  {cols:[0],     title:"World Happiness Report", note:"(Gallup Analytics)"},
+  {cols:[1,2,3], title:"Wellbeing Rankings",     note:"(Blanchflower & Bryson)", subs:["Overall","Positive Affect","Negative Affect"]},
+  {cols:[4],     title:"Happy Planet Index",     note:"(Hot or Cool)"},
+];
 // per column: indices into COUNTRIES, best rank first, unranked countries left out
 const ORDERS = SOURCES.map(s=>COUNTRIES.map((_,i)=>i)
   .filter(i=>COUNTRIES[i][s.key]!=null)
