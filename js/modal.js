@@ -51,13 +51,21 @@ const BLURB={
  "Austria":"an Alpine country of around 9 million people, known for mountains, music, and coffee houses",
  "Taiwan":"an island in East Asia, known for its mountainous landscapes, vibrant cities, and night markets",
  "Czechia":"a Central European country of around 11 million people, known for historic towns and beer culture"};
+const fmtPop=n=>n>=1e9?`${(n/1e9).toFixed(2)} billion`:n>=1e6?`${n>=1e7?Math.round(n/1e6):(n/1e6).toFixed(1)} million`:Math.round(n/1e3).toLocaleString("en")+",000";
 function fillGlance(i){
-  // some countries are unranked by WHR — show "–" for missing values
-  const d=COUNTRIES[i];
+  // anything a country lacks (outline, population, region, a ranking) is left out and the layout closes up
+  const d=COUNTRIES[i], geo=COUNTRY_GEO[d.iso]||{};
   document.getElementById("gEye").textContent=`${d.c} at a glance`;
-  document.getElementById("gStats").innerHTML=
-   `<div class="g-stat"><div class="g-big">${d.rank==null?"–":"#"+d.rank}</div><div class="g-lab">World happiness rank</div></div>
-    <div class="g-stat"><div class="g-big">${d.score==null?"–":d.score.toFixed(3)+"<small>/ 10</small>"}</div><div class="g-lab">Life evaluation score</div></div>`;
+  const facts=[geo.pop&&["Population",fmtPop(geo.pop)], geo.region&&["Region",geo.region]].filter(Boolean);
+  document.getElementById("gGeo").innerHTML=
+    (geo.d?`<svg viewBox="0 0 140 100" aria-hidden="true"><path d="${geo.d}"/></svg>`:"")+
+    (facts.length?`<div class="g-facts">${facts.map(([k,v])=>`<div class="g-fact"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("")}</div>`:"");
+  const stats=[
+    d.rank!=null  && [`#${d.rank}<small>of ${SOURCES[0].total}</small>`, "World happiness rank"],
+    d.score!=null && [`${d.score.toFixed(3)}<small>/ 10</small>`,        "Life evaluation score"],
+    d.wb!=null    && [`#${d.wb}<small>of ${SOURCES[1].total}</small>`,   "Overall wellbeing rank"],
+  ].filter(Boolean);
+  document.getElementById("gStats").innerHTML=stats.map(([v,l])=>`<div class="g-stat"><div class="g-big">${v}</div><div class="g-lab">${l}</div></div>`).join("");
   document.getElementById("glance").classList.remove("off");
 }
 const DIMS=["Loneliness","Rest & leisure","Work–life balance","Trust","Social ties","Housing","Mental health","Nature","Income security","Health","Safety","Community","Freedom","Generosity","Daily emotions","Hope"];

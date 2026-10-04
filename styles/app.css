@@ -105,8 +105,17 @@ html.tall .toast{position:fixed}
 .mhint.small{top:552px}
 .glance{position:absolute;inset:0;font-family:var(--font-plex);transition:opacity .35s}
 .glance.off{opacity:0;pointer-events:none}
-.g-eye{position:absolute;left:63px;top:86px;font-size:14px;color:#9aa0c8;letter-spacing:.03em}
-.g-stats{position:absolute;left:60px;top:136px;display:flex}
+/* landing panel stacks top to bottom; empty parts collapse */
+.g-body{position:absolute;left:63px;right:40px;top:86px;display:flex;flex-direction:column;gap:30px}
+.g-eye{font-size:14px;color:#9aa0c8;letter-spacing:.03em}
+.g-geo{display:flex;align-items:center;gap:36px}
+.g-geo:empty{display:none}
+.g-geo svg{display:block;width:140px;height:100px;flex:none}
+.g-geo path{fill:rgba(201,209,246,.12);stroke:#c9d1f6;stroke-width:1;stroke-linejoin:round}
+.g-facts{display:flex;flex-direction:column;gap:14px}
+.g-fact .k{font-size:12px;color:#9aa0c8;letter-spacing:.06em;text-transform:uppercase}
+.g-fact .v{margin-top:4px;font-size:20px;color:#f2f3fb;letter-spacing:.02em}
+.g-stats{display:flex}
 .g-stat{width:248px;padding-left:28px;border-left:1px solid rgba(238,240,248,.18)}
 .g-stat:first-child{padding-left:0;border-left:0;width:236px}
 .g-big{font-size:43px;font-weight:300;color:#f2f3fb;line-height:1;margin-top:10px;letter-spacing:.02em}
