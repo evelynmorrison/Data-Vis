@@ -65,6 +65,10 @@ function fillGlance(i){
     d.score!=null && [`${d.score.toFixed(3)}<small>/ 10</small>`,        "Life evaluation score"],
     d.wb!=null    && [`#${d.wb}<small>of ${SOURCES[1].total}</small>`,   "Overall wellbeing rank"],
   ].filter(Boolean);
+  const story=document.getElementById("gStory"); story.scrollTop=0;
+  story.innerHTML=(STORIES[d.c]||[]).map(p=>`<p>${p}</p>`).join("");
+  const fade=()=>story.classList.toggle("more",story.scrollTop+story.clientHeight<story.scrollHeight-4);
+  story.onscroll=fade; requestAnimationFrame(fade);
   document.getElementById("gStats").innerHTML=stats.map(([v,l])=>`<div class="g-stat"><div class="g-big">${v}</div><div class="g-lab">${l}</div></div>`).join("");
   document.getElementById("glance").classList.remove("off");
 }
