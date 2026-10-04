@@ -1,6 +1,6 @@
 /* ───────── RIBBON CHART ───────── */
 const NS="http://www.w3.org/2000/svg", svg=document.getElementById("chart");
-const X=[40,480,900,1290], W=110, H=17, TOP=140, GAP=24;
+const X=[40,352.5,665,977.5,1290], W=110, H=17, TOP=140, GAP=24;
 const cy=i=>TOP+i*GAP;
 const mk=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e};
 function bez(p0,p3,t){const m=(p0.x+p3.x)/2,u=1-t;
@@ -27,23 +27,28 @@ function drawChart(){
   <linearGradient id="hiB" x1="0" x2="1"><stop offset="0" stop-color="#3444dc"/><stop offset="1" stop-color="#6f87e6"/></linearGradient>
   <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity=".45"/></filter>`;
   
-  COLS.forEach((t,j)=>mk("text",{class:"colh",x:X[j]+(j===3?W:0),y:TOP-14,"text-anchor":j===0?"start":j===3?"end":"middle",dx:j===1||j===2?W/2:0}).textContent=t);
+  const last=COLS.length-1;
+  COLS.forEach((t,j)=>mk("text",{class:"colh",x:X[j]+(j===last?W:0),y:TOP-14,"text-anchor":j===0?"start":j===last?"end":"middle",dx:j>0&&j<last?W/2:0}).textContent=t);
   const layer=mk("g",{id:"ribs"});
   COUNTRIES.forEach((d,ci)=>{
     const g=mk("g",{class:"rib",filter:"url(#sh)"},layer); ribG[ci]=g;
-    const pos=ORDERS.map(o=>o.indexOf(ci)); let face=true; const faces=[true];
-    for(let j=1;j<4;j++){
-      const p0={x:X[j-1]+W,y:cy(pos[j-1])+H/2},p3={x:X[j],y:cy(pos[j])+H/2},tw=Math.abs(pos[j]-pos[j-1])>=3,tc=.36+.28*rnd();
+    // columns this country is ranked in; the ribbon jumps over the rest
+    const pos=ORDERS.map(o=>o.indexOf(ci)), cols=pos.map((p,j)=>j).filter(j=>pos[j]>=0);
+    let face=true; const faces={[cols[0]]:true};
+    for(let k=1;k<cols.length;k++){
+      const a=cols[k-1], b=cols[k];
+      const p0={x:X[a]+W,y:cy(pos[a])+H/2},p3={x:X[b],y:cy(pos[b])+H/2},tw=Math.abs(pos[b]-pos[a])>=3,tc=.36+.28*rnd();
       if(tw){ mk("path",{d:band(p0,p3,true,tc,0,tc),"data-f":face?1:0},g); mk("path",{d:band(p0,p3,true,tc,tc,1),"data-f":face?0:1},g); face=!face; }
       else mk("path",{d:band(p0,p3,false,tc,0,1),"data-f":face?1:0},g);
-      faces.push(face);
+      faces[b]=face;
     }
     labelEls[ci]=[];
-    pos.forEach((p,j)=>{
+    cols.forEach(j=>{
+      const p=pos[j];
       const rc=mk("rect",{x:X[j],y:cy(p),width:W,height:H,"data-f":faces[j]?1:0},g);
       const tx=mk("text",{class:"lbl",x:X[j]+W/2,y:cy(p)+H/2+3.6,"text-anchor":"middle"},g); tx.textContent=d.c;
       labelEls[ci].push(tx);
-      const rn=mk("text",{class:"lbl rn",x:X[j]+8,y:cy(p)+H/2+3.6,"font-weight":700,opacity:0},g); rn.textContent=j===0?d.rank:p+1;
+      const rn=mk("text",{class:"lbl rn",x:X[j]+8,y:cy(p)+H/2+3.6,"font-weight":700,opacity:0},g); rn.textContent=RANKS[d.c][SOURCES[j].key];
     });
     g.onmouseenter=()=>{ if(selected===null) preview(ci) };
     g.onmouseleave=()=>{ if(selected===null) apply() };

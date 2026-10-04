@@ -130,7 +130,7 @@ function nearest(e){
   const r=svg.getBoundingClientRect(), sx=1440/r.width, x=(e.clientX-r.left)*sx, y=(e.clientY-r.top)*sx;
   const row=Math.floor((y-TOP+ (GAP-H)/2)/GAP); if(row<0||row>=COUNTRIES.length) return null;
   let j=0,best=1e9; X.forEach((cx,k)=>{const d=Math.abs(x-(cx+W/2)); if(d<best){best=d;j=k;}});
-  if(best>W/2+60) return null; return ORDERS[j][row];
+  if(best>W/2+60) return null; return ORDERS[j][row] ?? null; // shorter columns have empty rows
 }
 svg.addEventListener("pointermove",e=>{ if(selected!==null||modalOpen) return; if(e.target.closest(".rib")) return; const ci=nearest(e); if(ci!==null) preview(ci); });
 svg.style.cursor="pointer";

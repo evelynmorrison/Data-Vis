@@ -1,7 +1,6 @@
 /* ───────── DATA ─────────
    life: WHR 2026 rank & score (verified).  prev: WHR 2025 rank.
-   overall / pos / neg: PLACEHOLDER ranks within these 20 — replace with
-   Blanchflower & Bryson (2024) wellbeing, positive-affect and negative-affect ranks. */
+   Per-source ranks for the ribbon chart live in RANKS below. */
 const COUNTRIES = [
   {c:"Finland",     code:"fi", score:7.764, prev:1},
   {c:"Iceland",     code:"is", score:7.540, prev:3},
@@ -26,14 +25,50 @@ const COUNTRIES = [
   {c:"Taiwan",      code:"tw", score:6.714, prev:null, rank:26, extra:true},
 ];
 COUNTRIES.forEach((d,i)=>{ if(!d.rank) d.rank=i+1; });
-const COLS = ["World Happiness (Gallup)","Pos + Negative / overall","Positive Affect","Negative Affect"];
-// placeholder orders (index into COUNTRIES), deterministic
-const ORDERS = [
-  COUNTRIES.map((_,i)=>i),
-  [11,3,1,15,4,0,13,9,2,6,7,20,16,12,5,10,18,8,14,19,17],
-  [3,11,20,15,1,7,12,13,4,9,0,10,6,2,16,5,18,14,8,19,17],
-  [1,4,0,9,2,6,18,5,10,13,8,20,12,16,14,19,17,11,3,7,15],
+/* Ribbon-chart columns. Each country's rank in each source; null = not ranked
+   in that source (the ribbon skips that column).
+     whr      2world_happiness_all_measures.xlsx · Rankings · rank on 3-year average, 2025
+     wb/pos/neg  1wellbeing_rankings_countries.xlsx · Overall ranks · countries only (of 164),
+              derived final overall / positive affect / negative affect
+     hpi      3Happy-Planet-Index-2006-2025-public-data-set.xlsx · 1. All countries · HPI rank, 2025
+   Name variants matched by hand: Czechia = "Czech Republic" (wellbeing, HPI),
+   Taiwan = "Taiwan Province of China" (WHR). Israel and Kosovo are listed in HPI
+   without a 2025 rank; Taiwan is not in HPI. */
+const SOURCES = [
+  {key:"whr", label:"World Happiness Report (Gallup Analytics)", total:147},
+  {key:"wb",  label:"Wellbeing (overall)",                       total:164},
+  {key:"pos", label:"Wellbeing (positive affect)",               total:164},
+  {key:"neg", label:"Wellbeing (negative affect)",               total:164},
+  {key:"hpi", label:"Happy Planet Index",                        total:134},
 ];
+const RANKS = {
+  "Finland":     {whr:1, wb:15, pos:47, neg:23, hpi:50},
+  "Iceland":     {whr:2, wb:4, pos:34, neg:27, hpi:89},
+  "Denmark":     {whr:3, wb:12, pos:23, neg:35, hpi:63},
+  "Costa Rica":  {whr:4, wb:31, pos:7, neg:87, hpi:1},
+  "Sweden":      {whr:5, wb:9, pos:43, neg:22, hpi:36},
+  "Norway":      {whr:6, wb:5, pos:27, neg:21, hpi:20},
+  "Netherlands": {whr:7, wb:3, pos:10, neg:28, hpi:69},
+  "Israel":      {whr:8, wb:106, pos:111, neg:129, hpi:null},
+  "Luxembourg":  {whr:9, wb:24, pos:48, neg:25, hpi:129},
+  "Switzerland": {whr:10, wb:7, pos:40, neg:20, hpi:6},
+  "New Zealand": {whr:11, wb:14, pos:38, neg:24, hpi:43},
+  "Mexico":      {whr:12, wb:32, pos:33, neg:68, hpi:9},
+  "Ireland":     {whr:13, wb:10, pos:22, neg:26, hpi:67},
+  "Belgium":     {whr:14, wb:41, pos:45, neg:55, hpi:46},
+  "Australia":   {whr:15, wb:23, pos:44, neg:29, hpi:103},
+  "Kosovo":      {whr:16, wb:53, pos:96, neg:11, hpi:null},
+  "Germany":     {whr:17, wb:20, pos:53, neg:12, hpi:16},
+  "Slovenia":    {whr:18, wb:74, pos:108, neg:77, hpi:60},
+  "Austria":     {whr:19, wb:2, pos:46, neg:6, hpi:56},
+  "Czechia":     {whr:20, wb:72, pos:97, neg:64, hpi:62},
+  "Taiwan":      {whr:26, wb:1, pos:8, neg:1, hpi:null},
+};
+const COLS = SOURCES.map(s=>s.label);
+// per column: indices into COUNTRIES, best rank first, unranked countries left out
+const ORDERS = SOURCES.map(s=>COUNTRIES.map((_,i)=>i)
+  .filter(i=>RANKS[COUNTRIES[i].c][s.key]!=null)
+  .sort((a,b)=>RANKS[COUNTRIES[a].c][s.key]-RANKS[COUNTRIES[b].c][s.key]));
 const TOTAL = 147;
 
 /* lowest-ranking 10 of 147 · World Happiness Report 2026, life evaluation
