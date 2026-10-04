@@ -28,7 +28,7 @@ function mull(t,w,h){
   return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">${o}</svg>`;
 }
 let modalOpen=false, pickedWin=null;
-// short intros (populations are rounded estimates — verify before publishing)
+// short intros — not currently shown in the modal; kept in case a description returns (populations are rounded estimates — verify before publishing)
 const BLURB={
  "Finland":"a Nordic country of around 5.7 million people, known for its forests, lakes, and sauna culture",
  "Iceland":"a North Atlantic island of around 390,000 people, shaped by volcanoes, glaciers, and geothermal pools",
@@ -52,19 +52,12 @@ const BLURB={
  "Taiwan":"an island in East Asia, known for its mountainous landscapes, vibrant cities, and night markets",
  "Czechia":"a Central European country of around 11 million people, known for historic towns and beer culture"};
 function fillGlance(i){
-  // most countries have no blurb, and some are unranked by WHR — show "–" for missing values
-  const d=COUNTRIES[i], ch=d.prev==null||d.rank==null?0:d.prev-d.rank;
+  // some countries are unranked by WHR — show "–" for missing values
+  const d=COUNTRIES[i];
   document.getElementById("gEye").textContent=`${d.c} at a glance`;
-  document.getElementById("gDesc").textContent=BLURB[d.c]?`${d.c} is ${BLURB[d.c]}.`:"";
-  const third = d.c==="Taiwan"
-    ? `<div class="g-big">#1</div><div class="g-lab">Happiness rank in East Asia</div><div class="g-sub">2026 report</div>`
-    : d.c==="Finland"
-    ? `<div class="g-big">9 years</div><div class="g-lab">Consecutive years at #1</div><div class="g-sub">2018–2026</div>`
-    : `<div class="g-big">${ch>0?"▲ "+ch:ch<0?"▼ "+(-ch):"–"}</div><div class="g-lab">Change from 2025</div><div class="g-sub">${d.prev==null?"not ranked in 2025":`was #${d.prev} in 2025`}</div>`;
   document.getElementById("gStats").innerHTML=
-   `<div class="g-stat"><div class="g-big">${d.rank==null?"–":"#"+d.rank}</div><div class="g-lab">World happiness rank</div><div class="g-sub">2026 report</div></div>
-    <div class="g-stat"><div class="g-big">${d.score==null?"–":d.score.toFixed(3)+"<small>/ 10</small>"}</div><div class="g-lab">Life evaluation score</div><div class="g-sub">2023–2025 average</div></div>
-    <div class="g-stat">${third}</div>`;
+   `<div class="g-stat"><div class="g-big">${d.rank==null?"–":"#"+d.rank}</div><div class="g-lab">World happiness rank</div></div>
+    <div class="g-stat"><div class="g-big">${d.score==null?"–":d.score.toFixed(3)+"<small>/ 10</small>"}</div><div class="g-lab">Life evaluation score</div></div>`;
   document.getElementById("glance").classList.remove("off");
 }
 const DIMS=["Loneliness","Rest & leisure","Work–life balance","Trust","Social ties","Housing","Mental health","Nature","Income security","Health","Safety","Community","Freedom","Generosity","Daily emotions","Hope"];
@@ -107,7 +100,7 @@ function openModal(){
   if(selected===null) return toast("Select a country first");
   const d=COUNTRIES[selected]; modalOpen=true; pickedWin=null;
   document.getElementById("mname").textContent=d.c.toUpperCase();
-  const mh=document.getElementById("mhint"); mh.textContent="Select a window to explore a different dimension.";
+  const mh=document.getElementById("mhint"); mh.textContent="Select a window to explore different measures";
   fillGlance(selected);
   document.getElementById("det").classList.remove("on");
   document.getElementById("mempty").style.opacity=0;
@@ -131,4 +124,4 @@ function closeModal(){ modalOpen=false; const m=document.getElementById("modal")
   document.getElementById("scrimM").classList.remove("on"); document.getElementById("modal").classList.remove("on"); document.querySelector("#ribbon .pager").style.opacity=1;
   // back to hover-exploring: drop the selection so other ribbons respond again
   selected=null; csearch.value=""; document.querySelectorAll(".row").forEach(r=>r.classList.remove("sel")); apply(); }
-document.getElementById("mclose").onclick=closeModal; document.getElementById("gBack").onclick=closeModal; document.getElementById("scrimM").onclick=closeModal;
+document.getElementById("mclose").onclick=closeModal; document.getElementById("scrimM").onclick=closeModal;
