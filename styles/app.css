@@ -56,6 +56,13 @@ html.tall .toast{position:fixed}
 .colnote{font:400 11px var(--font-sans);fill:var(--muted)}
 .colsub{font:500 12px var(--font-sans);fill:var(--ink)}
 .colrule{stroke:rgba(238,240,248,.25);stroke-width:1}
+.hhit{cursor:help}
+.htip{position:absolute;z-index:4;max-width:320px;padding:12px 14px;background:#1b2154;border:1px solid rgba(238,240,248,.22);border-radius:8px;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);font:400 12.5px/1.55 var(--font-sans);color:var(--ink);opacity:0;pointer-events:none;transition:opacity .15s}
+.htip.on{opacity:1}
+.htip p{margin:0}
+.htip .n{margin-top:8px;padding-top:8px;border-top:1px solid rgba(238,240,248,.15);color:var(--muted)}
+.htip .n b{color:var(--ink);font-weight:600}
 .lbl{font:400 10.5px var(--font-sans);pointer-events:none}
 .rib{cursor:pointer;transition:opacity .35s}
 .card{pointer-events:none;position:absolute;left:56px;bottom:40px;background:#fff;color:#111;padding:16px 20px;border-radius:2px;font-size:12.5px;line-height:1.6;min-width:360px;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:opacity .3s}

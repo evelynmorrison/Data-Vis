@@ -22,12 +22,24 @@ const SOURCES = [
   {key:"neg", total:164},
   {key:"hpi", total:134},
 ];
-// column titles: each group spans one or more SOURCES columns; subs label each column in the group
+// column titles: each group spans one or more SOURCES columns; subs label each column in the group.
+// info = hover popup text (what the index measures); the popup also shows how many countries the column ranks.
+// Sources: worldhappiness.report/faq · Blanchflower & Bryson (2024) Social Indicators Research 171:513-565 ·
+// happyplanetindex.org methodology
 const HEAD = [
-  {cols:[0],     title:"World Happiness Report", note:"(Gallup Analytics)"},
-  {cols:[1,2,3], title:"Wellbeing Rankings",     note:"(Blanchflower & Bryson)", subs:["Overall","Positive Affect","Negative Affect"]},
-  {cols:[4],     title:"Happy Planet Index",     note:"(Hot or Cool)"},
+  {cols:[0], title:"World Happiness Report", note:"(Gallup Analytics)",
+   info:"People rate their lives from 0 (worst possible) to 10 (best possible) on the Cantril ladder. Gallup World Poll, nationally representative samples, averaged over 2023–2025."},
+  {cols:[1,2,3], title:"Wellbeing Rankings", note:"(Blanchflower & Bryson)",
+   info:"Eight Gallup World Poll measures, pooled 2008–2017 and adjusted for age, gender and year. Positive: life satisfaction, enjoyment, smiling or laughing, feeling well-rested. Negative: physical pain, worry, sadness, anger.",
+   subs:[
+     {label:"Overall",         info:"Combined rank across all eight measures, positive and negative."},
+     {label:"Positive Affect", info:"Life satisfaction, enjoyment, smiling or laughing, and feeling well-rested."},
+     {label:"Negative Affect", info:"Physical pain, worry, sadness and anger. Rank 1 = the least negative feeling."},
+   ]},
+  {cols:[4], title:"Happy Planet Index", note:"(Hot or Cool)",
+   info:"How efficiently countries turn resources into long, happy lives: life satisfaction (Gallup ladder) × life expectancy, divided by ecological footprint per person. 2025 data."},
 ];
+const nRanked = j => ORDERS[j].length; // countries a column ranks in this dataset
 // per column: indices into COUNTRIES, best rank first, unranked countries left out
 const ORDERS = SOURCES.map(s=>COUNTRIES.map((_,i)=>i)
   .filter(i=>COUNTRIES[i][s.key]!=null)

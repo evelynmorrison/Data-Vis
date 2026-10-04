@@ -67,14 +67,37 @@ function drawChart(){
   HEAD.forEach((h,gi)=>{
     const a=h.cols[0], b=h.cols[h.cols.length-1];
     const [x,anchor]=gi===0?[X[a],"start"]:gi===HEAD.length-1?[X[b]+W,"end"]:[(X[a]+X[b]+W)/2,"middle"];
-    mk("text",{class:"colh",x,y:17,"text-anchor":anchor},head).textContent=h.title;
-    mk("text",{class:"colnote",x,y:32,"text-anchor":anchor},head).textContent=h.note;
+    const g=mk("g",{class:"hhit"},head);
+    mk("text",{class:"colh",x,y:17,"text-anchor":anchor},g).textContent=h.title;
+    mk("text",{class:"colnote",x,y:32,"text-anchor":anchor},g).textContent=h.note;
+    headTip(g,h.info,h.cols.length>1?"each":nRanked(a),anchor);
     if(h.subs){
       mk("line",{class:"colrule",x1:X[a],x2:X[b]+W,y1:41,y2:41},head);
-      h.subs.forEach((t,k)=>mk("text",{class:"colsub",x:X[h.cols[k]]+W/2,y:58,"text-anchor":"middle"},head).textContent=t);
+      h.subs.forEach((s,k)=>{
+        const sg=mk("g",{class:"hhit"},head);
+        mk("text",{class:"colsub",x:X[h.cols[k]]+W/2,y:58,"text-anchor":"middle"},sg).textContent=s.label;
+        headTip(sg,s.info,nRanked(h.cols[k]),"middle");
+      });
     }
   });
   render();
+}
+
+// hover popup for a column title: what the index measures + how many countries it ranks.
+// A transparent rect over the title block gives a steady hover target (text alone has gaps).
+const tip=document.getElementById("htip"), ribbonEl=document.getElementById("ribbon");
+function headTip(g,info,n,anchor){
+  const bb=g.getBBox(); g.insertBefore(mk("rect",{x:bb.x-6,y:bb.y-3,width:bb.width+12,height:bb.height+6,fill:"transparent"},g),g.firstChild);
+  const count=n==="each"?`<b>${nRanked(1)}</b> countries ranked in each column`:`<b>${n}</b> countries ranked`;
+  g.addEventListener("mouseenter",()=>{
+    tip.innerHTML=`<p>${info}</p><p class="n">${count}</p>`;
+    const z=parseFloat(stage.style.zoom)||1, r=g.getBoundingClientRect(), s=ribbonEl.getBoundingClientRect(), w=tip.offsetWidth;
+    const anchorX=anchor==="start"?r.left:anchor==="end"?r.right:(r.left+r.right)/2;
+    let left=(anchorX-s.left)/z-(anchor==="start"?0:anchor==="end"?w:w/2);
+    tip.style.left=Math.max(16,Math.min(1440-16-w,left))+"px"; tip.style.top=((r.bottom-s.top)/z+8)+"px";
+    tip.classList.add("on");
+  });
+  g.addEventListener("mouseleave",()=>tip.classList.remove("on"));
 }
 
 // (re)build every country for the current mode
