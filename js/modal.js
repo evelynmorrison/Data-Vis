@@ -14,8 +14,8 @@ const CELLS=[["g:2x2",0,0,53,63],["bars",63,14,66,45],["blue",138,6,47,53],["g:2
 const WINS={ Taiwan:[["tw",2,2,53,57],["twlit",58,7,52,58],["tw",113,1,52,59],["blue",169,10,46,55],
   ["blue",5,81,46,55],["tw",58,79,48,57],["tw",114,80,55,57],["twlit",175,80,52,57],
   ["tw",2,150,53,60],["blue",61,150,48,57],["twlit",116,153,51,74],["tw",171,152,52,58]],
-  Bhutan:[["g:2x1",50,6,30,53,"arch","lit"],["g:2x2",88,0,39,61,"arch"],["tc",133,3,33,56,"arch"],["g:2x2",26,78,46,76,"arch"],["blue",80,87,35,67,"arch"],["g:3x2",123,74,50,79,"arch"],["g:2x1",179,93,22,63,"arch"],
-    ["g:2x3",47,169,40,65,"arch"],["g:2x2",95,181,32,56,"arch","lit"],["blue",133,170,42,66,"arch"],["g:2x1",26,254,29,71,"arch"],["g:2x2",60,251,48,79,"arch"],["g:3x2",114,252,37,73,"arch"],["tc",161,257,33,68,"arch","lit"]] };
+  Bhutan:[["g:2x1",57,5,26,47,"arch","lit"],["g:2x2",91,0,35,54,"arch"],["tc",131,3,29,50,"arch"],["g:2x2",35,69,41,68,"arch"],["blue",83,77,31,59,"arch"],["g:3x2",122,66,45,70,"arch"],["g:2x1",171,82,19,56,"arch"],
+    ["g:2x3",55,150,36,58,"arch"],["g:2x2",97,161,29,50,"arch","lit"],["blue",131,151,37,59,"arch"],["g:2x1",35,226,25,63,"arch"],["g:2x2",66,223,42,70,"arch"],["g:3x2",114,224,33,65,"arch"],["tc",155,228,30,61,"arch","lit"]] };
 // Finland: the shared layout with three windows pre-lit in yellow (one per upper row, spread left to right)
 WINS.Finland=CELLS.map((c,i)=>[1,6,10].includes(i)?[...c,null,"lit"]:c);
 // optional 6th field "arch": arched top with a small point (clip-path), as in Bhutan's windows
@@ -144,6 +144,17 @@ function showInfo(i){
   document.getElementById("ctitle").style.opacity=0;
   document.getElementById("card").style.opacity=0;
 }
+// line the hint + subtitle up under the windows: same left edge and width as the window group,
+// vertically centred in the space between the lowest window and the bottom of the panel
+function placeModalText(){
+  const g=document.getElementById("wgrid"), t=document.getElementById("mtext"), panel=g.parentElement, ws=[...g.children];
+  if(!ws.length) return;
+  const l=Math.min(...ws.map(e=>e.offsetLeft)), r=Math.max(...ws.map(e=>e.offsetLeft+e.offsetWidth)), b=Math.max(...ws.map(e=>e.offsetTop+e.offsetHeight));
+  const w=Math.max(r-l,220), c=g.offsetLeft+(l+r)/2; // narrow window groups (Bhutan) keep a readable text width, centred under them
+  t.style.left=(c-w/2)+"px"; t.style.width=w+"px";
+  const top=g.offsetTop+b, room=panel.clientHeight-top;
+  t.style.top=(top+Math.max(16,(room-t.offsetHeight)/2))+"px";
+}
 // black hover label above a window that has a story, naming what it opens
 const winTip=document.getElementById("wtip");
 function showWinTip(b,text){ const g=b.offsetParent; winTip.textContent=text; winTip.style.left=(g.offsetLeft+b.offsetLeft+b.offsetWidth/2)+"px"; winTip.style.top=(g.offsetTop+b.offsetTop)+"px"; winTip.classList.add("on"); }
@@ -177,6 +188,7 @@ function openModal(){
   Object.assign(m.style,{top:(scrollY/z+Math.max(0,(innerHeight/z-677)/2))+"px",bottom:"auto",height:"677px"});
   m._y=scrollY; document.documentElement.style.overflow="hidden";
   document.getElementById("scrimM").classList.add("on"); m.classList.add("on");
+  placeModalText();
   document.querySelector("#ribbon .pager").style.opacity=0;
 }
 function closeModal(){ modalOpen=false; const m=document.getElementById("modal"); document.documentElement.style.overflow=""; scrollTo(0,m._y||0); // unlocking can jump to top

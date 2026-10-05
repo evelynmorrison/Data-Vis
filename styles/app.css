@@ -89,8 +89,10 @@ html.tall .toast{position:fixed}
 .eyebrow{position:absolute;left:40px;top:34px;font:400 14px var(--font-plex);letter-spacing:.04em;color:#b9bede;text-transform:uppercase}
 .mname{position:absolute;left:40px;top:56px;font:400 28px var(--font-plex);letter-spacing:.06em;letter-spacing:.02em;color:#f2f3fb}
 .wgrid{position:absolute;left:104px;top:186px;width:226px;height:296px}
-.mhsub{position:absolute;left:106px;right:40px;top:614px;margin:0;font-size:13px;line-height:1.55;color:#b9bede}
-.mhint{position:absolute;left:106px;right:30px;top:552px;text-align:left;font:400 17px/25px var(--font-plex);color:#f2f3fb;letter-spacing:.03em}
+/* hint + subtitle: placed by placeModalText() — same width as the windows, centred between them and the panel bottom */
+.mtext{position:absolute;left:104px;width:226px;top:552px}
+.mhsub{margin:14px 0 0;font-size:13px;line-height:1.55;color:#b9bede}
+.mhint{text-align:left;font:400 17px/25px var(--font-plex);color:#f2f3fb;letter-spacing:.03em}
 .mclose{position:absolute;z-index:2;top:22px;right:23px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(238,240,248,.35);background:none;color:var(--ink);cursor:pointer;font-size:14px;line-height:1}
 .mclose:hover{border-color:rgba(238,240,248,.7)}
 .mback{position:absolute;right:39px;bottom:39px;background:#e3e3e6;color:#1d1d2a;border:0;border-radius:10px;font:600 14px var(--font-sans);padding:12px 28px;cursor:pointer}
@@ -111,7 +113,6 @@ html.tall .toast{position:fixed}
 .dsoon{position:absolute;left:66px;top:300px;font-size:13px;color:var(--muted)}
 .cw.open{background:#5b4a46 center/cover no-repeat;box-shadow:0 0 26px rgba(245,226,160,.55)}
 .cw.open::after,.cw.open svg{display:none}
-.mhint.small{top:552px}
 .glance{position:absolute;inset:0;font-family:var(--font-plex);transition:opacity .35s}
 .glance.off{opacity:0;pointer-events:none}
 /* landing panel stacks top to bottom; empty parts collapse */
