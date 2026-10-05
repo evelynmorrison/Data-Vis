@@ -9,8 +9,11 @@ create table if not exists public.votes (
   created_at timestamptz not null default now(),
   choices    text[] not null,   -- the six measures lit, e.g. {quality-of-close-relationships, ...}
   shown      text[],            -- the order the options were shown in (to check for position bias)
-  write_in   text               -- optional "propose another metric"
+  write_in   text,              -- optional "propose another metric"
+  country    text               -- the voter's country (required on the website)
 );
+-- for tables created before the country field existed
+alter table public.votes add column if not exists country text;
 
 -- basic sanity checks on what the website can send
 alter table public.votes drop constraint if exists votes_six_choices;
