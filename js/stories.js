@@ -42,7 +42,7 @@ const WINDOW_STORIES = {
       title: "Suicide is rising, and the reasons shift with age",
       paras: [
         "Suicide returned to Taiwan's ten leading causes of death in 2024",
-        "Taiwan's crude rate is 16.9 per 100,000 (2024) — compared to a global average of 9.2 and Western Pacific's average of 9.5",
+        "Taiwan's crude rate is 16.9 per 100,000 (2025) — compared to a global average of 9.2 and Western Pacific's average of 9.5",
         "Rates are highest among the elderly, at 25.5 per 100,000",
         "Among 15- to 24-year-olds, the rate has nearly doubled in a decade",
         "The drivers differ by age: school, relationships and job prospects for the young; workplace stress and financial pressure in middle age; loneliness and illness in old age",
