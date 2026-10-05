@@ -21,7 +21,7 @@ const STORIES = {
 /* ───────── WINDOW STORIES ─────────
    Content for a specific window in a country's modal: WINDOW_STORIES[country][windowIndex].
    measure → label above the headline and the hover tooltip on the window; title → headline;
-   paras → body paragraphs; chart → key into WINDOW_CHARTS (modal.js); sources → source line. */
+   paras → body paragraphs (bullets: true shows them as a bulleted list); chart → key into WINDOW_CHARTS (modal.js); sources → source line. */
 const WINDOW_STORIES = {
   "Finland": {
     0: {
@@ -54,6 +54,7 @@ const WINDOW_STORIES = {
   "Bhutan": {
     0: {
       measure: "Alcohol consumption",
+      bullets: true, // body shown as a bulleted list
       title: "Alcohol use is high, and a leading cause of death",
       paras: [
         "Alcohol consumption is socially accepted in Bhutan, with a prevalence of 42.4%",

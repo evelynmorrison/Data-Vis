@@ -141,10 +141,13 @@ function showDim(k,d){
     document.getElementById("dhead").textContent=st.title;
     document.getElementById("dctx").innerHTML="";
     const c=st.chart&&WINDOW_CHARTS[st.chart];
-    body.innerHTML=`<div class="dstory">${st.paras.map(p=>`<p>${p}</p>`).join("")}${c?lineChart(c):""}${st.sources?`<div class="dsrc">Source: ${st.sources.join(" · ")}</div>`:""}</div>`;
+    const text=st.bullets?`<ul class="dbullets">${st.paras.map(p=>`<li>${p}</li>`).join("")}</ul>`:st.paras.map(p=>`<p>${p}</p>`).join("");
+    // source pinned to the bottom of the panel, same place and style as on the country overview
+    body.innerHTML=`<div class="dstory">${text}${c?lineChart(c):""}</div>${st.sources?`<div class="dsrc">Source: ${st.sources.join(" · ")}</div>`:""}`;
     if(c) wireLineChart(body.querySelector("[data-chart]"),c);
     const ds=body.querySelector(".dstory"), hd=document.getElementById("dhead"); ds.scrollTop=0;
     ds.style.top=(hd.offsetTop+hd.offsetHeight+24)+"px"; // start right under the headline (one or two lines)
+    const src=body.querySelector(".dsrc"); ds.style.bottom=(src?src.offsetHeight+26+20:24)+"px"; // stop above the source line
     const fade=()=>ds.classList.toggle("more",ds.scrollTop+ds.clientHeight<ds.scrollHeight-4); ds.onscroll=fade; requestAnimationFrame(fade);
     det.classList.add("on"); return;
   }
