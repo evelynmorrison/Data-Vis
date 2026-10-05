@@ -13,7 +13,16 @@ const CELLS=[["g:2x2",0,0,53,63],["bars",63,14,66,45],["blue",138,6,47,53],["g:2
   ["blue",0,236,66,46],["T",75,233,48,57],["g:2x2",132,239,49,50],["blue",189,232,37,60]];
 const WINS={ Taiwan:[["tw",2,2,53,57],["tw",58,7,52,58],["tw",113,1,52,59],["blue",169,10,46,55],
   ["blue",5,81,46,55],["tw",58,79,48,57],["tw",114,80,55,57],["tw",175,80,52,57],
-  ["tw",2,150,53,60],["blue",61,150,48,57],["tw",116,153,51,74],["tw",171,152,52,58]] };
+  ["tw",2,150,53,60],["blue",61,150,48,57],["tw",116,153,51,74],["tw",171,152,52,58]],
+  Bhutan:[["g:2x1",50,6,30,53,"arch"],["g:2x2",88,0,39,61,"arch"],["tc",133,3,33,56,"arch"],["g:2x2",26,78,46,76,"arch"],["blue",80,87,35,67,"arch"],["g:3x2",123,74,50,79,"arch"],["g:2x1",179,93,22,63,"arch"],
+    ["g:2x3",47,169,40,65,"arch"],["g:2x2",95,181,32,56,"arch"],["blue",133,170,42,66,"arch"],["g:2x1",26,254,29,71,"arch"],["g:2x2",60,251,48,79,"arch"],["g:3x2",114,252,37,73,"arch"],["tc",161,257,33,68,"arch"]] };
+// optional 6th field "arch": arched top with a small point (clip-path), as in Bhutan's windows
+function archClip(w,h){
+  const a=Math.min(w*.32,h*.3), p=Math.min(4,a*.25), pts=[];
+  for(let i=0;i<=24;i++){ const u=-1+i/12, x=(u+1)*w/2, y=a*(1-Math.sqrt(1-u*u))+p*Math.min(1,Math.abs(u)/.22); // round shoulders, small peak at the centre
+    pts.push(`${x.toFixed(1)}px ${y.toFixed(1)}px`); }
+  return `polygon(${pts.join(",")},${w}px ${h}px,0px ${h}px)`;
+}
 const M="#3346c2";
 // window pane pattern t over a w×h window; k scales bar thickness, col is the bar colour
 function mull(t,w,h,k=1,col=M){
@@ -26,6 +35,7 @@ function mull(t,w,h,k=1,col=M){
     o+=`<rect x="1.5" y="1.5" width="${w-3}" height="${h-3}" fill="none" stroke="${col}" stroke-width="${3*k}"/>`;
     const n=6, ry=h*.28, b=1*k, d=1.5*k; o+=R(3,ry-b/2,w-6,b);
     for(let i=1;i<n;i++){const x=w*i/n; o+=R(x-b/2,3,b,h-6); o+=`<rect x="${x-d}" y="${ry-d}" width="${2*d}" height="${2*d}" transform="rotate(45 ${x} ${ry})" fill="${col}"/>`;} }
+  else if(t==="tc"){const b=3*k; o+=R(0,h*.62-b/2,w,b); o+=R(w/2-b/2,0,b,h*.62);} // centred vertical above a crossbar
   else if(t==="v2"){const b=2*k; o+=R(w*.33-b/2,0,b,h); o+=R(w*.66-b/2,0,b,h); o+=R(0,h*.5-b/2,w,b);}
   return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">${o}</svg>`;
 }
@@ -119,8 +129,12 @@ function openModal(){
   document.getElementById("det").classList.remove("on");
   document.getElementById("mempty").style.opacity=0;
   const g=document.getElementById("wgrid"); g.innerHTML="";
-  (WINS[d.c]||CELLS).forEach(([tp,x,y,w,h],k)=>{const b=document.createElement("button");b.className="cw"+(tp==="blue"?" blue":"")+(tp==="twlit"?" lit":"");
-    Object.assign(b.style,{left:x+"px",top:y+"px",width:w+"px",height:h+"px"}); if(tp!=="blue") b.innerHTML=mull(tp,w,h);
+  (WINS[d.c]||CELLS).forEach(([tp,x,y,w,h,shape],k)=>{
+    // solid blue = unknown data: drawn as a plain, non-interactive block with nothing behind it
+    const b=document.createElement(tp==="blue"?"div":"button");b.className="cw"+(tp==="blue"?" blue":"")+(tp==="twlit"?" lit":"");
+    Object.assign(b.style,{left:x+"px",top:y+"px",width:w+"px",height:h+"px"}); if(shape==="arch") b.style.clipPath=archClip(w,h);
+    if(tp==="blue"){ b.setAttribute("aria-hidden","true"); g.appendChild(b); return; }
+    b.innerHTML=mull(tp,w,h);
     b.title=`Window ${k+1}`;
     b.onclick=()=>{g.querySelectorAll(".cw").forEach(e=>{e.classList.remove("sel","open");e.style.backgroundImage="";});
       b.classList.add("open"); b.style.backgroundImage=`url(${READER})`; pickedWin=k;
@@ -138,4 +152,14 @@ function closeModal(){ modalOpen=false; const m=document.getElementById("modal")
   document.getElementById("scrimM").classList.remove("on"); document.getElementById("modal").classList.remove("on"); document.querySelector("#ribbon .pager").style.opacity=1;
   // back to hover-exploring: drop the selection so other ribbons respond again
   selected=null; csearch.value=""; document.querySelectorAll(".row").forEach(r=>r.classList.remove("sel")); apply(); }
+// clicking the country name returns from a window's detail view to the landing ("at a glance") panel
+function backToGlance(){
+  if(!modalOpen) return; pickedWin=null;
+  document.querySelectorAll("#wgrid .cw").forEach(e=>{e.classList.remove("sel","open");e.style.backgroundImage="";});
+  document.getElementById("det").classList.remove("on");
+  document.getElementById("glance").classList.remove("off");
+}
+const mnameEl=document.getElementById("mname");
+mnameEl.onclick=backToGlance; mnameEl.setAttribute("role","button"); mnameEl.tabIndex=0; mnameEl.title="Back to overview";
+mnameEl.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); backToGlance(); } };
 document.getElementById("mclose").onclick=closeModal; document.getElementById("scrimM").onclick=closeModal;
