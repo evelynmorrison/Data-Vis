@@ -11,9 +11,9 @@ const CELLS=[["g:2x2",0,0,53,63],["bars",63,14,66,45],["blue",138,6,47,53],["g:2
   ["g:3x2",0,88,85,48],["blue",95,79,61,61],["g:2x2",165,90,61,48],
   ["blue",0,157,78,53],["v2",84,161,15,57],["blue",105,159,30,61],["g:2x3",140,152,43,68],["bars",189,161,35,53],
   ["blue",0,236,66,46],["T",75,233,48,57],["g:2x2",132,239,49,50],["blue",189,232,37,60]];
-const WINS={ Taiwan:[["tw",2,2,53,57],["twlit",58,7,52,58],["tw",113,1,52,59],["blue",169,10,46,55],
-  ["blue",5,81,46,55],["tw",58,79,48,57],["tw",114,80,55,57],["twlit",175,80,52,57],
-  ["tw",2,150,53,60],["blue",61,150,48,57],["twlit",116,153,51,74],["tw",171,152,52,58]] };
+const WINS={ Taiwan:[["tw",2,2,53,57],["tw",58,7,52,58],["tw",113,1,52,59],["blue",169,10,46,55],
+  ["blue",5,81,46,55],["tw",58,79,48,57],["tw",114,80,55,57],["tw",175,80,52,57],
+  ["tw",2,150,53,60],["blue",61,150,48,57],["tw",116,153,51,74],["tw",171,152,52,58]] };
 const M="#3346c2";
 // window pane pattern t over a w×h window; k scales bar thickness, col is the bar colour
 function mull(t,w,h,k=1,col=M){
@@ -22,9 +22,10 @@ function mull(t,w,h,k=1,col=M){
     for(let i=1;i<c;i++) o+=R(w*i/c-b/2,0,b,h); for(let j=1;j<r;j++) o+=R(0,h*j/r-b/2,w,b);}
   else if(t==="bars"){const rail=3*k, b=2.6*k; o+=R(0,6*k,w,rail); const n=6; for(let i=1;i<n;i++) o+=R(w*i/n-b/2,6*k+rail,b,h-6*k-rail);}
   else if(t==="T"){o+=R(0,h*.62,w,3.4*k); o+=R(w*.34-1.5*k,0,3*k,h*.62);}
-  else if(t==="tw"||t==="twlit"){ o+=`<rect x="1.5" y="1.5" width="${w-3}" height="${h-3}" fill="none" stroke="${M}" stroke-width="3"/>`;
-    const n=7, ry=h*.3; o+=R(3,ry-1,w-6,2);
-    for(let i=1;i<n;i++){const x=w*i/n; o+=R(x-1,3,2,h-6); o+=`<rect x="${x-2.2}" y="${ry-2.2}" width="4.4" height="4.4" transform="rotate(45 ${x} ${ry})" fill="${M}"/>`;} }
+  else if(t==="tw"||t==="twlit"){ // Taiwan: framed window, six panes, a thin rail near the top with small diamonds
+    o+=`<rect x="1.5" y="1.5" width="${w-3}" height="${h-3}" fill="none" stroke="${col}" stroke-width="${3*k}"/>`;
+    const n=6, ry=h*.28, b=1*k, d=1.5*k; o+=R(3,ry-b/2,w-6,b);
+    for(let i=1;i<n;i++){const x=w*i/n; o+=R(x-b/2,3,b,h-6); o+=`<rect x="${x-d}" y="${ry-d}" width="${2*d}" height="${2*d}" transform="rotate(45 ${x} ${ry})" fill="${col}"/>`;} }
   else if(t==="v2"){const b=2*k; o+=R(w*.33-b/2,0,b,h); o+=R(w*.66-b/2,0,b,h); o+=R(0,h*.5-b/2,w,b);}
   return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">${o}</svg>`;
 }
