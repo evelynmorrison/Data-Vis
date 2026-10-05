@@ -15,16 +15,17 @@ const WINS={ Taiwan:[["tw",2,2,53,57],["twlit",58,7,52,58],["tw",113,1,52,59],["
   ["blue",5,81,46,55],["tw",58,79,48,57],["tw",114,80,55,57],["twlit",175,80,52,57],
   ["tw",2,150,53,60],["blue",61,150,48,57],["twlit",116,153,51,74],["tw",171,152,52,58]] };
 const M="#3346c2";
-function mull(t,w,h){
-  const R=(x,y,ww,hh)=>`<rect x="${x}" y="${y}" width="${ww}" height="${hh}" fill="${M}"/>`; let o="";
-  if(t.startsWith("g:")){const [c,r]=t.slice(2).split("x").map(Number);
-    for(let i=1;i<c;i++) o+=R(w*i/c-1.5,0,3,h); for(let j=1;j<r;j++) o+=R(0,h*j/r-1.5,w,3);}
-  else if(t==="bars"){o+=R(0,6,w,3); const n=6; for(let i=1;i<n;i++) o+=R(w*i/n-1.3,9,2.6,h-9);}
-  else if(t==="T"){o+=R(0,h*.62,w,3.4); o+=R(w*.34-1.5,0,3,h*.62);}
+// window pane pattern t over a w×h window; k scales bar thickness, col is the bar colour
+function mull(t,w,h,k=1,col=M){
+  const R=(x,y,ww,hh)=>`<rect x="${x}" y="${y}" width="${ww}" height="${hh}" fill="${col}"/>`; let o="";
+  if(t.startsWith("g:")){const [c,r]=t.slice(2).split("x").map(Number), b=3*k;
+    for(let i=1;i<c;i++) o+=R(w*i/c-b/2,0,b,h); for(let j=1;j<r;j++) o+=R(0,h*j/r-b/2,w,b);}
+  else if(t==="bars"){const rail=3*k, b=2.6*k; o+=R(0,6*k,w,rail); const n=6; for(let i=1;i<n;i++) o+=R(w*i/n-b/2,6*k+rail,b,h-6*k-rail);}
+  else if(t==="T"){o+=R(0,h*.62,w,3.4*k); o+=R(w*.34-1.5*k,0,3*k,h*.62);}
   else if(t==="tw"||t==="twlit"){ o+=`<rect x="1.5" y="1.5" width="${w-3}" height="${h-3}" fill="none" stroke="${M}" stroke-width="3"/>`;
     const n=7, ry=h*.3; o+=R(3,ry-1,w-6,2);
     for(let i=1;i<n;i++){const x=w*i/n; o+=R(x-1,3,2,h-6); o+=`<rect x="${x-2.2}" y="${ry-2.2}" width="4.4" height="4.4" transform="rotate(45 ${x} ${ry})" fill="${M}"/>`;} }
-  else if(t==="v2"){o+=R(w*.33-1,0,2,h); o+=R(w*.66-1,0,2,h); o+=R(0,h*.5-1,w,2);}
+  else if(t==="v2"){const b=2*k; o+=R(w*.33-b/2,0,b,h); o+=R(w*.66-b/2,0,b,h); o+=R(0,h*.5-b/2,w,b);}
   return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">${o}</svg>`;
 }
 let modalOpen=false, pickedWin=null;

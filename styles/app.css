@@ -185,7 +185,9 @@ html.tall .toast{position:fixed}
 .ryou{padding:2px 14px;border:1.5px solid #f3e09d;border-radius:999px;color:#f3e09d;font:600 11px var(--font-sans)}
 .rbar{display:flex;align-items:center;gap:7px;margin-top:10px}
 .rbar .cw{position:relative;display:block;flex:none;width:26px;height:28px;cursor:default;transition:none}
-.rbar .cw.sel{box-shadow:none}
+.rbar .cw{background:#b9bee3}
+.rbar .cw::after{display:none} /* flat fills, no grain, so the thin bars read clearly */
+.rbar .cw.sel{background:#e9d27a;box-shadow:none}
 .rpct{margin-left:22px;font:700 22px var(--font-heading)}
 .rrow:first-child .rpct{color:#f3e09d}
 .rback{background:none;border:1px solid var(--line);border-radius:999px;color:var(--muted);font:500 13px var(--font-sans);padding:9px 20px;cursor:pointer}
