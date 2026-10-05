@@ -11,12 +11,13 @@ const CELLS=[["g:2x2",0,0,53,63],["bars",63,14,66,45],["blue",138,6,47,53],["g:2
   ["g:3x2",0,88,85,48],["blue",95,79,61,61],["g:2x2",165,90,61,48],
   ["blue",0,157,78,53],["v2",84,161,15,57],["blue",105,159,30,61],["g:2x3",140,152,43,68],["bars",189,161,35,53],
   ["blue",0,236,66,46],["T",75,233,48,57],["g:2x2",132,239,49,50],["blue",189,232,37,60]];
-const WINS={ Taiwan:[["tw",2,2,53,57],["tw",58,7,52,58],["tw",113,1,52,59],["blue",169,10,46,55],
-  ["blue",5,81,46,55],["tw",58,79,48,57],["tw",114,80,55,57],["tw",175,80,52,57],
-  ["tw",2,150,53,60],["blue",61,150,48,57],["tw",116,153,51,74],["tw",171,152,52,58]],
-  Bhutan:[["g:2x1",50,6,30,53,"arch"],["g:2x2",88,0,39,61,"arch"],["tc",133,3,33,56,"arch"],["g:2x2",26,78,46,76,"arch"],["blue",80,87,35,67,"arch"],["g:3x2",123,74,50,79,"arch"],["g:2x1",179,93,22,63,"arch"],
-    ["g:2x3",47,169,40,65,"arch"],["g:2x2",95,181,32,56,"arch"],["blue",133,170,42,66,"arch"],["g:2x1",26,254,29,71,"arch"],["g:2x2",60,251,48,79,"arch"],["g:3x2",114,252,37,73,"arch"],["tc",161,257,33,68,"arch"]] };
+const WINS={ Taiwan:[["tw",2,2,53,57],["twlit",58,7,52,58],["tw",113,1,52,59],["blue",169,10,46,55],
+  ["blue",5,81,46,55],["tw",58,79,48,57],["tw",114,80,55,57],["twlit",175,80,52,57],
+  ["tw",2,150,53,60],["blue",61,150,48,57],["twlit",116,153,51,74],["tw",171,152,52,58]],
+  Bhutan:[["g:2x1",50,6,30,53,"arch","lit"],["g:2x2",88,0,39,61,"arch"],["tc",133,3,33,56,"arch"],["g:2x2",26,78,46,76,"arch"],["blue",80,87,35,67,"arch"],["g:3x2",123,74,50,79,"arch"],["g:2x1",179,93,22,63,"arch"],
+    ["g:2x3",47,169,40,65,"arch"],["g:2x2",95,181,32,56,"arch","lit"],["blue",133,170,42,66,"arch"],["g:2x1",26,254,29,71,"arch"],["g:2x2",60,251,48,79,"arch"],["g:3x2",114,252,37,73,"arch"],["tc",161,257,33,68,"arch","lit"]] };
 // optional 6th field "arch": arched top with a small point (clip-path), as in Bhutan's windows
+// optional 7th field "lit": window shows warm yellow before anything is clicked (like Taiwan's "twlit")
 function archClip(w,h){
   const a=Math.min(w*.32,h*.3), p=Math.min(4,a*.25), pts=[];
   for(let i=0;i<=24;i++){ const u=-1+i/12, x=(u+1)*w/2, y=a*(1-Math.sqrt(1-u*u))+p*Math.min(1,Math.abs(u)/.22); // round shoulders, small peak at the centre
@@ -129,9 +130,9 @@ function openModal(){
   document.getElementById("det").classList.remove("on");
   document.getElementById("mempty").style.opacity=0;
   const g=document.getElementById("wgrid"); g.innerHTML="";
-  (WINS[d.c]||CELLS).forEach(([tp,x,y,w,h,shape],k)=>{
+  (WINS[d.c]||CELLS).forEach(([tp,x,y,w,h,shape,lit],k)=>{
     // solid blue = unknown data: drawn as a plain, non-interactive block with nothing behind it
-    const b=document.createElement(tp==="blue"?"div":"button");b.className="cw"+(tp==="blue"?" blue":"")+(tp==="twlit"?" lit":"");
+    const b=document.createElement(tp==="blue"?"div":"button");b.className="cw"+(tp==="blue"?" blue":"")+(tp==="twlit"||lit==="lit"?" lit":"");
     Object.assign(b.style,{left:x+"px",top:y+"px",width:w+"px",height:h+"px"}); if(shape==="arch") b.style.clipPath=archClip(w,h);
     if(tp==="blue"){ b.setAttribute("aria-hidden","true"); g.appendChild(b); return; }
     b.innerHTML=mull(tp,w,h);
