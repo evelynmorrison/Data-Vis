@@ -51,4 +51,17 @@ const WINDOW_STORIES = {
       sources: ["Taiwan News", "Taipei Times", "WHO", "Chen et al.", "2024 Taiwan Health and Welfare Report – Ministry of Health and Welfare", "Chart: Ministry of Health and Welfare, national suicide statistics (2025 update)"],
     },
   },
+  "Bhutan": {
+    0: {
+      measure: "Alcohol consumption",
+      title: "Alcohol use is high, and a leading cause of death",
+      paras: [
+        "Alcohol consumption is socially accepted in Bhutan, with a prevalence of 42.4%",
+        "More than 22% of consumers engage in heavy episodic drinking",
+        "Harmful alcohol use is a top cause of mortality in Bhutan",
+        "Among adolescents, 24.2% use alcohol and 16% use other substances",
+      ],
+      sources: ["Dendup et al."],
+    },
+  },
 };
