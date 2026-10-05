@@ -11,11 +11,11 @@ const CELLS=[["g:2x2",0,0,53,63],["bars",63,14,66,45],["blue",138,6,47,53],["g:2
   ["g:3x2",0,88,85,48],["blue",95,79,61,61],["g:2x2",165,90,61,48],
   ["blue",0,157,78,53],["v2",84,161,15,57],["blue",105,159,30,61],["g:2x3",140,152,43,68],["bars",189,161,35,53],
   ["blue",0,236,66,46],["T",75,233,48,57],["g:2x2",132,239,49,50],["blue",189,232,37,60]];
-const WINS={ Taiwan:[["tw",2,2,53,57],["twlit",58,7,52,58],["tw",113,1,52,59],["blue",169,10,46,55],
-  ["blue",5,81,46,55],["tw",58,79,48,57],["tw",114,80,55,57],["twlit",175,80,52,57],
-  ["tw",2,150,53,60],["blue",61,150,48,57],["twlit",116,153,51,74],["tw",171,152,52,58]],
-  Bhutan:[["g:2x1",57,5,26,47,"arch","lit"],["g:2x2",91,0,35,54,"arch"],["tc",131,3,29,50,"arch"],["g:2x2",35,69,41,68,"arch"],["blue",83,77,31,59,"arch"],["g:3x2",122,66,45,70,"arch"],["g:2x1",171,82,19,56,"arch"],
-    ["g:2x3",55,150,36,58,"arch"],["g:2x2",97,161,29,50,"arch","lit"],["blue",131,151,37,59,"arch"],["g:2x1",35,226,25,63,"arch"],["g:2x2",66,223,42,70,"arch"],["g:3x2",114,224,33,65,"arch"],["tc",155,228,30,61,"arch","lit"]] };
+const WINS={ Taiwan:[["tw",2,2,53,57],["tw",58,7,52,58],["tw",113,1,52,59],["blue",169,10,46,55],
+  ["blue",5,81,46,55],["tw",58,79,48,57],["tw",114,80,55,57],["tw",175,80,52,57],
+  ["tw",2,150,53,60],["blue",61,150,48,57],["tw",116,153,51,74],["tw",171,152,52,58]],
+  Bhutan:[["g:2x1",57,5,26,47,"arch"],["g:2x2",91,0,35,54,"arch"],["tc",131,3,29,50,"arch"],["g:2x2",35,69,41,68,"arch"],["blue",83,77,31,59,"arch"],["g:3x2",122,66,45,70,"arch"],["g:2x1",171,82,19,56,"arch"],
+    ["g:2x3",55,150,36,58,"arch"],["g:2x2",97,161,29,50,"arch"],["blue",131,151,37,59,"arch"],["g:2x1",35,226,25,63,"arch"],["g:2x2",66,223,42,70,"arch"],["g:3x2",114,224,33,65,"arch"],["tc",155,228,30,61,"arch"]] };
 // Finland: the shared layout, every window starts unlit (light only comes on when a window is opened)
 WINS.Finland=CELLS;
 // optional 6th field "arch": arched top with a small point (clip-path), as in Bhutan's windows
@@ -166,8 +166,8 @@ function placeModalText(){
   const g=document.getElementById("wgrid"), t=document.getElementById("mtext"), panel=g.parentElement, ws=[...g.children];
   if(!ws.length) return;
   const l=Math.min(...ws.map(e=>e.offsetLeft)), r=Math.max(...ws.map(e=>e.offsetLeft+e.offsetWidth)), b=Math.max(...ws.map(e=>e.offsetTop+e.offsetHeight));
-  const w=Math.max(r-l,220), c=g.offsetLeft+(l+r)/2; // narrow window groups (Bhutan) keep a readable text width, centred under them
-  t.style.left=(c-w/2)+"px"; t.style.width=w+"px";
+  const pad=40, w=panel.clientWidth-2*pad; // text spans the panel with the same 40px margin as COUNTRY / the name above
+  t.style.left=pad+"px"; t.style.width=w+"px";
   const top=g.offsetTop+b, room=panel.clientHeight-top;
   t.style.top=(top+Math.max(16,(room-t.offsetHeight)/2))+"px";
 }
@@ -194,7 +194,8 @@ function openModal(){
     const ws=WINDOW_STORIES[d.c]?.[k];
     if(ws){ b.setAttribute("aria-label",ws.measure); b.onmouseenter=()=>showWinTip(b,ws.measure); b.onmouseleave=hideWinTip; }
     else b.title=`Window ${k+1}`;
-    b.onclick=()=>{g.querySelectorAll(".cw").forEach(e=>{e.classList.remove("sel","open");e.style.backgroundImage="";});
+    b.onclick=()=>{ if(pickedWin===k){ backToGlance(); return; } // clicking the open window again turns it off and returns to the country overview
+      g.querySelectorAll(".cw").forEach(e=>{e.classList.remove("sel","open");e.style.backgroundImage="";});
       b.classList.add("open"); b.style.backgroundImage=`url(${READER})`; pickedWin=k;
       document.getElementById("glance").classList.add("off");
       showDim(k,d);};
