@@ -88,7 +88,7 @@ html.tall .toast{position:fixed}
 .mright{background:#0f1336;position:relative}
 .eyebrow{position:absolute;left:40px;top:34px;font:400 14px var(--font-plex);letter-spacing:.04em;color:#b9bede;text-transform:uppercase}
 .mname{position:absolute;left:40px;top:56px;font:400 28px var(--font-plex);letter-spacing:.06em;letter-spacing:.02em;color:#f2f3fb}
-.wgrid{position:absolute;left:104px;top:186px;width:226px;height:296px}
+.wgrid{position:absolute;left:104px;top:168px;width:226px;height:296px;--wscale:.895;transform:scale(var(--wscale));transform-origin:top center} /* windows drawn ~10% smaller (Figma revision) */
 /* hint + subtitle: placed by placeModalText() — same width as the windows, centred between them and the panel bottom */
 .mtext{position:absolute;left:104px;width:226px;top:552px}
 .mhsub{margin:14px 0 0;font-size:13px;line-height:1.55;color:#b9bede}
@@ -116,8 +116,8 @@ html.tall .toast{position:fixed}
 .glance{position:absolute;inset:0;font-family:var(--font-plex);transition:opacity .35s}
 .glance.off{opacity:0;pointer-events:none}
 /* landing panel stacks top to bottom; empty parts collapse */
-.g-body{position:absolute;left:63px;right:40px;top:34px;bottom:84px;display:flex;flex-direction:column;gap:30px} /* bottom: clear of the source line */
-.g-story{flex:0 1 auto;max-height:170px;min-height:0;overflow-y:auto;padding-right:14px;font:200 13px/1.65 var(--font-body);color:#c9cce0}
+.g-body{position:absolute;left:63px;right:40px;top:114px;bottom:84px;display:flex;flex-direction:column;gap:30px} /* bottom: clear of the source line */
+.g-story{flex:0 1 auto;max-height:125px;min-height:0;overflow-y:auto;padding-right:14px;font:200 13px/1.65 var(--font-body);color:#c9cce0}
 .g-story:empty{display:none}
 .g-story p{margin:0 0 14px}
 .g-story.more{-webkit-mask-image:linear-gradient(#000 calc(100% - 36px),transparent);mask-image:linear-gradient(#000 calc(100% - 36px),transparent)} /* fade hints there is more to scroll */
@@ -136,7 +136,7 @@ html.tall .toast{position:fixed}
 .g-big{font-size:43px;font-weight:300;color:#f2f3fb;line-height:1;margin-top:10px;letter-spacing:.02em}
 .g-big small{font-size:17px;color:#9aa0c8;margin-left:6px}
 .g-lab{margin-top:18px;font-size:14px;color:#f2f3fb;letter-spacing:.03em}
-.g-src{position:absolute;left:63px;right:40px;bottom:26px;font:400 9px/16px var(--font-plex);color:#9aa0c8;letter-spacing:.03em}
+.g-src{position:absolute;left:63px;right:40px;bottom:67px;font:400 9px/16px var(--font-plex);color:#9aa0c8;letter-spacing:.03em}
 .mempty{pointer-events:none;position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px;opacity:0;text-align:center;line-height:1.6;transition:opacity .3s}
 .cw{position:absolute;border:0;padding:0;cursor:pointer;background:#e7e9f8;transition:transform .15s,box-shadow .25s,background-color .25s}
 .cw::after{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .28 0 0 0 0 .78 0 0 0 2.2 -1.05'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}
@@ -234,3 +234,29 @@ html.tall .toast{position:fixed}
 #chart #stars .tw{animation:twinkle 4s ease-in-out infinite}
 @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){#chart #stars .tw{animation:none}}
+
+/* ───────── country popup v2 (Figma, Oct 5) ─────────
+   one dark translucent sheet; the right side is an inset rounded card; bold mono name, no COUNTRY eyebrow */
+.modal{background:rgba(11,12,24,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:32px;border-color:rgba(238,240,248,.2)}
+.mleft{background:transparent}
+.mright{background:rgba(40,44,68,.58);margin:24px 44px 30px 14px;border-radius:24px}
+.eyebrow{display:none}
+.mname{left:42px;top:51px;font:700 52px var(--font-plex);letter-spacing:0}
+.wgrid{left:107px;top:190px;--wscale:.78}
+.mtext{left:42px}
+.mhint{font:700 17px/25px var(--font-plex);letter-spacing:.03em}
+.mhsub{margin-top:12px;color:#c9cce0}
+.mclose{top:23px;right:19px}
+.g-eye{display:none}
+.g-body{left:40px;right:8px;top:75px;bottom:60px;gap:0}
+.g-geo{margin-bottom:72px}
+.g-stats{margin-bottom:50px}
+.g-stat{box-sizing:border-box;flex:none;width:251px;padding-left:28px;padding-bottom:8px}
+.g-stat:first-child{width:239px}
+.g-stat:last-child{flex:1 0 auto;width:auto}
+.g-big{font-size:30px;font-weight:700;margin-top:26px;letter-spacing:0}
+.g-big small{font-size:17px;font-weight:400;margin-left:24px}
+.g-lab{margin-top:5px;font-size:16px;letter-spacing:0;white-space:nowrap}
+.g-story{max-height:132px}
+.g-src{left:40px;right:20px;bottom:37px}
+.dtag,.dhead,.dctx,.dstory{left:40px}

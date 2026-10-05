@@ -166,14 +166,16 @@ function placeModalText(){
   const g=document.getElementById("wgrid"), t=document.getElementById("mtext"), panel=g.parentElement, ws=[...g.children];
   if(!ws.length) return;
   const l=Math.min(...ws.map(e=>e.offsetLeft)), r=Math.max(...ws.map(e=>e.offsetLeft+e.offsetWidth)), b=Math.max(...ws.map(e=>e.offsetTop+e.offsetHeight));
-  const pad=40, w=panel.clientWidth-2*pad; // text spans the panel with the same 40px margin as COUNTRY / the name above
+  const pad=42, w=panel.clientWidth-2*pad; // text spans the panel with the same margin as the country name above
   t.style.left=pad+"px"; t.style.width=w+"px";
-  const top=g.offsetTop+b, room=panel.clientHeight-top;
-  t.style.top=(top+Math.max(16,(room-t.offsetHeight)/2))+"px";
+  const sc=parseFloat(getComputedStyle(g).getPropertyValue("--wscale"))||1; // the window grid is scaled from its top edge
+  const top=g.offsetTop+b*sc;
+  t.style.top=Math.max(top+24, panel.clientHeight-63-t.offsetHeight)+"px"; // text sits 63px above the bottom edge (Figma), never over the windows
 }
 // black hover label above a window that has a story, naming what it opens
 const winTip=document.getElementById("wtip");
-function showWinTip(b,text){ const g=b.offsetParent; winTip.textContent=text; winTip.style.left=(g.offsetLeft+b.offsetLeft+b.offsetWidth/2)+"px"; winTip.style.top=(g.offsetTop+b.offsetTop)+"px"; winTip.classList.add("on"); }
+function showWinTip(b,text){ const g=b.offsetParent, sc=parseFloat(getComputedStyle(g).getPropertyValue("--wscale"))||1, cx=g.offsetWidth/2; winTip.textContent=text; // account for the grid scale (origin: top centre)
+  winTip.style.left=(g.offsetLeft+cx+(b.offsetLeft+b.offsetWidth/2-cx)*sc)+"px"; winTip.style.top=(g.offsetTop+b.offsetTop*sc)+"px"; winTip.classList.add("on"); }
 function hideWinTip(){ winTip.classList.remove("on"); }
 function openModal(){
   if(selected===null) return toast("Select a country first");
