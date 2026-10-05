@@ -17,3 +17,23 @@ const STORIES = {
     "But the headline figure is a choice. The same survey yields 93.6% happy or 48.1% happy depending on where the sufficiency threshold is drawn. Digging further, Bhutan ranks 145th of 164 on anger and 117th on physical pain, with life satisfaction at 5.196 out of 10 — rank 86. Recorded mental health cases rose from 2,878 in 2011 to 7,004 in 2015. Alcohol is a leading cause of death; alcoholic liver disease alone accounted for 15% of all deaths. In 2023, 1.5% of the population left for Australia in a single year, and 53% of recent migrants hold degrees against 7% of those who stayed.",
   ],
 };
+
+/* ───────── WINDOW STORIES ─────────
+   Content for a specific window in a country's modal: WINDOW_STORIES[country][windowIndex].
+   measure → label above the headline and the hover tooltip on the window; title → headline;
+   paras → body paragraphs; chart → key into WINDOW_CHARTS (modal.js); sources → source line. */
+const WINDOW_STORIES = {
+  "Finland": {
+    0: {
+      measure: "Antidepressant use",
+      title: "Antidepressant use is rising, fastest among the young",
+      paras: [
+        "Antidepressant consumption in Finland has climbed roughly 75% since 2006, from about 56 daily doses per 1,000 people to 97.6. The rise stalled through the early 2010s, then resumed in 2016 and has continued every year since.",
+        "The pattern is sharpest among young adults where usage had nearly doubled in the past 10 years. In 2024, close to 20% of Finnish women aged 18 to 29 were taking antidepressants, against 7.5% of men the same age — a significant gender gap that has widened as women's use climbed far faster than men's.",
+        "Finland's under-30s now take more antidepressants and ADHD medication than young people anywhere else in the Nordics. According to Kela researcher Miika Vuori, fifteen years ago, Finland sat below its neighbours on both.",
+      ],
+      chart: "fi-antidepressants",
+      sources: ["Finnish Statistics on Medicines 2024", "Helsinki Times"],
+    },
+  },
+};

@@ -14,8 +14,8 @@ const CELLS=[["g:2x2",0,0,53,63],["bars",63,14,66,45],["blue",138,6,47,53],["g:2
 const WINS={ Taiwan:[["tw",2,2,53,57],["twlit",58,7,52,58],["tw",113,1,52,59],["blue",169,10,46,55],
   ["blue",5,81,46,55],["tw",58,79,48,57],["tw",114,80,55,57],["twlit",175,80,52,57],
   ["tw",2,150,53,60],["blue",61,150,48,57],["twlit",116,153,51,74],["tw",171,152,52,58]],
-  Bhutan:[["g:2x1",50,6,30,53,"arch","lit"],["g:2x2",88,0,39,61,"arch"],["tc",133,3,33,56,"arch"],["g:2x2",26,78,46,76,"arch"],["blue",80,87,35,67,"arch"],["g:3x2",123,74,50,79,"arch"],["g:2x1",179,93,22,63,"arch"],
-    ["g:2x3",47,169,40,65,"arch"],["g:2x2",95,181,32,56,"arch","lit"],["blue",133,170,42,66,"arch"],["g:2x1",26,254,29,71,"arch"],["g:2x2",60,251,48,79,"arch"],["g:3x2",114,252,37,73,"arch"],["tc",161,257,33,68,"arch","lit"]] };
+  Bhutan:[["g:2x1",57,5,26,47,"arch","lit"],["g:2x2",91,0,35,54,"arch"],["tc",131,3,29,50,"arch"],["g:2x2",35,69,41,68,"arch"],["blue",83,77,31,59,"arch"],["g:3x2",122,66,45,70,"arch"],["g:2x1",171,82,19,56,"arch"],
+    ["g:2x3",55,150,36,58,"arch"],["g:2x2",97,161,29,50,"arch","lit"],["blue",131,151,37,59,"arch"],["g:2x1",35,226,25,63,"arch"],["g:2x2",66,223,42,70,"arch"],["g:3x2",114,224,33,65,"arch"],["tc",155,228,30,61,"arch","lit"]] };
 // Finland: the shared layout, every window starts unlit (light only comes on when a window is opened)
 WINS.Finland=CELLS;
 // optional 6th field "arch": arched top with a small point (clip-path), as in Bhutan's windows
@@ -88,33 +88,54 @@ function fillGlance(i){
   document.getElementById("glance").classList.remove("off");
 }
 const DIMS=["Loneliness","Rest & leisure","Work–life balance","Trust","Social ties","Housing","Mental health","Nature","Income security","Health","Safety","Community","Freedom","Generosity","Daily emotions","Hope"];
-const FI_MH={yrs:[2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],
-  tot:[56,61,63,66,69,71,70,70,69,69,68,69,72,78,81,85,89,93,97], ssri:[38,41,42,43,44,45,44,43,42,41,40,40,41,43,44,46,48,50,52]};
-function barChart(){
-  const {yrs,tot,ssri}=FI_MH, W=258,H=176,X0=22,Y1=160,Hh=140,bw=10.6,gp=2.6,sc=v=>v/100*Hh;
-  let o=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;margin-top:8px">`;
-  [0,20,40,60,80,100].forEach(v=>{o+=`<line x1="${X0-2}" x2="${W}" y1="${Y1-sc(v)}" y2="${Y1-sc(v)}" stroke="rgba(238,240,248,.08)"/><text x="${X0-6}" y="${Y1-sc(v)+3}" text-anchor="end" font-size="7.5" fill="#959ac8" font-family="Inter">${v}</text>`});
-  yrs.forEach((y,i)=>{const x=X0+i*(bw+gp);let b=Y1;
-    [[4,"#2b3aa8"],[ssri[i],"#4f66d6"],[tot[i]-ssri[i]-4,"#c9d1f6"]].forEach(([v,c])=>{o+=`<rect x="${x}" y="${b-sc(v)}" width="${bw}" height="${sc(v)}" fill="${c}"><title>${y}: ${tot[i]} DDD</title></rect>`;b-=sc(v)});
-    if(i%3===0) o+=`<text x="${x+bw/2}" y="${Y1+11}" text-anchor="middle" font-size="7.5" fill="#959ac8" font-family="Inter">${y}</text>`;});
-  return o+"</svg>";
+// chart data for window stories. Values approximate, traced from Finnish Statistics on Medicines 2024 (Fig. 7.22);
+// 2024 set to the published 97.6.
+const WINDOW_CHARTS={
+  "fi-antidepressants":{title:"Antidepressant use in Finland, 2006–2024", unit:"Daily doses per 1,000 people",
+    yrs:[2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],
+    vals:[56,61,63,66,69,71,70,70,69,69,68,69,72,78,81,85,89,93,97.6]},
+};
+// single-series line chart with a hover crosshair + tooltip
+function lineChart(c){
+  const W=640,H=210,L=34,R=44,T=14,B=26,yMax=100,x=i=>L+i*(W-L-R)/(c.yrs.length-1),y=v=>T+(1-v/yMax)*(H-T-B);
+  let o=`<svg class="lc" viewBox="0 0 ${W} ${H}" role="img" aria-label="${c.title}: ${c.vals[0]} in ${c.yrs[0]} to ${c.vals.at(-1)} in ${c.yrs.at(-1)}">`;
+  [0,25,50,75,100].forEach(v=>o+=`<line class="lc-grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="lc-ax" x="${L-8}" y="${y(v)+3.5}" text-anchor="end">${v}</text>`);
+  c.yrs.forEach((yr,i)=>{ if(i%3===0||i===c.yrs.length-1) o+=`<text class="lc-ax" x="${x(i)}" y="${H-6}" text-anchor="middle">${yr}</text>`; });
+  o+=`<path class="lc-line" d="M${c.vals.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("L")}"/>`;
+  const last=c.vals.length-1;
+  o+=`<circle class="lc-end" cx="${x(0)}" cy="${y(c.vals[0])}" r="4"/><circle class="lc-end" cx="${x(last)}" cy="${y(c.vals[last])}" r="4"/>`;
+  o+=`<text class="lc-val" x="${x(0)+8}" y="${y(c.vals[0])+16}">${c.vals[0]}</text><text class="lc-val" x="${x(last)+8}" y="${y(c.vals[last])+4}">${c.vals[last]}</text>`;
+  o+=`<line class="lc-x" y1="${T}" y2="${H-B}" style="opacity:0"/><circle class="lc-dot" r="5" style="opacity:0"/><rect class="lc-hit" x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}"/></svg>`;
+  return `<figure class="lcwrap" data-chart><figcaption><b>${c.title}</b><span>${c.unit}</span></figcaption>${o}<div class="lc-tip"></div></figure>`;
+}
+function wireLineChart(fig,c){
+  const svg=fig.querySelector("svg"), hit=svg.querySelector(".lc-hit"), xl=svg.querySelector(".lc-x"), dot=svg.querySelector(".lc-dot"), tip=fig.querySelector(".lc-tip");
+  const W=640,H=210,L=34,R=44,T=14,B=26,n=c.yrs.length,x=i=>L+i*(W-L-R)/(n-1),y=v=>T+(1-v/100)*(H-T-B);
+  hit.onpointermove=e=>{ const r=svg.getBoundingClientRect(), sx=(e.clientX-r.left)/r.width*W, i=Math.max(0,Math.min(n-1,Math.round((sx-L)/(W-L-R)*(n-1))));
+    xl.setAttribute("x1",x(i)); xl.setAttribute("x2",x(i)); xl.style.opacity=1; dot.setAttribute("cx",x(i)); dot.setAttribute("cy",y(c.vals[i])); dot.style.opacity=1;
+    tip.innerHTML=`<b>${c.yrs[i]}</b> ${c.vals[i]} daily doses per 1,000`; tip.style.opacity=1;
+    const f=fig.getBoundingClientRect(), z=f.width/fig.offsetWidth; // rects are in zoomed px; tooltip offsets are not
+    tip.style.left=((r.left-f.left)+x(i)/W*r.width)/z+"px"; tip.style.top=((r.top-f.top)+y(c.vals[i])/H*r.height)/z+"px"; };
+  hit.onpointerleave=()=>{ xl.style.opacity=0; dot.style.opacity=0; tip.style.opacity=0; };
 }
 function showDim(k,d){
-  const dim=DIMS[k], det=document.getElementById("det");
+  const dim=DIMS[k], det=document.getElementById("det"), st=WINDOW_STORIES[d.c]?.[k];
+  const body=document.getElementById("dbody");
+  if(st){ // a written window story: measure, headline, paragraphs, chart, sources — nothing else
+    document.getElementById("dtag").textContent=st.measure;
+    document.getElementById("dhead").textContent=st.title;
+    document.getElementById("dctx").innerHTML="";
+    const c=st.chart&&WINDOW_CHARTS[st.chart];
+    body.innerHTML=`<div class="dstory">${st.paras.map(p=>`<p>${p}</p>`).join("")}${c?lineChart(c):""}${st.sources?`<div class="dsrc">Source: ${st.sources.join(" · ")}</div>`:""}</div>`;
+    if(c) wireLineChart(body.querySelector("[data-chart]"),c);
+    const ds=body.querySelector(".dstory"); ds.scrollTop=0;
+    const fade=()=>ds.classList.toggle("more",ds.scrollTop+ds.clientHeight<ds.scrollHeight-4); ds.onscroll=fade; requestAnimationFrame(fade);
+    det.classList.add("on"); return;
+  }
   document.getElementById("dtag").textContent=dim;
   document.getElementById("dctx").innerHTML=d.rank==null?"Not ranked in the World Happiness Report 2026":`#${d.rank} of ${TOTAL} countries · World Happiness Report 2026<br>Life evaluation ${d.score.toFixed(2)} / 10 (2023–2025 average)`;
-  const body=document.getElementById("dbody");
-  if(d.c==="Finland" && dim==="Mental health"){
-    document.getElementById("dhead").textContent="9.8% of the population uses antidepressants";
-    body.innerHTML=`<div class="dcard" style="left:54px;width:287px"><h4>Antidepressant consumption, 2006–2024</h4><div class="sub">DDD per 1,000 inhabitants per day</div>${barChart()}
-      <div class="lg"><span><i style="background:#c9d1f6"></i>Other</span><span><i style="background:#4f66d6"></i>SSRIs</span><span><i style="background:#2b3aa8"></i>Non-selective</span></div>
-      <div class="src">Approx. values traced from Fig. 7.22 — replace with source data</div></div>
-      <div class="dcard" style="left:358px;width:229px"><h4>By wellbeing services county, 2024</h4><div class="sub">Whole country 96.35 DDD / 1,000 / day</div>
-      <div class="mapslot">Choropleth map slot<br>Fig. 7.24 · 4 classes</div></div>`;
-  } else {
-    document.getElementById("dhead").textContent=`${dim} in ${d.c}`;
-    body.innerHTML=`<div class="dsoon">Data for this dimension is coming soon.</div>`;
-  }
+  document.getElementById("dhead").textContent=`${dim} in ${d.c}`;
+  body.innerHTML=`<div class="dsoon">Data for this dimension is coming soon.</div>`;
   det.classList.add("on");
 }
 function hideInfo(){ document.getElementById("ctitle").style.opacity=0; document.getElementById("card").style.opacity=0; }
@@ -123,11 +144,27 @@ function showInfo(i){
   document.getElementById("ctitle").style.opacity=0;
   document.getElementById("card").style.opacity=0;
 }
+// line the hint + subtitle up under the windows: same left edge and width as the window group,
+// vertically centred in the space between the lowest window and the bottom of the panel
+function placeModalText(){
+  const g=document.getElementById("wgrid"), t=document.getElementById("mtext"), panel=g.parentElement, ws=[...g.children];
+  if(!ws.length) return;
+  const l=Math.min(...ws.map(e=>e.offsetLeft)), r=Math.max(...ws.map(e=>e.offsetLeft+e.offsetWidth)), b=Math.max(...ws.map(e=>e.offsetTop+e.offsetHeight));
+  const w=Math.max(r-l,220), c=g.offsetLeft+(l+r)/2; // narrow window groups (Bhutan) keep a readable text width, centred under them
+  t.style.left=(c-w/2)+"px"; t.style.width=w+"px";
+  const top=g.offsetTop+b, room=panel.clientHeight-top;
+  t.style.top=(top+Math.max(16,(room-t.offsetHeight)/2))+"px";
+}
+// black hover label above a window that has a story, naming what it opens
+const winTip=document.getElementById("wtip");
+function showWinTip(b,text){ const g=b.offsetParent; winTip.textContent=text; winTip.style.left=(g.offsetLeft+b.offsetLeft+b.offsetWidth/2)+"px"; winTip.style.top=(g.offsetTop+b.offsetTop)+"px"; winTip.classList.add("on"); }
+function hideWinTip(){ winTip.classList.remove("on"); }
 function openModal(){
   if(selected===null) return toast("Select a country first");
   const d=COUNTRIES[selected]; modalOpen=true; pickedWin=null;
   document.getElementById("mname").textContent=d.c.toUpperCase();
   const mh=document.getElementById("mhint"); mh.textContent="Select a window to explore different measures";
+  document.getElementById("mhsub").textContent=`Each represents a partial and imperfect window into ${d.c}${d.c.endsWith("s")?"’":"’s"} happiness`;
   fillGlance(selected);
   document.getElementById("det").classList.remove("on");
   document.getElementById("mempty").style.opacity=0;
@@ -138,7 +175,9 @@ function openModal(){
     Object.assign(b.style,{left:x+"px",top:y+"px",width:w+"px",height:h+"px"}); if(shape==="arch") b.style.clipPath=archClip(w,h);
     if(tp==="blue"){ b.setAttribute("aria-hidden","true"); g.appendChild(b); return; }
     b.innerHTML=mull(tp,w,h);
-    b.title=`Window ${k+1}`;
+    const ws=WINDOW_STORIES[d.c]?.[k];
+    if(ws){ b.setAttribute("aria-label",ws.measure); b.onmouseenter=()=>showWinTip(b,ws.measure); b.onmouseleave=hideWinTip; }
+    else b.title=`Window ${k+1}`;
     b.onclick=()=>{g.querySelectorAll(".cw").forEach(e=>{e.classList.remove("sel","open");e.style.backgroundImage="";});
       b.classList.add("open"); b.style.backgroundImage=`url(${READER})`; pickedWin=k;
       document.getElementById("glance").classList.add("off");
@@ -149,6 +188,7 @@ function openModal(){
   Object.assign(m.style,{top:(scrollY/z+Math.max(0,(innerHeight/z-677)/2))+"px",bottom:"auto",height:"677px"});
   m._y=scrollY; document.documentElement.style.overflow="hidden";
   document.getElementById("scrimM").classList.add("on"); m.classList.add("on");
+  placeModalText();
   document.querySelector("#ribbon .pager").style.opacity=0;
 }
 function closeModal(){ modalOpen=false; const m=document.getElementById("modal"); document.documentElement.style.overflow=""; scrollTo(0,m._y||0); // unlocking can jump to top

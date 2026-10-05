@@ -89,7 +89,10 @@ html.tall .toast{position:fixed}
 .eyebrow{position:absolute;left:40px;top:34px;font:400 14px var(--font-plex);letter-spacing:.04em;color:#b9bede;text-transform:uppercase}
 .mname{position:absolute;left:40px;top:56px;font:400 28px var(--font-plex);letter-spacing:.06em;letter-spacing:.02em;color:#f2f3fb}
 .wgrid{position:absolute;left:104px;top:186px;width:226px;height:296px}
-.mhint{position:absolute;left:106px;right:30px;top:552px;text-align:left;font:400 17px/25px var(--font-plex);color:#f2f3fb;letter-spacing:.03em}
+/* hint + subtitle: placed by placeModalText() — same width as the windows, centred between them and the panel bottom */
+.mtext{position:absolute;left:104px;width:226px;top:552px}
+.mhsub{margin:14px 0 0;font-size:13px;line-height:1.55;color:#b9bede}
+.mhint{text-align:left;font:400 17px/25px var(--font-plex);color:#f2f3fb;letter-spacing:.03em}
 .mclose{position:absolute;z-index:2;top:22px;right:23px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(238,240,248,.35);background:none;color:var(--ink);cursor:pointer;font-size:14px;line-height:1}
 .mclose:hover{border-color:rgba(238,240,248,.7)}
 .mback{position:absolute;right:39px;bottom:39px;background:#e3e3e6;color:#1d1d2a;border:0;border-radius:10px;font:600 14px var(--font-sans);padding:12px 28px;cursor:pointer}
@@ -110,12 +113,11 @@ html.tall .toast{position:fixed}
 .dsoon{position:absolute;left:66px;top:300px;font-size:13px;color:var(--muted)}
 .cw.open{background:#5b4a46 center/cover no-repeat;box-shadow:0 0 26px rgba(245,226,160,.55)}
 .cw.open::after,.cw.open svg{display:none}
-.mhint.small{top:552px}
 .glance{position:absolute;inset:0;font-family:var(--font-plex);transition:opacity .35s}
 .glance.off{opacity:0;pointer-events:none}
 /* landing panel stacks top to bottom; empty parts collapse */
 .g-body{position:absolute;left:63px;right:40px;top:86px;bottom:84px;display:flex;flex-direction:column;gap:30px} /* bottom: clear of the source line */
-.g-story{flex:1;min-height:0;overflow-y:auto;padding-right:14px;font:400 14px/1.65 var(--font-body);color:#c9cce0}
+.g-story{flex:1;min-height:0;overflow-y:auto;padding-right:14px;font:300 13px/1.65 var(--font-body);color:#c9cce0}
 .g-story:empty{display:none}
 .g-story p{margin:0 0 14px}
 .g-story.more{-webkit-mask-image:linear-gradient(#000 calc(100% - 36px),transparent);mask-image:linear-gradient(#000 calc(100% - 36px),transparent)} /* fade hints there is more to scroll */
@@ -199,7 +201,31 @@ html.tall .toast{position:fixed}
 .rback:hover{color:var(--ink);border-color:rgba(238,240,248,.45)}
 #mname{cursor:pointer}
 #mname:hover,#mname:focus-visible{outline:none;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:6px}
-
+/* window hover label (windows with a story) */
+.wtip{position:absolute;z-index:3;transform:translate(-50%,calc(-100% - 10px));padding:7px 12px;border-radius:6px;background:#000;color:#fff;font:500 13px var(--font-sans);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .12s}
+.wtip::after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-top-color:#000;border-bottom:0}
+.wtip.on{opacity:1}
+/* window story (detail view) */
+.dstory{position:absolute;left:63px;right:40px;top:196px;bottom:24px;overflow-y:auto;padding-right:14px}
+.dstory.more{-webkit-mask-image:linear-gradient(#000 calc(100% - 36px),transparent);mask-image:linear-gradient(#000 calc(100% - 36px),transparent)}
+.dstory p{margin:0 0 14px;font-size:14px;line-height:1.65;color:#c9cce0}
+.dstory::-webkit-scrollbar{width:6px}.dstory::-webkit-scrollbar-thumb{background:#2c3050;border-radius:3px}
+.lcwrap{position:relative;margin:22px 0 0}
+.lcwrap figcaption{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.lcwrap figcaption b{font:600 14px var(--font-sans);color:#f2f3fb}
+.lcwrap figcaption span{font-size:12px;color:var(--muted)}
+.lc{display:block;width:100%;height:auto;overflow:visible}
+.lc-grid{stroke:rgba(238,240,248,.08)}
+.lc-ax{font:400 11px var(--font-sans);fill:#959ac8}
+.lc-line{fill:none;stroke:#aab4f0;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.lc-end{fill:#aab4f0;stroke:#0f1336;stroke-width:2}
+.lc-val{font:600 12px var(--font-sans);fill:#f2f3fb}
+.lc-x{stroke:rgba(238,240,248,.35);stroke-dasharray:2 3}
+.lc-dot{fill:#f2f3fb;stroke:#0f1336;stroke-width:2}
+.lc-hit{fill:transparent;cursor:crosshair}
+.lc-tip{position:absolute;transform:translate(-50%,calc(-100% - 12px));padding:6px 10px;border-radius:6px;background:#000;color:#fff;font:400 12px var(--font-sans);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .1s}
+.lc-tip b{font-weight:600;margin-right:6px}
+.dsrc{margin-top:16px;font:400 12px/22px var(--font-plex);color:#9aa0c8;letter-spacing:.03em}
 /* twinkling stars behind the ribbon chart */
 #chart #stars .tw{animation:twinkle 4s ease-in-out infinite}
 @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.25}}
