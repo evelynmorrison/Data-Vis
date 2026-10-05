@@ -27,7 +27,8 @@ const VOTE_OPTIONS = VOTE_LABELS.map((label, i) => ({
 
 // Storage: entries live only in this browser, as a list (each Done appends one).
 // To pool votes across visitors, swap a shared backend into recordVote() and fetchVotes() — nothing else changes.
-function fetchVotes() {
+// entries submitted in this browser
+function localVotes() {
   try {
     const all = JSON.parse(localStorage.getItem(VOTES_KEY));
     if (Array.isArray(all)) return all;
@@ -35,8 +36,10 @@ function fetchVotes() {
     return old ? [old] : [];
   } catch { return []; }
 }
-function recordVote(rec) { try { localStorage.setItem(VOTES_KEY, JSON.stringify([...fetchVotes(), rec])); return true; } catch { return false; } }
-function loadVote() { const all = fetchVotes(); return all[all.length - 1] || null; }
+function recordVote(rec) { try { localStorage.setItem(VOTES_KEY, JSON.stringify([...localVotes(), rec])); return true; } catch { return false; } }
+function loadVote() { const all = localVotes(); return all[all.length - 1] || null; } // this visitor's latest entry
+// every vote the results page counts: demo seed votes (js/seed-votes.js, if present) + this browser's entries
+function fetchVotes() { return [...(typeof SEED_VOTES !== "undefined" ? SEED_VOTES : []), ...localVotes()]; }
 
 const byId = Object.fromEntries(VOTE_OPTIONS.map(o => [o.id, o]));
 const voteGrid = document.getElementById("vgrid"), voteCount = document.getElementById("vcount"), voteDone = document.getElementById("vdone");
