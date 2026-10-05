@@ -1,11 +1,14 @@
 /* ───────── RESULTS ─────────
-   Tallies every vote (fetchVotes) into a ranked list of all measures. Each row shows the share of voters who
+   Tallies every vote (fetchTally) into a ranked list of all measures. Each row shows the share of voters who
    chose that measure as 20 windows in the measure's own pattern — one lit window per 5% of voters. */
 const RESULT_WINDOWS = 20;
-function showResults() {
-  const votes = fetchVotes(), n = votes.length, mine = new Set(loadVote()?.choices || []);
-  const counts = Object.fromEntries(VOTE_OPTIONS.map(o => [o.id, 0]));
-  votes.forEach(v => v.choices.forEach(id => { if (id in counts) counts[id]++; }));
+let resultsReq = 0;
+async function showResults() {
+  const req = ++resultsReq, eye = document.getElementById("rEye");
+  if (!document.getElementById("rlist").children.length) eye.textContent = "Results · loading…";
+  const { n, counts } = await fetchTally();
+  if (req !== resultsReq) return; // a newer request superseded this one
+  const mine = new Set(loadVote()?.choices || []);
   const rows = VOTE_OPTIONS.map(o => ({ o, pct: n ? Math.round(counts[o.id] / n * 100) : 0, c: counts[o.id] }))
     .sort((a, b) => b.c - a.c || a.o.label.localeCompare(b.o.label));
   document.getElementById("rEye").textContent = `Results · ${n.toLocaleString("en")} ${n === 1 ? "vote" : "votes"} so far`;
