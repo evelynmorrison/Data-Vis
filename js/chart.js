@@ -61,22 +61,40 @@ function drawGrid(){
   });
 }
 
-// draw one country's full ribbon into gRib and its boxes + labels into gBox (the hovered/selected country)
+// draw one country's full ribbon into gRib and its boxes + labels into gBox (the hovered/selected country).
+// The ribbon is ONE unbroken shape through every column it is ranked in (flat across each box, an S-curve between),
+// so it reads as a single continuous strip. Colour flows along its length: light where the country rises or holds
+// vs the previous column, blue where it falls, blending through each curve.
+function ribbonPath(ci,H){
+  const {pos,cols}=GEO[ci], pts=[];
+  cols.forEach((j,k)=>{
+    const y=yc(pos[j]);
+    if(k>0){ const a=cols[k-1], p0={x:X[a]+W,y:yc(pos[a])}, p3={x:X[j],y};
+      for(let s=1;s<40;s++){ const b=bez(p0,p3,s/40); pts.push({x:b.x,y:b.y,dx:b.dx,dy:b.dy,sw:Math.sin(Math.PI*s/40)}); } }
+    for(let s=0;s<=10;s++) pts.push({x:X[j]+W*s/10,y,dx:1,dy:0,sw:0});
+  });
+  const top=[],bot=[];
+  pts.forEach(p=>{ const Ln=Math.hypot(p.dx,p.dy)||1, nx=-p.dy/Ln, ny=p.dx/Ln, h=H/2*(1+.18*p.sw); // slight swell mid-curve
+    top.push(`${(p.x+nx*h).toFixed(1)},${(p.y+ny*h).toFixed(1)}`); bot.push(`${(p.x-nx*h).toFixed(1)},${(p.y-ny*h).toFixed(1)}`); });
+  return "M"+top.join("L")+"L"+bot.reverse().join("L")+"Z";
+}
+function ribbonGradient(ci,faces){
+  const {cols}=GEO[ci], x0=X[cols[0]], x1=X[cols[cols.length-1]]+W, id="rg"+ci;
+  svg.querySelector("#"+id)?.remove();
+  const g=mk("linearGradient",{id,gradientUnits:"userSpaceOnUse",x1:x0,y1:0,x2:x1,y2:0},svg.querySelector("defs"));
+  const f=x=>((x-x0)/(x1-x0)).toFixed(4);
+  cols.forEach(j=>{ const c=faces[j]?"#e6e8fb":"#3f4fe0"; mk("stop",{offset:f(X[j]),"stop-color":c},g); mk("stop",{offset:f(X[j]+W),"stop-color":c},g); });
+  return `url(#${id})`;
+}
 function drawCountry(ci,gRib,gBox,H){
   const d=COUNTRIES[ci], {pos,cols,segs}=GEO[ci];
-  // light (data-f=1) where the country rises or holds vs the previous column it's ranked in, dark where it falls.
-  // A segment leaves in the colour of the box it starts from and arrives in its own direction's colour;
-  // when those differ the ribbon twists over mid-way. The first column has no previous, so it's light.
-  const faces={[cols[0]]:true};
-  for(const {a,b,tc} of segs){
-    const p0={x:X[a]+W,y:yc(pos[a])}, p3={x:X[b],y:yc(pos[b])}, from=faces[a], rise=pos[b]<=pos[a];
-    if(from===rise) mk("path",{d:band(p0,p3,H),"data-f":rise?1:0},gRib);
-    else { mk("path",{d:band(p0,p3,H,tc,0,tc),"data-f":from?1:0},gRib); mk("path",{d:band(p0,p3,H,tc,tc,1),"data-f":rise?1:0},gRib); }
-    faces[b]=rise;
-  }
+  const faces={[cols[0]]:true}; for(const {a,b} of segs) faces[b]=pos[b]<=pos[a];
+  const path=ribbonPath(ci,H);
+  mk("path",{class:"ribbon-body",d:path,"data-fill":ribbonGradient(ci,faces)},gRib);
+  mk("path",{class:"ribbon-grain",d:path,filter:"url(#ribGrain)","data-fill":"#ffffff"},gRib);
   cols.forEach(j=>{
     const c=yc(pos[j]);
-    mk("rect",{x:X[j],y:c-H/2,width:W,height:H,"data-f":faces[j]?1:0},gBox);
+    mk("rect",{x:X[j],y:c-H/2,width:W,height:H,"data-f":faces[j]?1:0,"data-fill":"transparent"},gBox); // hit area + label colour key
     mk("text",{class:"lbl",x:X[j]+W/2,y:c+3.6,"text-anchor":"middle"},gBox).textContent=d.c;
     mk("text",{class:"lbl rn",x:X[j]+8,y:c+3.6,"font-weight":700,opacity:0},gBox).textContent=d[SOURCES[j].key];
   });
@@ -89,7 +107,8 @@ function drawChart(){
   <linearGradient id="dimB" x1="0" x2="1"><stop offset="0" stop-color="#3a3f7c"/><stop offset="1" stop-color="#5a62b8"/></linearGradient>
   <linearGradient id="hiF" x1="0" x2="1"><stop offset="0" stop-color="#e3e5fa"/><stop offset=".5" stop-color="#aab4f0"/><stop offset="1" stop-color="#e3e5fa"/></linearGradient>
   <linearGradient id="hiB" x1="0" x2="1"><stop offset="0" stop-color="#3444dc"/><stop offset="1" stop-color="#6f87e6"/></linearGradient>
-  <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity=".45"/></filter>`;
+  <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity=".45"/></filter>
+  <filter id="ribGrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 2.4 -1.25" result="g"/><feComposite in="g" in2="SourceGraphic" operator="in"/></filter>`;
   // column titles: first group left-aligned, last right-aligned, others centred over their columns
   HEAD.forEach((h,gi)=>{
     const a=h.cols[0], b=h.cols[h.cols.length-1];
@@ -146,7 +165,7 @@ function paintGroups(gs,state){
   const bright=state!=="dim";
   for(const e of gs){
     e.style.opacity=bright?1:.32;
-    e.querySelectorAll("path,rect").forEach(e=>{const f=e.dataset.f==="1";
+    e.querySelectorAll("path,rect").forEach(e=>{ if(e.dataset.fill){ e.setAttribute("fill",e.dataset.fill); return; } const f=e.dataset.f==="1";
       e.setAttribute("fill",bright?(f?"url(#hiF)":"url(#hiB)"):(f?"url(#dimF)":"url(#dimB)"));});
     e.querySelectorAll("text.rn").forEach(t=>{const f=t.previousSibling.previousSibling.dataset.f==="1";t.setAttribute("opacity",state==="hi"?1:0);t.setAttribute("fill",f?"#1a1f6e":"#eef0f8")});
     e.querySelectorAll("text:not(.rn)").forEach(t=>{const f=t.previousSibling.dataset.f==="1";t.setAttribute("fill",bright?(f?"#1a1f6e":"#eef0f8"):"#d6d8ee");t.setAttribute("font-weight",state==="hi"?600:400)});
