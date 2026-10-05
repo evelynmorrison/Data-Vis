@@ -52,6 +52,18 @@ function drawLine(ci,g){
   for(let k=1;k<pts.length;k++){ const [x0,y0]=pts[k-1],[x1,y1]=pts[k],m=(x0+x1)/2; d+=`C${m},${y0.toFixed(1)} ${m},${y1.toFixed(1)} ${x1},${y1.toFixed(1)}`; }
   mk("path",{class:"ln",d,"stroke-width":(.5+3*t).toFixed(2),"stroke-opacity":(.1+.75*t).toFixed(2)},g);
 }
+// starry backdrop: seeded so the sky stays the same on every render; a few warm stars, a few soft glows, some twinkle
+function drawStars(ht){
+  let q=11; const r=()=> (q=(q*16807)%2147483647)/2147483647;
+  const g=mk("g",{id:"stars","pointer-events":"none"}), n=Math.round(ht/900*160);
+  for(let i=0;i<n;i++){
+    const x=(r()*1440).toFixed(1), y=(r()*ht).toFixed(1), k=r(), warm=r()<.14, tw=r()<.35;
+    const rad=k<.72?.7+r()*.5:k<.94?1.2+r()*.6:2+r()*.8;
+    const c=mk("circle",{cx:x,cy:y,r:rad.toFixed(2),fill:warm?"#f5d58a":"#eef0ff","fill-opacity":(.4+r()*.5).toFixed(2)},g);
+    if(rad>1.9) mk("circle",{cx:x,cy:y,r:(rad*3.5).toFixed(1),fill:"url(#starGlow)"},g);
+    if(tw){ c.classList.add("tw"); c.style.animationDelay=(-r()*6).toFixed(2)+"s"; c.style.animationDuration=(3+r()*4).toFixed(2)+"s"; }
+  }
+}
 function drawGrid(){
   const g=mk("g",{id:"grid"}), y0=yc(0), y1=yc(ROWS-1);
   X.forEach((_,j)=>mk("line",{class:"gcol",x1:lineX(j),x2:lineX(j),y1:y0,y2:y1},g));
@@ -107,6 +119,7 @@ function drawChart(){
   <linearGradient id="dimB" x1="0" x2="1"><stop offset="0" stop-color="#3a3f7c"/><stop offset="1" stop-color="#5a62b8"/></linearGradient>
   <linearGradient id="hiF" x1="0" x2="1"><stop offset="0" stop-color="#e3e5fa"/><stop offset=".5" stop-color="#aab4f0"/><stop offset="1" stop-color="#e3e5fa"/></linearGradient>
   <linearGradient id="hiB" x1="0" x2="1"><stop offset="0" stop-color="#3444dc"/><stop offset="1" stop-color="#6f87e6"/></linearGradient>
+  <radialGradient id="starGlow"><stop offset="0" stop-color="#dfe4ff" stop-opacity=".35"/><stop offset="1" stop-color="#dfe4ff" stop-opacity="0"/></radialGradient>
   <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity=".45"/></filter>
   <filter id="ribGrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 2.4 -1.25" result="g"/><feComposite in="g" in2="SourceGraphic" operator="in"/></filter>`;
   // column titles: first group left-aligned, last right-aligned, others centred over their columns
@@ -150,9 +163,9 @@ function headTip(g,info,n,anchor){
 function render(){
   const z=parseFloat(stage.style.zoom)||1;
   L={gap:Math.max(2,(innerHeight/z-HEAD_H-2*TOP)/ROWS)};
-  svg.querySelectorAll("#grid,#lines,#focus").forEach(e=>e.remove());
+  svg.querySelectorAll("#stars,#grid,#lines,#focus").forEach(e=>e.remove());
   const ht=TOP*2+ROWS*L.gap; svg.setAttribute("height",ht); svg.setAttribute("viewBox",`0 0 1440 ${ht}`);
-  drawGrid();
+  drawStars(ht); drawGrid();
   const lines=mk("g",{id:"lines"});
   // most-disagreeing countries drawn last so their brighter lines sit on top
   COUNTRIES.map((_,ci)=>ci).sort((a,b)=>DIS[a]-DIS[b]).forEach(ci=>{ lineG[ci]=mk("g",{class:"rib","data-ci":ci},lines); drawLine(ci,lineG[ci]); });

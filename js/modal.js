@@ -16,8 +16,8 @@ const WINS={ Taiwan:[["tw",2,2,53,57],["twlit",58,7,52,58],["tw",113,1,52,59],["
   ["tw",2,150,53,60],["blue",61,150,48,57],["twlit",116,153,51,74],["tw",171,152,52,58]],
   Bhutan:[["g:2x1",50,6,30,53,"arch","lit"],["g:2x2",88,0,39,61,"arch"],["tc",133,3,33,56,"arch"],["g:2x2",26,78,46,76,"arch"],["blue",80,87,35,67,"arch"],["g:3x2",123,74,50,79,"arch"],["g:2x1",179,93,22,63,"arch"],
     ["g:2x3",47,169,40,65,"arch"],["g:2x2",95,181,32,56,"arch","lit"],["blue",133,170,42,66,"arch"],["g:2x1",26,254,29,71,"arch"],["g:2x2",60,251,48,79,"arch"],["g:3x2",114,252,37,73,"arch"],["tc",161,257,33,68,"arch","lit"]] };
-// Finland: the shared layout with three windows pre-lit in yellow (one per upper row, spread left to right)
-WINS.Finland=CELLS.map((c,i)=>[1,6,10].includes(i)?[...c,null,"lit"]:c);
+// Finland: the shared layout, every window starts unlit (light only comes on when a window is opened)
+WINS.Finland=CELLS;
 // optional 6th field "arch": arched top with a small point (clip-path), as in Bhutan's windows
 // optional 7th field "lit": window shows warm yellow before anything is clicked (like Taiwan's "twlit")
 function archClip(w,h){
