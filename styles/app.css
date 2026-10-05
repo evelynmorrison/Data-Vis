@@ -168,7 +168,12 @@ html.tall .toast{position:fixed}
 .vopt:focus-visible{outline:none}.vopt:focus-visible .vlab{text-decoration:underline;text-underline-offset:4px}
 .vlab{font:600 14px/1.45 var(--font-plex);letter-spacing:.01em;text-align:center}
 .vopt[aria-pressed="true"] .vlab{color:#f3e09d}
-.vfoot{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:64px}
+.vwrite{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:72px}
+.vwrite label{font-size:15px;color:#c9cce0}
+.vwrite input{width:420px;padding:12px 18px;border:1px solid rgba(238,240,248,.35);border-radius:999px;background:transparent;color:var(--ink);font:500 14px var(--font-sans);outline:none;text-align:center}
+.vwrite input::placeholder{color:var(--muted)}
+.vwrite input:focus{border-color:rgba(238,240,248,.75)}
+.vfoot{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:40px}
 .vdone{min-width:206px;padding:20px 40px;border:0;border-radius:2px;background:#e6e7ee;color:var(--bg);font:600 16px var(--font-sans);cursor:pointer}
 .vdone:disabled{background:#4a5068;color:#c9cce0;cursor:default}
 .vcount{font-size:13px;color:var(--muted)}

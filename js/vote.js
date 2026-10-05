@@ -43,13 +43,14 @@ function fetchVotes() { return [...(typeof SEED_VOTES !== "undefined" ? SEED_VOT
 
 const byId = Object.fromEntries(VOTE_OPTIONS.map(o => [o.id, o]));
 const voteGrid = document.getElementById("vgrid"), voteCount = document.getElementById("vcount"), voteDone = document.getElementById("vdone");
+const voteWrite = document.getElementById("vwrite"); // optional write-in: a proposed metric, saved with the vote
 let voteOrder = [], lit = new Set();
 
 // fresh entry: everything off, new random order (called by go("vote"))
 function resetVote() {
   voteOrder = VOTE_OPTIONS.map(o => o.id);
   for (let i = voteOrder.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [voteOrder[i], voteOrder[j]] = [voteOrder[j], voteOrder[i]]; } // Fisher–Yates
-  lit = new Set();
+  lit = new Set(); voteWrite.value = "";
   voteGrid.innerHTML = voteOrder.map(id => {
     const o = byId[id], [w, h] = o.size;
     return `<button class="vopt" data-id="${id}" aria-pressed="false"><span class="vicon"><span class="cw" style="width:${w}px;height:${h}px">${o.pane === "plain" ? "" : mull(o.pane, w, h)}</span></span><span class="vlab">${o.label}</span></button>`;
@@ -72,7 +73,8 @@ voteGrid.addEventListener("click", e => {
 });
 voteDone.addEventListener("click", () => {
   if (lit.size !== VOTE_PICK) return;
-  const ok = recordVote({ v: 1, choices: voteOrder.filter(id => lit.has(id)), shown: voteOrder, at: new Date().toISOString() });
+  const writeIn = voteWrite.value.trim();
+  const ok = recordVote({ v: 1, choices: voteOrder.filter(id => lit.has(id)), shown: voteOrder, ...(writeIn && { writeIn }), at: new Date().toISOString() });
   if (!ok) { toast("Couldn't save your choices in this browser"); return; }
   go("results");
 });
