@@ -21,10 +21,58 @@ const STORIES = {
 /* ───────── WINDOW STORIES ─────────
    Content for a specific window in a country's modal: WINDOW_STORIES[country][windowIndex].
    measure → label above the headline and the hover tooltip on the window; title → headline;
-   paras → body paragraphs; chart → key into WINDOW_CHARTS (modal.js); sources → source line. */
+   paras → body paragraphs (bullets: true shows them as a bulleted list); chart → key into WINDOW_CHARTS (modal.js); sources → source line. */
 const WINDOW_STORIES = {
   "Finland": {
     0: {
+      measure: "Youth mental health",
+      title: "Mental health gaps among children and teens are wide",
+      paras: [
+        "Among students in grades 8 and 9, 51% of those born abroad reported discrimination or bullying, compared with 31% of those whose parents were both born in Finland. In upper secondary school, 18% of boys born abroad reported at least moderate anxiety, against 7% of boys with a Finnish background. Across groups, girls report anxiety, school burnout, life dissatisfaction, and loneliness clearly more often than boys.",
+      ],
+      sources: ["Finnish Institute for Health and Welfare (THL), School Health Promotion Study 2025"],
+    },
+    1: {
+      measure: "Proximity to nature",
+      title: "Nature is never far away",
+      paras: [
+        "More than three-quarters of Finland is forest, the highest share in Europe, and another 10% is lakes, rivers and other water. Under the principle of jokamiehenoikeus — Every Person's Right — anyone may hike, camp and pick berries and mushrooms in any forest, regardless of who owns it. The Ministry of the Environment recommends that schools sit no more than 300 metres from a green area.",
+      ],
+      sources: ["Finnish Ministry of Agriculture and Forestry", "Finland Toolbox (Ministry for Foreign Affairs)"],
+    },
+    3: {
+      measure: "Alcohol consumption",
+      title: "Monthly binge drinking reaches one in five",
+      paras: [
+        "In 2023, 21% of Finns reported heavy episodic drinking at least once a month — six or more standard drinks on a single occasion. Overall, 28% exceeded the risk threshold on the AUDIT, a screening test for alcohol-related problems.",
+      ],
+      sources: ["Finnish Institute for Health and Welfare"],
+    },
+    4: {
+      measure: "Trust",
+      title: "Finns trust their institutions",
+      paras: [
+        "In 2025, 89% of people in Finland trusted the police and 75% trusted the courts. Trust in the civil service stood at 68%, against an OECD average of 45%, and trust in the national government at 49%, above the OECD average of 40%.",
+      ],
+      sources: ["OECD Survey on Drivers of Trust in Public Institutions 2026"],
+    },
+    6: {
+      measure: "Youth life satisfaction",
+      title: "Young people's life satisfaction is at a record low",
+      paras: [
+        "The Youth Barometer 2025 surveyed about 2,300 people aged 15 to 29 for the State Youth Council. Only 30% rated their life satisfaction 9 or 10 — the lowest since the survey began in 1994, and down from more than half a decade earlier. The national average hides a widening gap between generations.",
+      ],
+      sources: ["Yle"],
+    },
+    8: {
+      measure: "Violence against women",
+      title: "Violence against women is among the highest in the EU",
+      paras: [
+        "In the 2024 EU Gender-Based Violence Survey, 57.1% of Finnish women aged 18 to 74 reported experiencing physical or sexual violence or threats in their lifetime. 37.3% reported sexual violence, against an EU average of 17.2%. And 12% experienced violence from an intimate partner in the past year — the highest rate in the EU.",
+      ],
+      sources: ["EU Gender-Based Violence Survey (Eurostat, FRA, EIGE)", "Helsinki Times"],
+    },
+    10: {
       measure: "Antidepressant use",
       title: "Antidepressant use is rising, fastest among the young",
       paras: [
@@ -34,6 +82,30 @@ const WINDOW_STORIES = {
       ],
       chart: "fi-antidepressants",
       sources: ["Finnish Statistics on Medicines 2024", "Helsinki Times"],
+    },
+    11: {
+      measure: "Social infrastructure",
+      title: "The state shares the work of raising children",
+      paras: [
+        "In 1948, Finland became the first country to serve free meals to every schoolchild, and roughly 900,000 students still receive one each school day — the world's longest-running universal school meal programme. Since a 2022 reform, each parent receives 160 days of paid parental allowance, and fathers of children born under the new rules have taken an average of 78 days.",
+      ],
+      sources: ["Finland Toolbox", "Kela"],
+    },
+    13: {
+      measure: "Racism",
+      title: "Minorities, especially Black immigrants, face severe racism",
+      paras: [
+        "In the EU Fundamental Rights Agency's 2023 survey Being Black in the EU, 63% of Black respondents in Finland reported racial discrimination in the past five years — the third highest of the countries surveyed. 54% reported racist harassment, and 11% racist violence, the highest of any country in the survey.",
+      ],
+      sources: ["EU Agency for Fundamental Rights, Being Black in the EU"],
+    },
+    14: {
+      measure: "Death by suicide",
+      title: "Suicide and alcohol deaths are still deep-rooted problems",
+      paras: [
+        "Finland has halved its suicide rate since the 1990s, yet it remains relatively high for Western Europe, where the EU average is 10.4 deaths per 100,000 people. In 2024, death rates fell for most major causes — but the suicide rate held flat. The same year saw about 1,600 alcohol-related deaths.",
+      ],
+      sources: ["Statistics Finland", "Eurostat", "The Conversation"],
     },
   },
   "Taiwan": {
@@ -49,6 +121,174 @@ const WINDOW_STORIES = {
       ],
       chart: "tw-suicide",
       sources: ["Taiwan News", "Taipei Times", "WHO", "Chen et al.", "2024 Taiwan Health and Welfare Report – Ministry of Health and Welfare", "Chart: Ministry of Health and Welfare, national suicide statistics (2025 update)"],
+    },
+    2: {
+      measure: "Depression",
+      title: "Depression is on the rise but remains significantly underreported",
+      paras: [
+        "Only 1.92% of Taiwanese were recorded as having a depressive disorder in 2016 — a figure that likely reflects how few people seek treatment rather than how few need it. Among people over 50, just 27% with depression seek medical help, and only four in ten of those receive effective treatment. In Europe and the United States, by comparison, about half of people with depression seek care. Among the young, antidepressant use has doubled in the past decade for people under 30, and more than a quarter of college students show signs of depression.",
+      ],
+      sources: ["OCAC News", "CNA", "Taiwan News", "Wang et al."],
+    },
+    5: {
+      measure: "Overwork",
+      title: "Long hours carry a measurable risk",
+      paras: [
+        "Taiwanese workers average 2,008 hours a year — about 167 a month — the sixth-longest of 39 economies tracked by the OECD. The toll shows up in the heart and brain: as industry-average monthly hours rise from 169 to 187, the risk of overwork-related cardiovascular and cerebrovascular disease nearly quadruples.",
+      ],
+      chart: "tw-overwork",
+      sources: ["Taipei Times", "Lin, Chien & Kawachi (2018), Scientific Reports"],
+    },
+    7: {
+      measure: "Academic pressure",
+      title: "School is driving adverse mental health experiences among the young",
+      paras: [
+        "Seven in ten Taiwanese high school students report high levels of stress, and 57% experience moderate to severe fatigue. The pressure starts early: 30% of junior high students have had thoughts of self-harm linked to their studies. Over the past decade, the suicide rate among 15- to 24-year-olds has nearly doubled.",
+      ],
+      sources: ["Broken Chalk", "Child Welfare League Foundation"],
+    },
+    10: {
+      measure: "Loneliness",
+      title: "Loneliness deepens with age",
+      paras: [
+        "Across studies, the average prevalence of loneliness in Taiwan is 12.6%. Among adults over 65, it rises to between 18% and 27%, depending on how it is measured.",
+      ],
+      sources: ["Hung et al.", "Tiunn et al."],
+    },
+    1: {
+      measure: "Healthcare",
+      title: "Nearly everyone is covered, and nearly everyone is satisfied",
+      paras: [
+        "Taiwan's single-payer National Health Insurance launched in 1995 and now covers 99.93% of the population, including foreign residents. Public satisfaction exceeds 90%. Access is easy and unrestricted: Taiwanese average 16.1 outpatient visits a year, against 5.9 in comparable high-income OECD countries, with an average premium of about 5% of monthly income.",
+      ],
+      sources: ["Health Affairs", "Health and Human Rights Journal"],
+    },
+    6: {
+      measure: "Safety",
+      title: "One of the safest places in the world",
+      paras: [
+        "Taiwan ranked fourth of 146 countries on Numbeo's 2025 Safety Index, with a score of 82.9 — ahead of Singapore in ninth and Japan in tenth. The United States ranked 89th. Residents rate violent crime, robbery and theft as very low concerns.",
+      ],
+      sources: ["Numbeo Safety Index 2025", "Taipei Times"],
+    },
+    8: {
+      measure: "Everyday emotion",
+      title: "The least sad country on earth",
+      paras: [
+        "Asked how they felt the previous day, just 7.3% of Taiwanese reported sadness — the lowest share of 164 countries. Only 17.8% reported worry and 17.3% physical pain, both second-lowest in the world. Meanwhile, 84% reported enjoyment and 83% smiled or laughed.",
+      ],
+      sources: ["Blanchflower & Bryson (2024), Wellbeing Rankings, Gallup World Poll"],
+    },
+    11: {
+      measure: "Family",
+      title: "Family is still the first safety net",
+      paras: [
+        "More than half of Taiwanese aged 65 and over — 55.5% — live with their adult children. When older people need daily care, family provides it: two-thirds of frail elders are cared for solely by relatives, and fewer than one in twenty live in residential homes. Most older Taiwanese prefer it that way, and a growing share of grandparents help raise their grandchildren.",
+      ],
+      sources: ["Ministry of Health and Welfare, Senior Citizen Condition Survey 2017", "Department of Statistics, Ministry of the Interior"],
+    },
+  },
+  "Bhutan": {
+    0: {
+      measure: "Alcohol consumption",
+      bullets: true, // body shown as a bulleted list
+      title: "Alcohol use is high, and a leading cause of death",
+      paras: [
+        "Alcohol consumption is socially accepted in Bhutan, with a prevalence of 42.4%",
+        "More than 22% of consumers engage in heavy episodic drinking",
+        "Harmful alcohol use is a top cause of mortality in Bhutan",
+        "Among adolescents, 24.2% use alcohol and 16% use other substances",
+      ],
+      sources: ["Dendup et al."],
+    },
+    2: {
+      measure: "Mental health",
+      title: "Cases are climbing, but the language to describe them is thin",
+      paras: [
+        "Documented mental health disorders in Bhutan more than doubled in four years, from 2,878 cases in 2011 to 7,004 in 2015. Anxiety accounted for 45% of those cases and depression for 31%. Stigma keeps the subject largely unspoken, and Dr. Chencho Dorji, the country's first qualified psychiatrist, points to a deeper barrier: the local dialect offers few ways to describe emotional states, which keeps awareness low and leaves many people silent.",
+      ],
+      sources: ["ABC News", "Dorji et al."],
+    },
+    6: {
+      measure: "Death by suicide",
+      title: "Among the leading causes of death",
+      paras: [
+        "Suicide ranks among Bhutan's leading causes of death, at a crude rate of about 13 per 100,000 people in 2024. Rates run highest among rural residents and farmers, followed by students, and among people who are married or partnered, with lower education and income.",
+      ],
+      sources: ["Dendup et al.", "Asia News Network"],
+    },
+    8: {
+      measure: "Emigration and economics",
+      title: "An exodus to Australia",
+      paras: [
+        "In 2023 alone, 1.5% of Bhutan's population left for Australia to work or study. At home, opportunities have narrowed: just over half of women now work, down from 61.2% in 2019, and youth unemployment, rising steadily since 2004, reached 28.6% in 2022.",
+      ],
+      sources: ["The Guardian"],
+    },
+    12: {
+      measure: "Affect",
+      title: "A country of strong feeling, in both directions",
+      paras: [
+        "The same Bhutanese who report some of the world's highest enjoyment also report among its highest negative emotion. Nearly 30% felt angry the previous day, ranking 145th of 164 countries. More than a third were in physical pain (117th), and 43.5% felt worried (107th). Asked to rate their lives as a whole, Bhutanese averaged 5.2 out of 10, ranking 86th.",
+      ],
+      sources: ["Blanchflower & Bryson (2024), Wellbeing Rankings, Gallup World Poll"],
+    },
+    1: {
+      measure: "Gross National Happiness",
+      title: "Bhutan’s own survey says 94% are happy, or 48%",
+      paras: [
+        "Bhutan's 2022 Gross National Happiness Survey asked 11,052 people across all 20 districts about 33 indicators of wellbeing. Count everyone who reaches sufficiency in at least half of them, and 93.6% of Bhutanese are happy — the figure that made headlines worldwide. Raise the bar to two-thirds, the threshold the index itself uses to define happiness, and the share falls to 48.1%. Same people, same answers: the cutoff writes the story.",
+      ],
+      chart: "bt-gnh",
+      sources: ["Centre for Bhutan and GNH Studies, 2022 GNH Survey Report", "Oxford Poverty and Human Development Initiative (OPHI)"],
+    },
+    3: {
+      measure: "Time use",
+      title: "Women work longer and rest less",
+      paras: [
+        "Bhutan's happiness index treats time as a condition of wellbeing: a person counts as sufficient only if they work no more than eight hours a day and sleep at least eight. By that measure, the burden falls unevenly. Women work an average of 8 hours 21 minutes a day across household, paid, and community work, against 7 hours 31 minutes for men, and get about an hour less leisure. Sleep is among the most common shortfalls for the 51.9% of Bhutanese classed as not yet happy — even though, asked by Gallup, Bhutanese report feeling more well-rested than any other country.",
+      ],
+      sources: ["Asian Development Bank, The Experience of Gross National Happiness", "Centre for Bhutan and GNH Studies / OPHI", "Multidimensional Poverty Peer Network"],
+    },
+    5: {
+      measure: "Healthcare",
+      title: "Free healthcare is written into the constitution",
+      paras: [
+        "Bhutan's constitution requires the state to provide free access to basic public health services, in both modern and traditional medicine. Care is free at the point of service, and patients who need treatment unavailable at home are referred abroad at state expense. Life expectancy has risen from 32 years in 1960 to around 70 today.",
+      ],
+      sources: ["Ministry of Health, National Health Policy", "Euroasian Journal of Hepato-Gastroenterology"],
+    },
+    7: {
+      measure: "Environment",
+      title: "A forest the constitution protects forever",
+      paras: [
+        "Bhutan's constitution requires that at least 60% of the country remain forested for all time. Today forest covers about 72% of the land, and more than half the country is protected — the largest share of any nation in Asia. Its forests absorb several times more carbon than the country emits, making Bhutan one of the world's few carbon-negative nations.",
+      ],
+      sources: ["Ministry of Foreign Affairs of Bhutan", "World Wildlife Fund"],
+    },
+    10: {
+      measure: "Rural happiness",
+      title: "Happiness grew fastest in the countryside",
+      paras: [
+        "Bhutan's GNH Index rose from 0.743 in 2010 to 0.781 in 2022, and the gains were not where you might expect. Rural wellbeing rose from 0.731 to 0.771 since 2015, while urban wellbeing stayed flat. Women's scores rose by about six points over the same period, narrowing the gender gap.",
+      ],
+      sources: ["OPHI", "Multidimensional Poverty Peer Network (MPPN)"],
+    },
+    11: {
+      measure: "The expelled",
+      title: "A sixth of the population was forced out",
+      paras: [
+        "Between 1990 and 1993, more than 100,000 Lhotshampa — Bhutanese of Nepali descent — were forcibly displaced from the country, roughly one in six of the population at the time. More than 40,000 were later resettled in eight countries under a US-led programme. Since 2025, several deported from the United States have been refused re-entry by Bhutan, leaving them stateless.",
+      ],
+      sources: ["Forced Migration Review", "US Department of State", "CNN"],
+    },
+    13: {
+      measure: "Missing from the global data",
+      title: "The home of national happiness is absent from the global ranking",
+      paras: [
+        "Bhutan, the country that introduced Gross National Happiness, has not appeared in the World Happiness Report since 2018, when it ranked 95th. Its own index is published in detailed reports, but the underlying survey data is not publicly released — the results can be read, but not independently checked.",
+      ],
+      sources: ["World Happiness Report", "Centre for Bhutan and GNH Studies", "Global Health Data Exchange"],
     },
   },
 };

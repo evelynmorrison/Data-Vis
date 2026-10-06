@@ -1,8 +1,8 @@
 /* ───────── VOTE ─────────
    "How would you quantify happiness?" — light exactly six windows, one per measure.
    Every time the screen opens it resets: all windows off, options reshuffled (so earlier positions aren't
-   favoured). Each Done adds a new entry via recordVote(); loadVote() returns the latest entry, fetchVotes()
-   every entry for the results page. */
+   favoured). Each Done adds a new entry via recordVote() — sent to the shared Supabase database and kept in this
+   browser. loadVote() returns this browser's latest entry; fetchTally() returns the totals for the results page. */
 const VOTE_PICK = 6, VOTES_KEY = "untold.votes.v1", OLD_VOTE_KEY = "untold.vote.v1";
 const VOTE_LABELS = [
   "How often you laugh or smile", "How often you feel sad", "How often you feel angry", "How often you feel worried",
@@ -25,8 +25,13 @@ const VOTE_OPTIONS = VOTE_LABELS.map((label, i) => ({
   label, pane: PANES[i % 10], size: SHAPES[(i * 3 + Math.floor(i / 10)) % 10],
 }));
 
-// Storage: entries live only in this browser, as a list (each Done appends one).
-// To pool votes across visitors, swap a shared backend into recordVote() and fetchVotes() — nothing else changes.
+/* Storage. Votes go to a Supabase table (setup: supabase/setup.sql) so everyone's choices are pooled.
+   The publishable key is meant to be public: the database only lets visitors add votes and read totals.
+   Every entry is also kept in this browser — for the "You" badges, and as a queue: an entry that couldn't be
+   sent (offline, database down) is marked pending and retried on the next visit. */
+const SUPABASE = { url: "https://nauocnqiortfxhojogem.supabase.co", key: "sb_publishable_VDqQimeyx77qnOWmiOOdMw_u-qZcxOC" };
+const sbHeaders = extra => ({ apikey: SUPABASE.key, ...extra });
+
 // entries submitted in this browser
 function localVotes() {
   try {
@@ -36,21 +41,94 @@ function localVotes() {
     return old ? [old] : [];
   } catch { return []; }
 }
-function recordVote(rec) { try { localStorage.setItem(VOTES_KEY, JSON.stringify([...localVotes(), rec])); return true; } catch { return false; } }
+function saveLocal(all) { try { localStorage.setItem(VOTES_KEY, JSON.stringify(all)); return true; } catch { return false; } }
 function loadVote() { const all = localVotes(); return all[all.length - 1] || null; } // this visitor's latest entry
-// every vote the results page counts: demo seed votes (js/seed-votes.js, if present) + this browser's entries
-function fetchVotes() { return [...(typeof SEED_VOTES !== "undefined" ? SEED_VOTES : []), ...localVotes()]; }
+
+async function sendVote(rec) {
+  try {
+    const r = await fetch(`${SUPABASE.url}/rest/v1/votes`, { method: "POST",
+      headers: sbHeaders({ "Content-Type": "application/json", Prefer: "return=minimal" }),
+      body: JSON.stringify({ choices: rec.choices, shown: rec.shown, write_in: rec.writeIn || null, ...(rec.country && { country: rec.country }) }) });
+    return r.ok;
+  } catch { return false; }
+}
+// save in this browser, then send to the shared database; resolves true if it reached the database
+async function recordVote(rec) {
+  const all = [...localVotes(), { ...rec, pending: true }]; saveLocal(all);
+  const sent = await sendVote(rec);
+  if (sent) { all[all.length - 1].pending = false; saveLocal(all); }
+  return sent;
+}
+// retry any entries from earlier visits that never reached the database
+async function flushPending() {
+  const all = localVotes(); let changed = false;
+  for (const v of all) if (v.pending && await sendVote(v)) { v.pending = false; changed = true; }
+  if (changed) saveLocal(all);
+}
+flushPending();
+
+// totals for the results page: { n: number of votes, counts: {optionId: votes}, shared: reached the database? }
+async function fetchTally() {
+  const counts = Object.fromEntries(VOTE_OPTIONS.map(o => [o.id, 0])), add = v => v.choices.forEach(id => { if (id in counts) counts[id]++; });
+  let n = 0, shared = false;
+  try {
+    const [t, c] = await Promise.all([
+      fetch(`${SUPABASE.url}/rest/v1/vote_tally?select=id,n`, { headers: sbHeaders() }),
+      fetch(`${SUPABASE.url}/rest/v1/votes?select=id`, { headers: sbHeaders({ Prefer: "count=exact", Range: "0-0" }) }),
+    ]);
+    if (!t.ok || !c.ok) throw new Error("tally");
+    (await t.json()).forEach(r => { if (r.id in counts) counts[r.id] += r.n; });
+    n = +(c.headers.get("content-range") || "/0").split("/")[1] || 0; shared = true;
+  } catch { const mine = localVotes(); mine.forEach(add); n = mine.length; } // offline: this browser's entries only
+  return { n, counts, shared };
+}
 
 const byId = Object.fromEntries(VOTE_OPTIONS.map(o => [o.id, o]));
 const voteGrid = document.getElementById("vgrid"), voteCount = document.getElementById("vcount"), voteDone = document.getElementById("vdone");
 const voteWrite = document.getElementById("vwrite"); // optional write-in: a proposed metric, saved with the vote
+const voteCountry = document.getElementById("vcountry"); // required: the voter's country, picked from the list
+
+// every country/territory (ISO 3166-1 + Kosovo), names from the browser's built-in list with a few plainer names
+const COUNTRY_CODES = "AF AX AL DZ AS AD AO AI AQ AG AR AM AW AU AT AZ BS BH BD BB BY BE BZ BJ BM BT BO BQ BA BW BV BR IO BN BG BF BI CV KH CM CA KY CF TD CL CN CX CC CO KM CG CD CK CR CI HR CU CW CY CZ DK DJ DM DO EC EG SV GQ ER EE SZ ET FK FO FJ FI FR GF PF TF GA GM GE DE GH GI GR GL GD GP GU GT GG GN GW GY HT HM VA HN HK HU IS IN ID IR IQ IE IM IL IT JM JP JE JO KZ KE KI KP KR XK KW KG LA LV LB LS LR LY LI LT LU MO MG MW MY MV ML MT MH MQ MR MU YT MX FM MD MC MN ME MS MA MZ MM NA NR NP NL NC NZ NI NE NG NU NF MK MP NO OM PK PW PS PA PG PY PE PH PN PL PT PR QA RE RO RU RW BL SH KN LC MF PM VC WS SM ST SA SN RS SC SL SG SX SK SI SB SO ZA GS SS ES LK SD SR SJ SE CH SY TW TJ TZ TH TL TG TK TO TT TN TR TM TC TV UG UA AE GB US UM UY UZ VU VE VN VG VI WF EH YE ZM ZW".split(" ");
+const COUNTRY_NAMES = (() => {
+  const plain = { CD: "DR Congo", CG: "Congo", HK: "Hong Kong", MO: "Macau", MM: "Myanmar", PS: "Palestine", CI: "Côte d’Ivoire", XK: "Kosovo" };
+  let dn; try { dn = new Intl.DisplayNames(["en"], { type: "region" }); } catch {}
+  return [...new Set(COUNTRY_CODES.map(c => plain[c] || dn?.of(c) || c))].sort((a, b) => a.localeCompare(b));
+})();
+// country picker: a scrollable list of every country under the field, filtered as you type
+// (a custom list rather than <datalist>, which phones show inconsistently)
+const countryList = document.getElementById("vclist");
+let countryActive = -1;
+function renderCountries() {
+  const q = voteCountry.value.trim().toLowerCase();
+  const hits = !q ? COUNTRY_NAMES : [...COUNTRY_NAMES.filter(n => n.toLowerCase().startsWith(q)), ...COUNTRY_NAMES.filter(n => !n.toLowerCase().startsWith(q) && n.toLowerCase().includes(q))];
+  countryActive = -1;
+  countryList.innerHTML = hits.length ? hits.map(n => `<li role="option" data-name="${n}">${n}</li>`).join("") : `<li class="none">No match — check the spelling</li>`;
+  countryList.hidden = false; voteCountry.setAttribute("aria-expanded", "true"); countryList.scrollTop = 0;
+}
+function closeCountries() { countryList.hidden = true; voteCountry.setAttribute("aria-expanded", "false"); }
+function pickCountry(name) { voteCountry.value = name; voteCountry.classList.remove("bad"); closeCountries(); updateVote(); }
+voteCountry.addEventListener("focus", renderCountries);
+voteCountry.addEventListener("click", () => { if (countryList.hidden) renderCountries(); });
+voteCountry.addEventListener("blur", () => setTimeout(closeCountries, 150));
+countryList.addEventListener("pointerdown", e => { const li = e.target.closest("li[data-name]"); if (li) { e.preventDefault(); pickCountry(li.dataset.name); voteCountry.blur(); } });
+voteCountry.addEventListener("keydown", e => {
+  const items = [...countryList.querySelectorAll("li[data-name]")]; if (countryList.hidden || !items.length) return;
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); countryActive = (countryActive + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+    items.forEach((li, i) => li.classList.toggle("act", i === countryActive)); items[countryActive].scrollIntoView({ block: "nearest" }); }
+  else if (e.key === "Enter") { e.preventDefault(); pickCountry(items[Math.max(0, countryActive)].dataset.name); }
+  else if (e.key === "Escape") closeCountries();
+});
+// exact list name for what was typed (any capitalisation), or null if it isn't on the list
+const countryMatch = v => { v = v.trim().toLowerCase(); return v ? COUNTRY_NAMES.find(n => n.toLowerCase() === v) || null : null; };
 let voteOrder = [], lit = new Set();
 
 // fresh entry: everything off, new random order (called by go("vote"))
 function resetVote() {
   voteOrder = VOTE_OPTIONS.map(o => o.id);
   for (let i = voteOrder.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [voteOrder[i], voteOrder[j]] = [voteOrder[j], voteOrder[i]]; } // Fisher–Yates
-  lit = new Set(); voteWrite.value = "";
+  lit = new Set(); voteWrite.value = ""; voteCountry.classList.remove("bad");
+  voteCountry.value = ""; closeCountries(); // blank every time — the voter picks their country
   voteGrid.innerHTML = voteOrder.map(id => {
     const o = byId[id], [w, h] = o.size;
     return `<button class="vopt" data-id="${id}" aria-pressed="false"><span class="vicon"><span class="cw" style="width:${w}px;height:${h}px">${o.pane === "plain" ? "" : mull(o.pane, w, h)}</span></span><span class="vlab">${o.label}</span></button>`;
@@ -59,10 +137,14 @@ function resetVote() {
 }
 function updateVote() {
   voteGrid.querySelectorAll(".vopt").forEach(b => { const on = lit.has(b.dataset.id); b.setAttribute("aria-pressed", on); b.firstChild.firstChild.classList.toggle("sel", on); });
-  const n = lit.size;
-  voteDone.disabled = n !== VOTE_PICK;
-  voteCount.textContent = n === VOTE_PICK ? "6 of 6 lit — ready" : `${n} of ${VOTE_PICK} lit`;
+  const n = lit.size, country = countryMatch(voteCountry.value);
+  voteDone.disabled = n !== VOTE_PICK || !country;
+  voteCount.textContent = n !== VOTE_PICK ? `${n} of ${VOTE_PICK} lit` : country ? "6 of 6 lit — ready" : "6 of 6 lit — now choose your country";
 }
+voteCountry.addEventListener("input", () => { voteCountry.classList.remove("bad"); renderCountries(); updateVote(); });
+voteCountry.addEventListener("change", () => { // tidy to the list's spelling, or flag text that isn't a country on the list
+  const m = countryMatch(voteCountry.value); if (m) voteCountry.value = m;
+  voteCountry.classList.toggle("bad", !!voteCountry.value.trim() && !m); updateVote(); });
 voteGrid.addEventListener("click", e => {
   const b = e.target.closest(".vopt"); if (!b) return;
   const id = b.dataset.id;
@@ -71,11 +153,14 @@ voteGrid.addEventListener("click", e => {
   else lit.add(id);
   updateVote();
 });
-voteDone.addEventListener("click", () => {
-  if (lit.size !== VOTE_PICK) return;
+voteDone.addEventListener("click", async () => {
+  const country = countryMatch(voteCountry.value);
+  if (lit.size !== VOTE_PICK || !country || voteDone.dataset.busy) return;
   const writeIn = voteWrite.value.trim();
-  const ok = recordVote({ v: 1, choices: voteOrder.filter(id => lit.has(id)), shown: voteOrder, ...(writeIn && { writeIn }), at: new Date().toISOString() });
-  if (!ok) { toast("Couldn't save your choices in this browser"); return; }
+  voteDone.dataset.busy = 1; voteDone.disabled = true; voteDone.textContent = "Saving…";
+  const sent = await recordVote({ v: 1, choices: voteOrder.filter(id => lit.has(id)), shown: voteOrder, ...(writeIn && { writeIn }), country, at: new Date().toISOString() });
+  delete voteDone.dataset.busy; voteDone.textContent = "Done";
+  if (!sent) toast("Saved on this device — it will be added to the shared results when you're back online");
   go("results");
 });
 resetVote();

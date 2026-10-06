@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Untold stories · Prototype</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@200;300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Poppins:ital,wght@1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles/theme.css?v=20261005fix">
-<link rel="stylesheet" href="styles/app.css?v=20261006plexsans">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@200;300;400;500;600&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Poppins:ital,wght@1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/theme.css?v=20261006094945">
+<link rel="stylesheet" href="styles/app.css?v=20261006merge">
 </head>
 <body>
 <div id="stage">
@@ -81,9 +81,19 @@
       <p>Turn on the lights in six windows. Your choices are combined with others to inform a new index of happiness.</p>
     </div>
     <div class="vgrid" id="vgrid" role="group" aria-label="Measures of happiness"></div>
+    <div class="vfields">
     <div class="vwrite">
       <label for="vwrite">If you feel something is missing from this list</label>
       <input id="vwrite" type="text" maxlength="120" placeholder="Propose another metric" autocomplete="off">
+    </div>
+    <div class="vwrite">
+      <label for="vcountry">Which country are you from? <span class="vreq" aria-hidden="true">*</span><span class="sr-only">(required)</span></label>
+      <div class="vcombo">
+        <input id="vcountry" type="text" placeholder="Search or scroll for your country" autocomplete="off" required aria-required="true"
+          role="combobox" aria-expanded="false" aria-controls="vclist" aria-autocomplete="list">
+        <ul class="vclist" id="vclist" role="listbox" hidden></ul>
+      </div>
+    </div>
     </div>
     <div class="vfoot"><button class="vdone" id="vdone" disabled>Done</button><div class="vcount" id="vcount" aria-live="polite"></div></div>
   </section>
@@ -97,7 +107,10 @@
         <h2>Here’s what lights up for everyone.</h2>
         <p>Each row is a happiness metric. The more people chose it, the more lights are on.</p>
       </div>
-      <ol class="rlist" id="rlist"></ol>
+      <div class="rbody">
+        <ol class="rlist" id="rlist"></ol>
+        <aside class="rmatch" id="rmatch" aria-label="Countries that vote like you"></aside>
+      </div>
     </div>
     <div class="vfoot"><button class="rback" data-goto="vote">Vote again</button></div>
   </section>
@@ -105,18 +118,18 @@
   <div class="toast" id="toast"></div>
 </div>
 
-<script src="js/countries.js?v=20261005fix"></script>
-<script src="js/shapes.js?v=20261005fix"></script>
-<script src="js/data.js?v=20261005fix"></script>
-<script src="js/flags.js?v=20261005fix"></script>
-<script src="js/nav.js?v=20261005fix"></script>
-<script src="js/ranking.js?v=20261005fix"></script>
-<script src="js/chart.js?v=20261005fix"></script>
-<script src="js/search.js?v=20261005fix"></script>
-<script src="js/stories.js?v=20261005fix"></script>
-<script src="js/modal.js?v=20261005v2"></script>
-<script src="js/seed-votes.js?v=20261005fix"></script>
-<script src="js/vote.js?v=20261005fix"></script>
-<script src="js/results.js?v=20261005fix"></script>
+<script src="js/countries.js?v=20261006094945"></script>
+<script src="js/shapes.js?v=20261006094945"></script>
+<script src="js/data.js?v=20261006094945"></script>
+<script src="js/flags.js?v=20261006094945"></script>
+<script src="js/nav.js?v=20261006094945"></script>
+<script src="js/ranking.js?v=20261006094945"></script>
+<script src="js/chart.js?v=20261006094945"></script>
+<script src="js/search.js?v=20261006094945"></script>
+<script src="js/stories.js?v=20261006094945"></script>
+<script src="js/modal.js?v=20261006094945"></script>
+<script src="js/vote.js?v=20261006094945"></script>
+<script src="js/similar.js?v=20261006094945"></script>
+<script src="js/results.js?v=20261006094945"></script>
 </body>
 </html>
