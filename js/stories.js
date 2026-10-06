@@ -154,6 +154,38 @@ const WINDOW_STORIES = {
       ],
       sources: ["Hung et al.", "Tiunn et al."],
     },
+    1: {
+      measure: "Healthcare",
+      title: "Nearly everyone is covered, and nearly everyone is satisfied",
+      paras: [
+        "Taiwan's single-payer National Health Insurance launched in 1995 and now covers 99.93% of the population, including foreign residents. Public satisfaction exceeds 90%. Access is easy and unrestricted: Taiwanese average 16.1 outpatient visits a year, against 5.9 in comparable high-income OECD countries, with an average premium of about 5% of monthly income.",
+      ],
+      sources: ["Health Affairs", "Health and Human Rights Journal"],
+    },
+    6: {
+      measure: "Safety",
+      title: "One of the safest places in the world",
+      paras: [
+        "Taiwan ranked fourth of 146 countries on Numbeo's 2025 Safety Index, with a score of 82.9 — ahead of Singapore in ninth and Japan in tenth. The United States ranked 89th. Residents rate violent crime, robbery and theft as very low concerns.",
+      ],
+      sources: ["Numbeo Safety Index 2025", "Taipei Times"],
+    },
+    8: {
+      measure: "Everyday emotion",
+      title: "The least sad country on earth",
+      paras: [
+        "Asked how they felt the previous day, just 7.3% of Taiwanese reported sadness — the lowest share of 164 countries. Only 17.8% reported worry and 17.3% physical pain, both second-lowest in the world. Meanwhile, 84% reported enjoyment and 83% smiled or laughed.",
+      ],
+      sources: ["Blanchflower & Bryson (2024), Wellbeing Rankings, Gallup World Poll"],
+    },
+    11: {
+      measure: "Family",
+      title: "Family is still the first safety net",
+      paras: [
+        "More than half of Taiwanese aged 65 and over — 55.5% — live with their adult children. When older people need daily care, family provides it: two-thirds of frail elders are cared for solely by relatives, and fewer than one in twenty live in residential homes. Most older Taiwanese prefer it that way, and a growing share of grandparents help raise their grandchildren.",
+      ],
+      sources: ["Ministry of Health and Welfare, Senior Citizen Condition Survey 2017", "Department of Statistics, Ministry of the Interior"],
+    },
   },
   "Bhutan": {
     0: {
