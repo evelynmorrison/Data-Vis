@@ -113,6 +113,11 @@ const WINDOW_CHARTS={
             {name:"Death",      sig:[168.1,196.55], vals:[1.0,1.35,1.7,1.95,2.05,2.65,3.35,4.3,5.35,6.55,6.85,7.25,8.0,8.65,9.05,9.4,9.55]},
             {name:"Disability", sig:[168.6,196.55], vals:[1.0,1.4,1.7,1.83,1.95,2.75,3.85,5.4,7.0,8.5,8.72,8.85,8.9,9.0,9.15,9.35,9.45]},
             {name:"Illness",    sig:[173,191.1],   vals:[1.0,1.05,1.05,1.08,1.1,1.25,1.8,2.6,3.35,4.1,4.07,3.9,3.4,2.6,1.85,1.3,1.05]}]},
+  // Centre for Bhutan & GNH Studies, 2022 GNH Survey Report, Figure 29: share of people in each happiness gradient
+  "bt-gnh":{kind:"stack", title:"Happiness gradients in Bhutan, 2010–2022", unit:"Share of people, Gross National Happiness Survey",
+    cats:["Unhappy","Narrowly happy","Extensively happy","Deeply happy"], colors:["#3a4180","#6f7bc8","#aab4f0","#e9d27a"], dark:[false,false,true,true],
+    rows:[{label:"2010",vals:[10.4,48.7,32.6,8.3]},{label:"2015",vals:[8.8,47.9,35.0,8.4]},{label:"2022",vals:[6.4,45.5,38.6,9.5]}],
+    note:"The index counts only extensively and deeply happy people as happy (sufficiency in two-thirds of indicators): 41% in 2010, 43% in 2015, 48% in 2022."},
 };
 const SERIES_COLORS=["#aab4f0","#e9d27a","#ff8a8a","#6fd39a"]; // lavender, window yellow, coral, green
 const LC={W:640,H:210,L:34,R:132,T:14,B:26};
@@ -145,6 +150,14 @@ function lineChart(c){
   const legend=multi?`<div class="lc-legend">${c.series.map((s,k)=>`<span><i style="background:${SERIES_COLORS[k]}"></i>${s.name}</span>`).join("")}</div>`:"";
   return `<figure class="lcwrap" data-chart><figcaption><b>${c.title}</b><span>${c.unit}</span></figcaption>${legend}${o}${c.axisX?`<div class="lc-axlab">${c.axisX}</div>`:""}<div class="lc-tip"></div>${c.note?`<div class="lc-note">${c.note}</div>`:""}</figure>`;
 }
+// 100% stacked horizontal bars, one row per year; each segment labelled with its share
+function stackChart(c){
+  const legend=`<div class="lc-legend">${c.cats.map((n,k)=>`<span><i style="background:${c.colors[k]}"></i>${n}</span>`).join("")}</div>`;
+  const rows=c.rows.map(r=>`<div class="sc-row"><span class="sc-lab">${r.label}</span><div class="sc-bar">${r.vals.map((v,k)=>
+    `<span class="sc-seg" style="flex:${v} 1 0;background:${c.colors[k]};color:${c.dark[k]?"#11132b":"#eef0f8"}" title="${r.label} · ${c.cats[k]}: ${v}%">${v>=6?v.toFixed(1)+"%":""}</span>`).join("")}</div></div>`).join("");
+  return `<figure class="lcwrap"><figcaption><b>${c.title}</b><span>${c.unit}</span></figcaption>${legend}<div class="sc">${rows}</div>${c.note?`<div class="lc-note">${c.note}</div>`:""}</figure>`;
+}
+const chartHTML=c=>c.kind==="stack"?stackChart(c):lineChart(c);
 function wireLineChart(fig,c){
   const {W,H,L,R,T,B}=LC, n=c.yrs.length, {x,y,fmt}=lcScale(c);
   const svg=fig.querySelector("svg"), hit=svg.querySelector(".lc-hit"), xl=svg.querySelector(".lc-x"), dots=[...svg.querySelectorAll(".lc-dot")], tip=fig.querySelector(".lc-tip");
@@ -168,8 +181,8 @@ function showDim(k,d){
     const c=st.chart&&WINDOW_CHARTS[st.chart];
     const text=st.bullets?`<ul class="dbullets">${st.paras.map(p=>`<li>${p}</li>`).join("")}</ul>`:st.paras.map(p=>`<p>${p}</p>`).join("");
     // source pinned to the bottom of the panel, same place and style as on the country overview
-    body.innerHTML=`<div class="dstory">${text}${c?lineChart(c):""}</div>${st.sources?`<div class="dsrc">Source: ${st.sources.join(" · ")}</div>`:""}`;
-    if(c) wireLineChart(body.querySelector("[data-chart]"),c);
+    body.innerHTML=`<div class="dstory">${text}${c?chartHTML(c):""}</div>${st.sources?`<div class="dsrc">Source: ${st.sources.join(" · ")}</div>`:""}`;
+    if(c&&c.kind!=="stack") wireLineChart(body.querySelector("[data-chart]"),c);
     const ds=body.querySelector(".dstory"), hd=document.getElementById("dhead"); ds.scrollTop=0;
     ds.style.top=(hd.offsetTop+hd.offsetHeight+24)+"px"; // start right under the headline (one or two lines)
     const src=body.querySelector(".dsrc"); ds.style.bottom=(src?src.offsetHeight+26+20:24)+"px"; // stop above the source line

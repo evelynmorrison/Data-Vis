@@ -233,5 +233,62 @@ const WINDOW_STORIES = {
       ],
       sources: ["Blanchflower & Bryson (2024), Wellbeing Rankings, Gallup World Poll"],
     },
+    1: {
+      measure: "Gross National Happiness",
+      title: "Bhutan’s own survey says 94% are happy, or 48%",
+      paras: [
+        "Bhutan's 2022 Gross National Happiness Survey asked 11,052 people across all 20 districts about 33 indicators of wellbeing. Count everyone who reaches sufficiency in at least half of them, and 93.6% of Bhutanese are happy — the figure that made headlines worldwide. Raise the bar to two-thirds, the threshold the index itself uses to define happiness, and the share falls to 48.1%. Same people, same answers: the cutoff writes the story.",
+      ],
+      chart: "bt-gnh",
+      sources: ["Centre for Bhutan and GNH Studies, 2022 GNH Survey Report", "Oxford Poverty and Human Development Initiative (OPHI)"],
+    },
+    3: {
+      measure: "Time use",
+      title: "Women work longer and rest less",
+      paras: [
+        "Bhutan's happiness index treats time as a condition of wellbeing: a person counts as sufficient only if they work no more than eight hours a day and sleep at least eight. By that measure, the burden falls unevenly. Women work an average of 8 hours 21 minutes a day across household, paid, and community work, against 7 hours 31 minutes for men, and get about an hour less leisure. Sleep is among the most common shortfalls for the 51.9% of Bhutanese classed as not yet happy — even though, asked by Gallup, Bhutanese report feeling more well-rested than any other country.",
+      ],
+      sources: ["Asian Development Bank, The Experience of Gross National Happiness", "Centre for Bhutan and GNH Studies / OPHI", "Multidimensional Poverty Peer Network"],
+    },
+    5: {
+      measure: "Healthcare",
+      title: "Free healthcare is written into the constitution",
+      paras: [
+        "Bhutan's constitution requires the state to provide free access to basic public health services, in both modern and traditional medicine. Care is free at the point of service, and patients who need treatment unavailable at home are referred abroad at state expense. Life expectancy has risen from 32 years in 1960 to around 70 today.",
+      ],
+      sources: ["Ministry of Health, National Health Policy", "Euroasian Journal of Hepato-Gastroenterology"],
+    },
+    7: {
+      measure: "Environment",
+      title: "A forest the constitution protects forever",
+      paras: [
+        "Bhutan's constitution requires that at least 60% of the country remain forested for all time. Today forest covers about 72% of the land, and more than half the country is protected — the largest share of any nation in Asia. Its forests absorb several times more carbon than the country emits, making Bhutan one of the world's few carbon-negative nations.",
+      ],
+      sources: ["Ministry of Foreign Affairs of Bhutan", "World Wildlife Fund"],
+    },
+    10: {
+      measure: "Rural happiness",
+      title: "Happiness grew fastest in the countryside",
+      paras: [
+        "Bhutan's GNH Index rose from 0.743 in 2010 to 0.781 in 2022, and the gains were not where you might expect. Rural wellbeing rose from 0.731 to 0.771 since 2015, while urban wellbeing stayed flat. Women's scores rose by about six points over the same period, narrowing the gender gap.",
+      ],
+      sources: ["OPHI", "Multidimensional Poverty Peer Network (MPPN)"],
+    },
+    11: {
+      measure: "The expelled",
+      title: "A sixth of the population was forced out",
+      paras: [
+        "Between 1990 and 1993, more than 100,000 Lhotshampa — Bhutanese of Nepali descent — were forcibly displaced from the country, roughly one in six of the population at the time. More than 40,000 were later resettled in eight countries under a US-led programme. Since 2025, several deported from the United States have been refused re-entry by Bhutan, leaving them stateless.",
+      ],
+      sources: ["Forced Migration Review", "US Department of State", "CNN"],
+    },
+    13: {
+      measure: "Missing from the global data",
+      title: "The home of national happiness is absent from the global ranking",
+      paras: [
+        "Bhutan, the country that introduced Gross National Happiness, has not appeared in the World Happiness Report since 2018, when it ranked 95th. Its own index is published in detailed reports, but the underlying survey data is not publicly released — the results can be read, but not independently checked.",
+      ],
+      sources: ["World Happiness Report", "Centre for Bhutan and GNH Studies", "Global Health Data Exchange"],
+    },
   },
 };
