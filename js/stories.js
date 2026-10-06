@@ -83,6 +83,30 @@ const WINDOW_STORIES = {
       ],
       sources: ["Finnish Institute for Health and Welfare (THL), School Health Promotion Study 2025"],
     },
+    11: {
+      measure: "Proximity to nature",
+      title: "Nature is never far away",
+      paras: [
+        "More than three-quarters of Finland is forest, the highest share in Europe, and another 10% is lakes, rivers and other water. Under the principle of jokamiehenoikeus — Every Person's Right — anyone may hike, camp and pick berries and mushrooms in any forest, regardless of who owns it. The Ministry of the Environment recommends that schools sit no more than 300 metres from a green area.",
+      ],
+      sources: ["Finnish Ministry of Agriculture and Forestry", "Finland Toolbox (Ministry for Foreign Affairs)"],
+    },
+    13: {
+      measure: "Social infrastructure",
+      title: "The state shares the work of raising children",
+      paras: [
+        "In 1948, Finland became the first country to serve free meals to every schoolchild, and roughly 900,000 students still receive one each school day — the world's longest-running universal school meal programme. Since a 2022 reform, each parent receives 160 days of paid parental allowance, and fathers of children born under the new rules have taken an average of 78 days.",
+      ],
+      sources: ["Finland Toolbox", "Kela"],
+    },
+    14: {
+      measure: "Trust",
+      title: "Finns trust their institutions",
+      paras: [
+        "In 2025, 89% of people in Finland trusted the police and 75% trusted the courts. Trust in the civil service stood at 68%, against an OECD average of 45%, and trust in the national government at 49%, above the OECD average of 40%.",
+      ],
+      sources: ["OECD Survey on Drivers of Trust in Public Institutions 2026"],
+    },
   },
   "Taiwan": {
     0: {
