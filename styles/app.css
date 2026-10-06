@@ -410,3 +410,8 @@ html.tall #ribbon.on{padding-top:244px}
 #intro .istars{opacity:.65}
 /* landing background a step darker */
 #intro{background:#0b0c1f}
+/* window story headline + chart title: same lavender as the chart line (replaces the warm tint) */
+.dhead{color:#aab4f0}
+.lcwrap figcaption b{color:#aab4f0}
+/* sub-column titles (Overall / Positive / Negative Affect) in the chart lavender */
+.colsub{fill:#aab4f0}
