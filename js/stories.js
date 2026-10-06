@@ -24,6 +24,54 @@ const STORIES = {
    paras → body paragraphs (bullets: true shows them as a bulleted list); chart → key into WINDOW_CHARTS (modal.js); sources → source line. */
 const WINDOW_STORIES = {
   "Finland": {
+    0: {
+      measure: "Youth mental health",
+      title: "Mental health gaps among children and teens are wide",
+      paras: [
+        "Among students in grades 8 and 9, 51% of those born abroad reported discrimination or bullying, compared with 31% of those whose parents were both born in Finland. In upper secondary school, 18% of boys born abroad reported at least moderate anxiety, against 7% of boys with a Finnish background. Across groups, girls report anxiety, school burnout, life dissatisfaction, and loneliness clearly more often than boys.",
+      ],
+      sources: ["Finnish Institute for Health and Welfare (THL), School Health Promotion Study 2025"],
+    },
+    1: {
+      measure: "Proximity to nature",
+      title: "Nature is never far away",
+      paras: [
+        "More than three-quarters of Finland is forest, the highest share in Europe, and another 10% is lakes, rivers and other water. Under the principle of jokamiehenoikeus — Every Person's Right — anyone may hike, camp and pick berries and mushrooms in any forest, regardless of who owns it. The Ministry of the Environment recommends that schools sit no more than 300 metres from a green area.",
+      ],
+      sources: ["Finnish Ministry of Agriculture and Forestry", "Finland Toolbox (Ministry for Foreign Affairs)"],
+    },
+    3: {
+      measure: "Alcohol consumption",
+      title: "Monthly binge drinking reaches one in five",
+      paras: [
+        "In 2023, 21% of Finns reported heavy episodic drinking at least once a month — six or more standard drinks on a single occasion. Overall, 28% exceeded the risk threshold on the AUDIT, a screening test for alcohol-related problems.",
+      ],
+      sources: ["Finnish Institute for Health and Welfare"],
+    },
+    4: {
+      measure: "Trust",
+      title: "Finns trust their institutions",
+      paras: [
+        "In 2025, 89% of people in Finland trusted the police and 75% trusted the courts. Trust in the civil service stood at 68%, against an OECD average of 45%, and trust in the national government at 49%, above the OECD average of 40%.",
+      ],
+      sources: ["OECD Survey on Drivers of Trust in Public Institutions 2026"],
+    },
+    6: {
+      measure: "Youth life satisfaction",
+      title: "Young people's life satisfaction is at a record low",
+      paras: [
+        "The Youth Barometer 2025 surveyed about 2,300 people aged 15 to 29 for the State Youth Council. Only 30% rated their life satisfaction 9 or 10 — the lowest since the survey began in 1994, and down from more than half a decade earlier. The national average hides a widening gap between generations.",
+      ],
+      sources: ["Yle"],
+    },
+    8: {
+      measure: "Violence against women",
+      title: "Violence against women is among the highest in the EU",
+      paras: [
+        "In the 2024 EU Gender-Based Violence Survey, 57.1% of Finnish women aged 18 to 74 reported experiencing physical or sexual violence or threats in their lifetime. 37.3% reported sexual violence, against an EU average of 17.2%. And 12% experienced violence from an intimate partner in the past year — the highest rate in the EU.",
+      ],
+      sources: ["EU Gender-Based Violence Survey (Eurostat, FRA, EIGE)", "Helsinki Times"],
+    },
     10: {
       measure: "Antidepressant use",
       title: "Antidepressant use is rising, fastest among the young",
@@ -35,63 +83,7 @@ const WINDOW_STORIES = {
       chart: "fi-antidepressants",
       sources: ["Finnish Statistics on Medicines 2024", "Helsinki Times"],
     },
-    1: {
-      measure: "Alcohol consumption",
-      title: "Monthly binge drinking reaches one in five",
-      paras: [
-        "In 2023, 21% of Finns reported heavy episodic drinking at least once a month — six or more standard drinks on a single occasion. Overall, 28% exceeded the risk threshold on the AUDIT, a screening test for alcohol-related problems.",
-      ],
-      sources: ["Finnish Institute for Health and Welfare"],
-    },
-    3: {
-      measure: "Youth life satisfaction",
-      title: "Young people's life satisfaction is at a record low",
-      paras: [
-        "The Youth Barometer 2025 surveyed about 2,300 people aged 15 to 29 for the State Youth Council. Only 30% rated their life satisfaction 9 or 10 — the lowest since the survey began in 1994, and down from more than half a decade earlier. The national average hides a widening gap between generations.",
-      ],
-      sources: ["Yle"],
-    },
-    4: {
-      measure: "Violence against women",
-      title: "Violence against women is among the highest in the EU",
-      paras: [
-        "In the 2024 EU Gender-Based Violence Survey, 57.1% of Finnish women aged 18 to 74 reported experiencing physical or sexual violence or threats in their lifetime. 37.3% reported sexual violence, against an EU average of 17.2%. And 12% experienced violence from an intimate partner in the past year — the highest rate in the EU.",
-      ],
-      sources: ["EU Gender-Based Violence Survey (Eurostat, FRA, EIGE)", "Helsinki Times"],
-    },
-    6: {
-      measure: "Racism",
-      title: "Minorities, especially Black immigrants, face severe racism",
-      paras: [
-        "In the EU Fundamental Rights Agency's 2023 survey Being Black in the EU, 63% of Black respondents in Finland reported racial discrimination in the past five years — the third highest of the countries surveyed. 54% reported racist harassment, and 11% racist violence, the highest of any country in the survey.",
-      ],
-      sources: ["EU Agency for Fundamental Rights, Being Black in the EU"],
-    },
-    8: {
-      measure: "Death by suicide",
-      title: "Suicide and alcohol deaths are still deep-rooted problems",
-      paras: [
-        "Finland has halved its suicide rate since the 1990s, yet it remains relatively high for Western Europe, where the EU average is 10.4 deaths per 100,000 people. In 2024, death rates fell for most major causes — but the suicide rate held flat. The same year saw about 1,600 alcohol-related deaths.",
-      ],
-      sources: ["Statistics Finland", "Eurostat", "The Conversation"],
-    },
-    0: {
-      measure: "Youth mental health",
-      title: "Mental health gaps among children and teens are wide",
-      paras: [
-        "Among students in grades 8 and 9, 51% of those born abroad reported discrimination or bullying, compared with 31% of those whose parents were both born in Finland. In upper secondary school, 18% of boys born abroad reported at least moderate anxiety, against 7% of boys with a Finnish background. Across groups, girls report anxiety, school burnout, life dissatisfaction, and loneliness clearly more often than boys.",
-      ],
-      sources: ["Finnish Institute for Health and Welfare (THL), School Health Promotion Study 2025"],
-    },
     11: {
-      measure: "Proximity to nature",
-      title: "Nature is never far away",
-      paras: [
-        "More than three-quarters of Finland is forest, the highest share in Europe, and another 10% is lakes, rivers and other water. Under the principle of jokamiehenoikeus — Every Person's Right — anyone may hike, camp and pick berries and mushrooms in any forest, regardless of who owns it. The Ministry of the Environment recommends that schools sit no more than 300 metres from a green area.",
-      ],
-      sources: ["Finnish Ministry of Agriculture and Forestry", "Finland Toolbox (Ministry for Foreign Affairs)"],
-    },
-    13: {
       measure: "Social infrastructure",
       title: "The state shares the work of raising children",
       paras: [
@@ -99,13 +91,21 @@ const WINDOW_STORIES = {
       ],
       sources: ["Finland Toolbox", "Kela"],
     },
-    14: {
-      measure: "Trust",
-      title: "Finns trust their institutions",
+    13: {
+      measure: "Racism",
+      title: "Minorities, especially Black immigrants, face severe racism",
       paras: [
-        "In 2025, 89% of people in Finland trusted the police and 75% trusted the courts. Trust in the civil service stood at 68%, against an OECD average of 45%, and trust in the national government at 49%, above the OECD average of 40%.",
+        "In the EU Fundamental Rights Agency's 2023 survey Being Black in the EU, 63% of Black respondents in Finland reported racial discrimination in the past five years — the third highest of the countries surveyed. 54% reported racist harassment, and 11% racist violence, the highest of any country in the survey.",
       ],
-      sources: ["OECD Survey on Drivers of Trust in Public Institutions 2026"],
+      sources: ["EU Agency for Fundamental Rights, Being Black in the EU"],
+    },
+    14: {
+      measure: "Death by suicide",
+      title: "Suicide and alcohol deaths are still deep-rooted problems",
+      paras: [
+        "Finland has halved its suicide rate since the 1990s, yet it remains relatively high for Western Europe, where the EU average is 10.4 deaths per 100,000 people. In 2024, death rates fell for most major causes — but the suicide rate held flat. The same year saw about 1,600 alcohol-related deaths.",
+      ],
+      sources: ["Statistics Finland", "Eurostat", "The Conversation"],
     },
   },
   "Taiwan": {
