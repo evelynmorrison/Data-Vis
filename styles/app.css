@@ -390,3 +390,5 @@ html.mob .rmatch .bar{margin-top:4px}
 .v-eye{font-weight:400}
 .vhead h2,.rhead h2{font:400 36px "IBM Plex Sans",var(--font-sans);letter-spacing:0}
 .vlab{font-weight:400}
+/* ranking scores one weight lighter */
+.row .sc{font-weight:500}
