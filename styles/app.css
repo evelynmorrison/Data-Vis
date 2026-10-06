@@ -7,7 +7,7 @@ html,body{margin:0;height:100%;background:#0a0b1c;color:var(--ink);font-family:v
 .screen.on{opacity:1;pointer-events:auto}
 .mono{font-family:var(--font-heading)}
 header{position:absolute;left:56px;right:40px;top:36px;display:flex;justify-content:space-between;align-items:center}
-header h1{margin:0;font:400 24px "IBM Plex Sans",var(--font-sans)} /* headline: IBM Plex Sans */
+header h1{margin:0;font:400 28px "IBM Plex Sans",var(--font-sans)} /* headline: IBM Plex Sans */
 header .hsub{margin:8px 0 0;font-size:13px;color:var(--muted)}
 #ribbon header{align-items:flex-start} /* keep tabs level with the title, as on the other screens */
 .tabs{display:flex;border:1px solid rgba(238,240,248,.8);border-radius:8px;padding:4px;gap:4px}
@@ -18,7 +18,7 @@ header .hsub{margin:8px 0 0;font-size:13px;color:var(--muted)}
 .next:hover svg polygon,.next:hover svg path{opacity:1}
 /* intro */
 #intro .box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:760px;text-align:center}
-#intro h1{font:400 28px "IBM Plex Sans",var(--font-sans);margin:0 0 30px}
+#intro h1{font:400 32px "IBM Plex Sans",var(--font-sans);margin:0 0 30px}
 #intro p{font-size:13px;line-height:1.75;color:#c9cce0;margin:0 0 18px}
 /* ranking */
 .rsub{position:absolute;left:96px;right:40px;top:128px}
