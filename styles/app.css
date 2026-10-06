@@ -306,3 +306,4 @@ html.mob .rmatch .bar{margin-top:4px}
 .lc-reflab{font:400 10.5px var(--font-sans);fill:#959ac8}
 .lc-axlab{margin-top:2px;text-align:center;font-size:11px;color:#959ac8;padding-right:calc(132 / 640 * 100%)}
 .lc-note{margin-top:6px;font-size:11px;color:#7d83a8}
+.lc-faint{opacity:.3}

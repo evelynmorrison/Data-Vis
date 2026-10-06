@@ -137,7 +137,7 @@ const WINDOW_STORIES = {
         "Taiwanese workers average 2,008 hours a year — about 167 a month — the sixth-longest of 39 economies tracked by the OECD. The toll shows up in the heart and brain: as industry-average monthly hours rise from 169 to 187, the risk of overwork-related cardiovascular and cerebrovascular disease nearly quadruples.",
       ],
       chart: "tw-overwork",
-      sources: ["Taipei Times", "Lin et al."],
+      sources: ["Taipei Times", "Lin, Chien & Kawachi (2018), Scientific Reports"],
     },
     7: {
       measure: "Academic pressure",

@@ -100,16 +100,19 @@ const WINDOW_CHARTS={
     yrs:[2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
     series:[{name:"Crude rate", vals:[15.7,16.0,16.4,16.4,16.4,15.5,15.3,16.2,16.7,17.4,16.9]},
             {name:"Age-standardised", vals:[12.1,12.3,12.5,12.5,12.6,11.8,11.6,12.3,12.7,13.4,12.9]}]},
-  // relative risk of overwork-related cerebrovascular and cardiovascular disease by industry-average monthly working hours;
-  // values read off Lin et al.'s figure (approximate), shown at 2.5-hour steps
-  "tw-overwork":{title:"Overwork-related heart and brain disease in Taiwan", unit:"Relative risk by average working hours per month (1 = no added risk)", yMax:10, yStep:2,
-    yrs:[162.5,165,167.5,170,172.5,175,177.5,180,182.5,185,187.5,190,192.5,195,196.5], xTicks:[165,170,175,180,185,190,195],
-    xLabel:v=>`${v} hours a month`, fmt:v=>`${v.toFixed(1)}×`, ref:{y:1,label:"no added risk"}, axisX:"Working hours per month",
-    note:"Values read from the published figure; approximate",
-    series:[{name:"Total",      vals:[1.0,1.15,1.3,1.5,1.9,2.7,3.8,4.9,5.8,6.0,5.65,5.1,4.45,3.8,3.45]},
-            {name:"Death",      vals:[1.0,1.35,1.7,2.1,2.65,3.35,4.3,5.35,6.3,7.25,8.0,8.6,9.05,9.4,9.55]},
-            {name:"Disability", vals:[1.0,1.4,1.75,2.1,2.75,3.85,5.4,7.0,8.3,8.85,8.9,9.0,9.15,9.35,9.45]},
-            {name:"Illness",    vals:[1.0,1.05,1.05,1.1,1.25,1.8,2.6,3.35,4.05,3.9,3.35,2.6,1.85,1.3,1.05]}]},
+  // Lin, Chien & Kawachi (2018), Sci Rep 8:9694, Fig. 1: relative risk of overwork-related cerebrovascular and
+  // cardiovascular disease (CCVD) by industry-average monthly working hours, 13 industry groups, 2006-2016,
+  // vs industries averaging 162.3 hours (RR = 1). Values at 162.3, 168.6, 169.2, 183.1, 183.9, 187.3 and 196.55 hours
+  // are the paper's reported figures; the rest are read off Fig. 1. sig = the range where RR is significantly > 1
+  // (the paper's shaded symbols); outside it the line is faded.
+  "tw-overwork":{title:"Overwork-related heart and brain disease in Taiwan", unit:"Relative risk vs industries averaging 162.3 hours a month · industry averages, 2006–2016", yMax:10, yStep:2,
+    yrs:[162.3,165,167.5,168.6,169.2,172.5,175,177.5,180,183.1,183.9,185,187.3,190,192.5,195,196.55], xTicks:[165,170,175,180,185,190,195],
+    xLabel:v=>`${v} hours a month`, fmt:v=>`${v.toFixed(1)}×`, ref:{y:1,label:"no added risk"}, axisX:"Industry-average working hours per month",
+    note:"Faded where not statistically significant. Exact values at the paper’s reported points; elsewhere read from its Figure 1.",
+    series:[{name:"Total",      sig:[169.2,196.55], vals:[1.0,1.15,1.3,1.4,1.46,1.9,2.7,3.8,4.9,5.95,6.05,6.0,5.73,5.05,4.45,3.8,3.45]},
+            {name:"Death",      sig:[168.1,196.55], vals:[1.0,1.35,1.7,1.95,2.05,2.65,3.35,4.3,5.35,6.55,6.85,7.25,8.0,8.65,9.05,9.4,9.55]},
+            {name:"Disability", sig:[168.6,196.55], vals:[1.0,1.4,1.7,1.83,1.95,2.75,3.85,5.4,7.0,8.5,8.72,8.85,8.9,9.0,9.15,9.35,9.45]},
+            {name:"Illness",    sig:[173,191.1],   vals:[1.0,1.05,1.05,1.08,1.1,1.25,1.8,2.6,3.35,4.1,4.07,3.9,3.4,2.6,1.85,1.3,1.05]}]},
 };
 const SERIES_COLORS=["#aab4f0","#e9d27a","#ff8a8a","#6fd39a"]; // lavender, window yellow, coral, green
 const LC={W:640,H:210,L:34,R:132,T:14,B:26};
@@ -129,8 +132,12 @@ function lineChart(c){
   if(c.ref) o+=`<line class="lc-ref" x1="${L}" x2="${W-R}" y1="${y(c.ref.y)}" y2="${y(c.ref.y)}"/><text class="lc-reflab" x="${L+6}" y="${y(c.ref.y)+13}">${c.ref.label}</text>`;
   if(c.xTicks) c.xTicks.forEach(v=>o+=`<text class="lc-ax" x="${xv(v)}" y="${H-6}" text-anchor="middle">${v}</text>`);
   else { const every=n>12?3:2; c.yrs.forEach((yr,i)=>{ if(i%every===0||i===n-1) o+=`<text class="lc-ax" x="${x(i)}" y="${H-6}" text-anchor="middle">${yr}</text>`; }); }
-  c.series.forEach((s,k)=>{ const col=SERIES_COLORS[k];
-    o+=`<path class="lc-line" style="stroke:${col}" d="M${s.vals.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("L")}"/>`;
+  const uid="lc"+Math.random().toString(36).slice(2,7);
+  c.series.forEach((s,k)=>{ const col=SERIES_COLORS[k], d=`M${s.vals.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("L")}`;
+    if(s.sig){ // faded everywhere, solid only where the value is statistically significant
+      o+=`<clipPath id="${uid}${k}"><rect x="${xv(s.sig[0])}" y="0" width="${xv(s.sig[1])-xv(s.sig[0])}" height="${H}"/></clipPath>`;
+      o+=`<path class="lc-line lc-faint" style="stroke:${col}" d="${d}"/><path class="lc-line" style="stroke:${col}" clip-path="url(#${uid}${k})" d="${d}"/>`;
+    } else o+=`<path class="lc-line" style="stroke:${col}" d="${d}"/>`;
     o+=`<circle class="lc-end" style="fill:${col}" cx="${x(0)}" cy="${y(s.vals[0])}" r="4"/><circle class="lc-end" style="fill:${col}" cx="${x(n-1)}" cy="${y(s.vals[n-1])}" r="4"/>`; });
   ends.forEach(e=>o+=`<text class="lc-val" x="${x(n-1)+10}" y="${e.y+4}">${fmt(e.v)}${multi?`<tspan class="lc-name"> ${e.s.name}</tspan>`:""}</text>`);
   if(!multi) o+=`<text class="lc-val" x="${x(0)+8}" y="${y(c.series[0].vals[0])+16}">${fmt(c.series[0].vals[0])}</text>`;
