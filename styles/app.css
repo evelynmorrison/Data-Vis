@@ -22,9 +22,9 @@ header .hsub{margin:8px 0 0;font-size:13px;color:var(--muted)}
 #intro p{font-size:13px;line-height:1.75;color:#c9cce0;margin:0 0 18px}
 /* ranking */
 .rsub{position:absolute;left:96px;right:40px;top:128px}
-.rsub .rtitle{margin:0;font:700 15px var(--font-heading);letter-spacing:.03em}
-.rsub .byline{margin:4px 0 0;font-size:13px;color:var(--muted)}
-.rsub .caption{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.rsub .rtitle{margin:0;font:600 15px "IBM Plex Sans",var(--font-sans);letter-spacing:.01em}
+.rsub .byline{margin:4px 0 0;font:400 13px "IBM Plex Sans",var(--font-sans);color:var(--muted)}
+.rsub .caption{margin:4px 0 0;font:400 12px "IBM Plex Sans",var(--font-sans);color:var(--muted)}
 .ranklists{position:absolute;left:96px;right:40px;top:206px;bottom:60px;display:flex;gap:48px}
 .ranklist{flex:1;overflow:auto;padding-right:8px}
 .ranklist::-webkit-scrollbar{width:6px}.ranklist::-webkit-scrollbar-thumb{background:#2c3050;border-radius:3px}
@@ -356,3 +356,15 @@ html.mob .rmatch .bar{margin-top:4px}
 .g-src{left:36px;right:30px;bottom:70px}
 .mclose{top:17px;right:12px}
 .dtag,.dhead,.dctx,.dstory{left:36px}
+/* ── popup text in IBM Plex Sans (Oct 6): name, hint, and the at-a-glance stats/facts ── */
+.mname{font-family:"IBM Plex Sans",var(--font-sans)}
+.mhint{font-family:"IBM Plex Sans",var(--font-sans);letter-spacing:.01em}
+.glance{font-family:"IBM Plex Sans",var(--font-sans)}
+.g-src{font-family:var(--font-plex)} /* source line stays mono */
+/* ── window detail keeps the country stats (Oct 6): opening a window fades out only the facts/map/story/source;
+   the three stats stay pinned top-right and the window story sits underneath ── */
+.glance.off{opacity:1;pointer-events:none}
+.glance .g-geo,.glance .g-story,.glance .g-src{transition:opacity .35s}
+.glance.off .g-geo,.glance.off .g-story,.glance.off .g-src{opacity:0}
+.dtag{display:none}
+.dhead{top:221px;right:30px;font:400 23px/30px "IBM Plex Sans",var(--font-sans);letter-spacing:0}

@@ -184,7 +184,7 @@ function showDim(k,d){
     body.innerHTML=`<div class="dstory">${text}${c?chartHTML(c):""}</div>${st.sources?`<div class="dsrc">Source: ${st.sources.join(" · ")}</div>`:""}`;
     if(c&&c.kind!=="stack") wireLineChart(body.querySelector("[data-chart]"),c);
     const ds=body.querySelector(".dstory"), hd=document.getElementById("dhead"); ds.scrollTop=0;
-    ds.style.top=(hd.offsetTop+hd.offsetHeight+24)+"px"; // start right under the headline (one or two lines)
+    ds.style.top=(hd.offsetTop+hd.offsetHeight+12)+"px"; // start right under the headline (one or two lines)
     const src=body.querySelector(".dsrc"); ds.style.bottom=(src?src.offsetHeight+26+20:24)+"px"; // stop above the source line
     const fade=()=>ds.classList.toggle("more",ds.scrollTop+ds.clientHeight<ds.scrollHeight-4); ds.onscroll=fade; requestAnimationFrame(fade);
     det.classList.add("on"); return;
@@ -208,12 +208,11 @@ function placeModalText(){
   const g=document.getElementById("wgrid"), t=document.getElementById("mtext"), panel=g.parentElement, ws=[...g.children];
   if(!ws.length) return;
   const l=Math.min(...ws.map(e=>e.offsetLeft)), r=Math.max(...ws.map(e=>e.offsetLeft+e.offsetWidth)), b=Math.max(...ws.map(e=>e.offsetTop+e.offsetHeight));
-  const cs=getComputedStyle(panel), pad=parseFloat(cs.getPropertyValue("--mtext-pad"))||42, w=panel.clientWidth-2*pad; // text spans the panel (margin set in CSS)
+  const pad=42, w=panel.clientWidth-2*pad; // text spans the panel with the same margin as the country name above
   t.style.left=pad+"px"; t.style.width=w+"px";
   const sc=parseFloat(getComputedStyle(g).getPropertyValue("--wscale"))||1; // the window grid is scaled from its top edge
   const top=g.offsetTop+b*sc;
-  const gapB=parseFloat(cs.getPropertyValue("--mtext-bottom"))||63;
-  t.style.top=Math.max(top+24, panel.clientHeight-gapB-t.offsetHeight)+"px"; // text sits a fixed distance above the bottom edge (Figma), never over the windows
+  t.style.top=Math.max(top+24, panel.clientHeight-63-t.offsetHeight)+"px"; // text sits 63px above the bottom edge (Figma), never over the windows
 }
 // black hover label above a window that has a story, naming what it opens
 const winTip=document.getElementById("wtip");
