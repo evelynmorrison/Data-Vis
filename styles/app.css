@@ -17,9 +17,9 @@ header .hsub{margin:8px 0 0;font-size:13px;color:var(--muted)}
 .next svg{display:block}
 .next:hover svg polygon,.next:hover svg path{opacity:1}
 /* intro */
-#intro .box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:760px;text-align:center}
+#intro .box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:900px;text-align:center}
 #intro h1{font:400 32px "IBM Plex Sans",var(--font-sans);margin:0 0 30px}
-#intro p{font-size:13px;line-height:1.75;color:#c9cce0;margin:0 0 18px}
+#intro p{font-size:17px;line-height:1.6;color:#c9cce0;margin:0 0 28px} /* one sentence per line, centred (see index.html) */
 /* ranking */
 .rsub{position:absolute;left:96px;right:40px;top:150px}
 .rsub .rtitle{margin:0;font:400 20px "IBM Plex Sans",var(--font-sans);letter-spacing:0}
@@ -383,3 +383,6 @@ html.mob .rmatch .bar{margin-top:4px}
 .row .sc{display:block;margin:0 0 0 auto;font:600 15px var(--font-sans);font-variant-numeric:tabular-nums;color:var(--ink)}
 /* stat numbers: light weight (Oct 6) */
 .g-big{font-weight:300}
+/* popup hint: one running sentence in a single style (hint + sub flow together) */
+.mhint,.mhsub{display:inline;margin:0;font:400 15px/1.6 "IBM Plex Sans",var(--font-sans);letter-spacing:0;color:#d8dbec}
+.mhint::after{content:" "}
