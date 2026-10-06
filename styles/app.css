@@ -374,3 +374,12 @@ html.mob .rmatch .bar{margin-top:4px}
 .mhint{font-weight:500}
 /* vote/results headers hold only the tabs — keep them at the original height */
 #vote header,#results header{top:36px}
+/* window story headline + chart title (all countries): a faint warm (lit-window) tint */
+.dhead{color:#f5ecd2}
+.lcwrap figcaption b{color:#f5ecd2}
+/* country name a step smaller (all countries) */
+.mname{font-size:36px;top:34px}
+/* ranking score: Inter, and undo the stacked-chart ".sc" rule (column flex + 10px top margin) that was pushing it down */
+.row .sc{display:block;margin:0 0 0 auto;font:600 15px var(--font-sans);font-variant-numeric:tabular-nums;color:var(--ink)}
+/* stat numbers: light weight (Oct 6) */
+.g-big{font-weight:300}
