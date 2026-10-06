@@ -9,7 +9,13 @@ function fit(){
 addEventListener("resize",fit);fit();
 let selected=null, lastData="ranking"; // lastData: the data screen "View Data" returns to
 const TALL=["ribbon","vote","results"]; // screens that scroll as a long page
-function go(id){
+// every screen has its own address (#rankings, #chart, #vote, #results; the intro is the bare URL), so a screen
+// can be linked to directly and the browser's back/forward buttons move between screens.
+// /vote/ (vote/index.html) is a short link that redirects to #vote.
+const ROUTES={intro:"",ranking:"rankings",ribbon:"chart",vote:"vote",results:"results"};
+const screenFor=hash=>Object.keys(ROUTES).find(id=>ROUTES[id]&&ROUTES[id]===hash.replace(/^#/,""))||"intro";
+function go(id,fromHistory){
+  if(!fromHistory && screenFor(location.hash)!==id) history.pushState(null,"",ROUTES[id]?"#"+ROUTES[id]:location.pathname+location.search);
   document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));
   document.documentElement.classList.toggle("tall",TALL.includes(id)); fit(); scrollTo(0,0);
   if(id==="ranking"||id==="ribbon") lastData=id;
@@ -17,6 +23,9 @@ function go(id){
   if(id==="results") showResults();
   if(id==="vote") resetVote(); // every visit starts a fresh entry
 }
+addEventListener("popstate",()=>{ if(typeof modalOpen!=="undefined"&&modalOpen) closeModal(); go(screenFor(location.hash),true); });
+// open the screen in the address once every script has loaded (chart, vote and results code come after this file)
+document.addEventListener("DOMContentLoaded",()=>{ const id=screenFor(location.hash); if(id!=="intro") go(id,true); });
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
 // top-right View Data / Vote toggle
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>go(b.dataset.tab==="vote"?"vote":lastData));
