@@ -408,3 +408,5 @@ html.tall #ribbon.on{padding-top:244px}
 .band{top:232px}
 /* landing stars a little dimmer */
 #intro .istars{opacity:.65}
+/* landing background a step darker */
+#intro{background:#0b0c1f}
