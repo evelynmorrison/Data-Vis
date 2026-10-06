@@ -95,7 +95,30 @@ const COUNTRY_NAMES = (() => {
   let dn; try { dn = new Intl.DisplayNames(["en"], { type: "region" }); } catch {}
   return [...new Set(COUNTRY_CODES.map(c => plain[c] || dn?.of(c) || c))].sort((a, b) => a.localeCompare(b));
 })();
-document.getElementById("vcountries").innerHTML = COUNTRY_NAMES.map(n => `<option value="${n}">`).join("");
+// country picker: a scrollable list of every country under the field, filtered as you type
+// (a custom list rather than <datalist>, which phones show inconsistently)
+const countryList = document.getElementById("vclist");
+let countryActive = -1;
+function renderCountries() {
+  const q = voteCountry.value.trim().toLowerCase();
+  const hits = !q ? COUNTRY_NAMES : [...COUNTRY_NAMES.filter(n => n.toLowerCase().startsWith(q)), ...COUNTRY_NAMES.filter(n => !n.toLowerCase().startsWith(q) && n.toLowerCase().includes(q))];
+  countryActive = -1;
+  countryList.innerHTML = hits.length ? hits.map(n => `<li role="option" data-name="${n}">${n}</li>`).join("") : `<li class="none">No match — check the spelling</li>`;
+  countryList.hidden = false; voteCountry.setAttribute("aria-expanded", "true"); countryList.scrollTop = 0;
+}
+function closeCountries() { countryList.hidden = true; voteCountry.setAttribute("aria-expanded", "false"); }
+function pickCountry(name) { voteCountry.value = name; voteCountry.classList.remove("bad"); closeCountries(); updateVote(); }
+voteCountry.addEventListener("focus", renderCountries);
+voteCountry.addEventListener("click", () => { if (countryList.hidden) renderCountries(); });
+voteCountry.addEventListener("blur", () => setTimeout(closeCountries, 150));
+countryList.addEventListener("pointerdown", e => { const li = e.target.closest("li[data-name]"); if (li) { e.preventDefault(); pickCountry(li.dataset.name); voteCountry.blur(); } });
+voteCountry.addEventListener("keydown", e => {
+  const items = [...countryList.querySelectorAll("li[data-name]")]; if (countryList.hidden || !items.length) return;
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); countryActive = (countryActive + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+    items.forEach((li, i) => li.classList.toggle("act", i === countryActive)); items[countryActive].scrollIntoView({ block: "nearest" }); }
+  else if (e.key === "Enter") { e.preventDefault(); pickCountry(items[Math.max(0, countryActive)].dataset.name); }
+  else if (e.key === "Escape") closeCountries();
+});
 // exact list name for what was typed (any capitalisation), or null if it isn't on the list
 const countryMatch = v => { v = v.trim().toLowerCase(); return v ? COUNTRY_NAMES.find(n => n.toLowerCase() === v) || null : null; };
 let voteOrder = [], lit = new Set();
@@ -105,7 +128,7 @@ function resetVote() {
   voteOrder = VOTE_OPTIONS.map(o => o.id);
   for (let i = voteOrder.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [voteOrder[i], voteOrder[j]] = [voteOrder[j], voteOrder[i]]; } // Fisher–Yates
   lit = new Set(); voteWrite.value = ""; voteCountry.classList.remove("bad");
-  voteCountry.value = loadVote()?.country || ""; // same device, probably the same person — prefilled, still editable
+  voteCountry.value = ""; closeCountries(); // blank every time — the voter picks their country
   voteGrid.innerHTML = voteOrder.map(id => {
     const o = byId[id], [w, h] = o.size;
     return `<button class="vopt" data-id="${id}" aria-pressed="false"><span class="vicon"><span class="cw" style="width:${w}px;height:${h}px">${o.pane === "plain" ? "" : mull(o.pane, w, h)}</span></span><span class="vlab">${o.label}</span></button>`;
@@ -118,7 +141,7 @@ function updateVote() {
   voteDone.disabled = n !== VOTE_PICK || !country;
   voteCount.textContent = n !== VOTE_PICK ? `${n} of ${VOTE_PICK} lit` : country ? "6 of 6 lit — ready" : "6 of 6 lit — now choose your country";
 }
-voteCountry.addEventListener("input", () => { voteCountry.classList.remove("bad"); updateVote(); });
+voteCountry.addEventListener("input", () => { voteCountry.classList.remove("bad"); renderCountries(); updateVote(); });
 voteCountry.addEventListener("change", () => { // tidy to the list's spelling, or flag text that isn't a country on the list
   const m = countryMatch(voteCountry.value); if (m) voteCountry.value = m;
   voteCountry.classList.toggle("bad", !!voteCountry.value.trim() && !m); updateVote(); });

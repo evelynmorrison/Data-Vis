@@ -265,3 +265,16 @@ html.mob .rname{font-size:14px;flex-wrap:wrap;gap:8px}
 html.mob .rbar{gap:3px;margin-top:8px}
 html.mob .rbar .cw{flex:1 1 0;min-width:0;width:auto;height:22px}
 html.mob .rpct{margin-left:10px;font-size:16px;min-width:42px;text-align:right}
+/* country picker list */
+.vcombo{position:relative}
+.vclist{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 6px);max-height:260px;overflow-y:auto;margin:0;padding:6px 0;list-style:none;
+  background:#1b2154;border:1px solid rgba(238,240,248,.25);border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.45);text-align:left}
+.vclist li{padding:10px 18px;font:400 14px var(--font-sans);color:var(--ink);cursor:pointer}
+.vclist li:hover,.vclist li.act{background:rgba(238,240,248,.10)}
+.vclist li.none{color:var(--muted);cursor:default}
+.vclist::-webkit-scrollbar{width:6px}.vclist::-webkit-scrollbar-thumb{background:#3a4180;border-radius:3px}
+/* phones only see the vote: no View Data / Vote toggle */
+html.mob .tabs{display:none}
+html.mob #vote.on,html.mob #results.on{padding-top:36px}
+html.mob .vcombo{width:100%}
+html.mob .vclist li{font-size:16px;padding:12px 18px}
