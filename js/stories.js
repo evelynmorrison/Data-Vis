@@ -24,7 +24,7 @@ const STORIES = {
    paras → body paragraphs (bullets: true shows them as a bulleted list); chart → key into WINDOW_CHARTS (modal.js); sources → source line. */
 const WINDOW_STORIES = {
   "Finland": {
-    0: {
+    10: {
       measure: "Antidepressant use",
       title: "Antidepressant use is rising, fastest among the young",
       paras: [
@@ -75,7 +75,7 @@ const WINDOW_STORIES = {
       ],
       sources: ["Statistics Finland", "Eurostat", "The Conversation"],
     },
-    10: {
+    0: {
       measure: "Youth mental health",
       title: "Mental health gaps among children and teens are wide",
       paras: [
