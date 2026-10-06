@@ -208,11 +208,12 @@ function placeModalText(){
   const g=document.getElementById("wgrid"), t=document.getElementById("mtext"), panel=g.parentElement, ws=[...g.children];
   if(!ws.length) return;
   const l=Math.min(...ws.map(e=>e.offsetLeft)), r=Math.max(...ws.map(e=>e.offsetLeft+e.offsetWidth)), b=Math.max(...ws.map(e=>e.offsetTop+e.offsetHeight));
-  const pad=42, w=panel.clientWidth-2*pad; // text spans the panel with the same margin as the country name above
+  const cs=getComputedStyle(panel), pad=parseFloat(cs.getPropertyValue("--mtext-pad"))||42, w=panel.clientWidth-2*pad; // text spans the panel (margin set in CSS)
   t.style.left=pad+"px"; t.style.width=w+"px";
   const sc=parseFloat(getComputedStyle(g).getPropertyValue("--wscale"))||1; // the window grid is scaled from its top edge
   const top=g.offsetTop+b*sc;
-  t.style.top=Math.max(top+24, panel.clientHeight-63-t.offsetHeight)+"px"; // text sits 63px above the bottom edge (Figma), never over the windows
+  const gapB=parseFloat(cs.getPropertyValue("--mtext-bottom"))||63;
+  t.style.top=Math.max(top+24, panel.clientHeight-gapB-t.offsetHeight)+"px"; // text sits a fixed distance above the bottom edge (Figma), never over the windows
 }
 // black hover label above a window that has a story, naming what it opens
 const winTip=document.getElementById("wtip");

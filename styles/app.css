@@ -340,3 +340,19 @@ html.mob .rmatch .bar{margin-top:4px}
 .g-story{max-height:132px}
 .g-src{left:40px;right:20px;bottom:37px}
 .dtag,.dhead,.dctx,.dstory{left:40px}
+/* ── popup v3 (Oct 6): right side reordered — stats first, facts with the map on their right, then the story; lighter country name ── */
+.mname{font-weight:300}
+.g-body{left:54px;top:43px}
+.g-stats{order:-1;margin-bottom:77px}
+.g-geo{flex-direction:row-reverse;justify-content:flex-end;gap:0;margin-bottom:81px}
+.g-facts{width:194px}
+/* ── popup v4 (Oct 6): the rounded card moves to the left (name + windows); right side sits on the dark sheet ── */
+.modal{grid-template-columns:470px 1fr}
+.mleft{background:rgba(40,44,68,.58);margin:24px 15px 34px 22px;border-radius:24px;--mtext-pad:31px;--mtext-bottom:29px}
+.mright{background:transparent;margin:0;border-radius:0}
+.mname{left:36px;top:26px;font:300 52px var(--font-plex);letter-spacing:0}
+.wgrid{left:96px;top:166px}
+.g-body{left:36px;right:30px;top:67px}
+.g-src{left:36px;right:30px;bottom:70px}
+.mclose{top:17px;right:12px}
+.dtag,.dhead,.dctx,.dstory{left:36px}
