@@ -122,6 +122,38 @@ const WINDOW_STORIES = {
       chart: "tw-suicide",
       sources: ["Taiwan News", "Taipei Times", "WHO", "Chen et al.", "2024 Taiwan Health and Welfare Report – Ministry of Health and Welfare", "Chart: Ministry of Health and Welfare, national suicide statistics (2025 update)"],
     },
+    2: {
+      measure: "Depression",
+      title: "Depression is on the rise but remains significantly underreported",
+      paras: [
+        "Only 1.92% of Taiwanese were recorded as having a depressive disorder in 2016 — a figure that likely reflects how few people seek treatment rather than how few need it. Among people over 50, just 27% with depression seek medical help, and only four in ten of those receive effective treatment. In Europe and the United States, by comparison, about half of people with depression seek care. Among the young, antidepressant use has doubled in the past decade for people under 30, and more than a quarter of college students show signs of depression.",
+      ],
+      sources: ["OCAC News", "CNA", "Taiwan News", "Wang et al."],
+    },
+    5: {
+      measure: "Overwork",
+      title: "Long hours carry a measurable risk",
+      paras: [
+        "Taiwanese workers average 2,008 hours a year — about 167 a month — the sixth-longest of 39 economies tracked by the OECD. The toll shows up in the heart and brain: as industry-average monthly hours rise from 169 to 187, the risk of overwork-related cardiovascular and cerebrovascular disease nearly quadruples.",
+      ],
+      sources: ["Taipei Times", "Lin et al."],
+    },
+    7: {
+      measure: "Academic pressure",
+      title: "School is driving adverse mental health experiences among the young",
+      paras: [
+        "Seven in ten Taiwanese high school students report high levels of stress, and 57% experience moderate to severe fatigue. The pressure starts early: 30% of junior high students have had thoughts of self-harm linked to their studies. Over the past decade, the suicide rate among 15- to 24-year-olds has nearly doubled.",
+      ],
+      sources: ["Broken Chalk", "Child Welfare League Foundation"],
+    },
+    10: {
+      measure: "Loneliness",
+      title: "Loneliness deepens with age",
+      paras: [
+        "Across studies, the average prevalence of loneliness in Taiwan is 12.6%. Among adults over 65, it rises to between 18% and 27%, depending on how it is measured.",
+      ],
+      sources: ["Hung et al.", "Tiunn et al."],
+    },
   },
   "Bhutan": {
     0: {
