@@ -60,9 +60,9 @@ html.tall .toast{position:fixed}
 #chart .grow{stroke:rgba(238,240,248,.06)}
 #chart .gaxis{font:400 10px var(--font-sans);fill:var(--muted)}
 .csearch input:focus{border-color:rgba(238,240,248,.75)}
-.colh{font:600 13px var(--font-sans);fill:var(--ink)}
-.colnote{font:400 11px var(--font-sans);fill:var(--muted)}
-.colsub{font:500 12px var(--font-sans);fill:var(--ink)}
+.colh{font:500 13px var(--font-sans);fill:var(--ink)}
+.colnote{font:300 11px var(--font-sans);fill:var(--muted)}
+.colsub{font:400 12px var(--font-sans);fill:var(--ink)}
 .colrule{stroke:rgba(238,240,248,.25);stroke-width:1}
 .hhit{cursor:help}
 .htip{position:absolute;z-index:4;max-width:320px;padding:12px 14px;background:#1b2154;border:1px solid rgba(238,240,248,.22);border-radius:8px;
@@ -159,8 +159,8 @@ html.tall .toast{position:fixed}
 
 /* vote */
 .vhead{margin:0 56px}
-.v-eye{font:700 18px var(--font-plex);letter-spacing:.02em}
-.vhead h2{margin:30px 0 10px;font:700 34px var(--font-heading)}
+.v-eye{font:600 18px "IBM Plex Sans",var(--font-sans);letter-spacing:.01em}
+.vhead h2{margin:30px 0 10px;font:600 34px "IBM Plex Sans",var(--font-sans)}
 .vhead p{margin:0;max-width:760px;font-size:16px;line-height:1.55;color:#c9cce0}
 .vgrid{display:flex;flex-wrap:wrap;justify-content:center;gap:44px 20px;max-width:1260px;margin:64px auto 0}
 .vopt{width:190px;display:flex;flex-direction:column;align-items:center;gap:16px;background:none;border:0;padding:0;color:var(--ink);cursor:pointer}
@@ -186,8 +186,8 @@ html.tall .toast{position:fixed}
 
 /* results */
 .rwrap{width:fit-content;margin:0 auto} /* heading + list centred as one block, sharing a left edge */
-.r-eye{font:400 15px var(--font-plex);color:#9aa0c8;letter-spacing:.02em}
-.rhead h2{margin:14px 0 10px;font:700 34px var(--font-heading)}
+.r-eye{font:400 15px "IBM Plex Sans",var(--font-sans);color:#9aa0c8;letter-spacing:.02em}
+.rhead h2{margin:14px 0 10px;font:600 34px "IBM Plex Sans",var(--font-sans)}
 .rhead p{margin:0;font-size:15px;color:#9aa0c8}
 .rbody{display:flex;align-items:flex-start;gap:56px;margin-top:48px}
 .rlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px}
