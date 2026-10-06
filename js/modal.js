@@ -100,34 +100,52 @@ const WINDOW_CHARTS={
     yrs:[2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
     series:[{name:"Crude rate", vals:[15.7,16.0,16.4,16.4,16.4,15.5,15.3,16.2,16.7,17.4,16.9]},
             {name:"Age-standardised", vals:[12.1,12.3,12.5,12.5,12.6,11.8,11.6,12.3,12.7,13.4,12.9]}]},
+  // relative risk of overwork-related cerebrovascular and cardiovascular disease by industry-average monthly working hours;
+  // values read off Lin et al.'s figure (approximate), shown at 2.5-hour steps
+  "tw-overwork":{title:"Overwork-related heart and brain disease in Taiwan", unit:"Relative risk by average working hours per month (1 = no added risk)", yMax:10, yStep:2,
+    yrs:[162.5,165,167.5,170,172.5,175,177.5,180,182.5,185,187.5,190,192.5,195,196.5], xTicks:[165,170,175,180,185,190,195],
+    xLabel:v=>`${v} hours a month`, fmt:v=>`${v.toFixed(1)}×`, ref:{y:1,label:"no added risk"}, axisX:"Working hours per month",
+    note:"Values read from the published figure; approximate",
+    series:[{name:"Total",      vals:[1.0,1.15,1.3,1.5,1.9,2.7,3.8,4.9,5.8,6.0,5.65,5.1,4.45,3.8,3.45]},
+            {name:"Death",      vals:[1.0,1.35,1.7,2.1,2.65,3.35,4.3,5.35,6.3,7.25,8.0,8.6,9.05,9.4,9.55]},
+            {name:"Disability", vals:[1.0,1.4,1.75,2.1,2.75,3.85,5.4,7.0,8.3,8.85,8.9,9.0,9.15,9.35,9.45]},
+            {name:"Illness",    vals:[1.0,1.05,1.05,1.1,1.25,1.8,2.6,3.35,4.05,3.9,3.35,2.6,1.85,1.3,1.05]}]},
 };
-const SERIES_COLORS=["#aab4f0","#e9d27a"]; // lavender, then the site's window yellow
+const SERIES_COLORS=["#aab4f0","#e9d27a","#ff8a8a","#6fd39a"]; // lavender, window yellow, coral, green
 const LC={W:640,H:210,L:34,R:132,T:14,B:26};
+// x positions follow the values in c.yrs (years, or any number such as hours), so uneven steps are fine.
+// Options: xTicks (axis labels), xLabel(v) (tooltip heading), fmt(v) (value text), ref {y,label} (dashed reference line)
+function lcScale(c){
+  const {W,H,L,R,T,B}=LC, xs=c.yrs, x0=xs[0], x1=xs[xs.length-1];
+  return { x:i=>L+(xs[i]-x0)/(x1-x0)*(W-L-R), xv:v=>L+(v-x0)/(x1-x0)*(W-L-R), y:v=>T+(1-v/c.yMax)*(H-T-B), fmt:c.fmt||(v=>v) };
+}
 // line chart: hover crosshair + tooltip; with 2+ series, a legend and a direct label at each line's end
 function lineChart(c){
-  const {W,H,L,R,T,B}=LC, n=c.yrs.length, x=i=>L+i*(W-L-R)/(n-1), y=v=>T+(1-v/c.yMax)*(H-T-B), multi=c.series.length>1;
+  const {W,H,L,R,T,B}=LC, n=c.yrs.length, {x,xv,y,fmt}=lcScale(c), multi=c.series.length>1;
   const ends=c.series.map(s=>({s,v:s.vals[n-1],y:y(s.vals[n-1])}));
   ends.sort((a,b)=>a.y-b.y).forEach((e,i,a)=>{ if(i&&e.y-a[i-1].y<14) e.y=a[i-1].y+14; }); // keep end labels apart
   let o=`<svg class="lc" viewBox="0 0 ${W} ${H}" role="img" aria-label="${c.title}">`;
   for(let v=0;v<=c.yMax;v+=c.yStep) o+=`<line class="lc-grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="lc-ax" x="${L-8}" y="${y(v)+3.5}" text-anchor="end">${v}</text>`;
-  const every=n>12?3:2;
-  c.yrs.forEach((yr,i)=>{ if(i%every===0||i===n-1) o+=`<text class="lc-ax" x="${x(i)}" y="${H-6}" text-anchor="middle">${yr}</text>`; });
+  if(c.ref) o+=`<line class="lc-ref" x1="${L}" x2="${W-R}" y1="${y(c.ref.y)}" y2="${y(c.ref.y)}"/><text class="lc-reflab" x="${L+6}" y="${y(c.ref.y)+13}">${c.ref.label}</text>`;
+  if(c.xTicks) c.xTicks.forEach(v=>o+=`<text class="lc-ax" x="${xv(v)}" y="${H-6}" text-anchor="middle">${v}</text>`);
+  else { const every=n>12?3:2; c.yrs.forEach((yr,i)=>{ if(i%every===0||i===n-1) o+=`<text class="lc-ax" x="${x(i)}" y="${H-6}" text-anchor="middle">${yr}</text>`; }); }
   c.series.forEach((s,k)=>{ const col=SERIES_COLORS[k];
     o+=`<path class="lc-line" style="stroke:${col}" d="M${s.vals.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("L")}"/>`;
     o+=`<circle class="lc-end" style="fill:${col}" cx="${x(0)}" cy="${y(s.vals[0])}" r="4"/><circle class="lc-end" style="fill:${col}" cx="${x(n-1)}" cy="${y(s.vals[n-1])}" r="4"/>`; });
-  ends.forEach(e=>o+=`<text class="lc-val" x="${x(n-1)+10}" y="${e.y+4}">${e.v}${multi?`<tspan class="lc-name"> ${e.s.name}</tspan>`:""}</text>`);
-  if(!multi) o+=`<text class="lc-val" x="${x(0)+8}" y="${y(c.series[0].vals[0])+16}">${c.series[0].vals[0]}</text>`;
+  ends.forEach(e=>o+=`<text class="lc-val" x="${x(n-1)+10}" y="${e.y+4}">${fmt(e.v)}${multi?`<tspan class="lc-name"> ${e.s.name}</tspan>`:""}</text>`);
+  if(!multi) o+=`<text class="lc-val" x="${x(0)+8}" y="${y(c.series[0].vals[0])+16}">${fmt(c.series[0].vals[0])}</text>`;
   o+=`<line class="lc-x" y1="${T}" y2="${H-B}" style="opacity:0"/>${c.series.map(()=>'<circle class="lc-dot" r="5" style="opacity:0"/>').join("")}<rect class="lc-hit" x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}"/></svg>`;
   const legend=multi?`<div class="lc-legend">${c.series.map((s,k)=>`<span><i style="background:${SERIES_COLORS[k]}"></i>${s.name}</span>`).join("")}</div>`:"";
-  return `<figure class="lcwrap" data-chart><figcaption><b>${c.title}</b><span>${c.unit}</span></figcaption>${legend}${o}<div class="lc-tip"></div></figure>`;
+  return `<figure class="lcwrap" data-chart><figcaption><b>${c.title}</b><span>${c.unit}</span></figcaption>${legend}${o}${c.axisX?`<div class="lc-axlab">${c.axisX}</div>`:""}<div class="lc-tip"></div>${c.note?`<div class="lc-note">${c.note}</div>`:""}</figure>`;
 }
 function wireLineChart(fig,c){
-  const {W,H,L,R,T,B}=LC, n=c.yrs.length, x=i=>L+i*(W-L-R)/(n-1), y=v=>T+(1-v/c.yMax)*(H-T-B);
+  const {W,H,L,R,T,B}=LC, n=c.yrs.length, {x,y,fmt}=lcScale(c);
   const svg=fig.querySelector("svg"), hit=svg.querySelector(".lc-hit"), xl=svg.querySelector(".lc-x"), dots=[...svg.querySelectorAll(".lc-dot")], tip=fig.querySelector(".lc-tip");
-  hit.onpointermove=e=>{ const r=svg.getBoundingClientRect(), sx=(e.clientX-r.left)/r.width*W, i=Math.max(0,Math.min(n-1,Math.round((sx-L)/(W-L-R)*(n-1))));
+  hit.onpointermove=e=>{ const r=svg.getBoundingClientRect(), sx=(e.clientX-r.left)/r.width*W;
+    let i=0; for(let k=1;k<n;k++) if(Math.abs(x(k)-sx)<Math.abs(x(i)-sx)) i=k; // nearest data point
     xl.setAttribute("x1",x(i)); xl.setAttribute("x2",x(i)); xl.style.opacity=1;
     c.series.forEach((s,k)=>{ dots[k].setAttribute("cx",x(i)); dots[k].setAttribute("cy",y(s.vals[i])); dots[k].style.opacity=1; });
-    tip.innerHTML=`<b>${c.yrs[i]}</b>`+c.series.map(s=>c.series.length>1?`<span>${s.name}: ${s.vals[i]}</span>`:`${s.vals[i]} ${c.tip}`).join("");
+    tip.innerHTML=`<b>${c.xLabel?c.xLabel(c.yrs[i]):c.yrs[i]}</b>`+c.series.map(s=>c.series.length>1?`<span>${s.name}: ${fmt(s.vals[i])}</span>`:`${fmt(s.vals[i])} ${c.tip}`).join("");
     tip.style.opacity=1;
     const f=fig.getBoundingClientRect(), z=f.width/fig.offsetWidth, top=Math.min(...c.series.map(s=>y(s.vals[i]))); // rects are zoomed px; offsets are not
     tip.style.left=((r.left-f.left)+x(i)/W*r.width)/z+"px"; tip.style.top=((r.top-f.top)+top/H*r.height)/z+"px"; };

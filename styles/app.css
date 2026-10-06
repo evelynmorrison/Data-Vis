@@ -302,3 +302,7 @@ html.mob .rmatch{padding:16px 18px 14px}
 html.mob .rmatch .sub{margin-bottom:8px}
 html.mob .rmatch li{padding:7px 0}
 html.mob .rmatch .bar{margin-top:4px}
+.lc-ref{stroke:rgba(238,240,248,.35);stroke-dasharray:4 4}
+.lc-reflab{font:400 10.5px var(--font-sans);fill:#959ac8}
+.lc-axlab{margin-top:2px;text-align:center;font-size:11px;color:#959ac8;padding-right:calc(132 / 640 * 100%)}
+.lc-note{margin-top:6px;font-size:11px;color:#7d83a8}
