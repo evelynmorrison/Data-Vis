@@ -151,10 +151,11 @@ function showDim(k,d){
     const fade=()=>ds.classList.toggle("more",ds.scrollTop+ds.clientHeight<ds.scrollHeight-4); ds.onscroll=fade; requestAnimationFrame(fade);
     det.classList.add("on"); return;
   }
-  document.getElementById("dtag").textContent=dim;
-  document.getElementById("dctx").innerHTML=d.rank==null?"Not ranked in the World Happiness Report 2026":`#${d.rank} of ${TOTAL} countries · World Happiness Report 2026<br>Life evaluation ${d.score.toFixed(2)} / 10 (2023–2025 average)`;
-  document.getElementById("dhead").textContent=`${dim} in ${d.c}`;
-  body.innerHTML=`<div class="dsoon">Data for this dimension is coming soon.</div>`;
+  // a window with no story yet: no placeholder topic or rank line — just a neutral note
+  document.getElementById("dtag").textContent="";
+  document.getElementById("dctx").innerHTML="";
+  document.getElementById("dhead").textContent="A window not yet opened";
+  body.innerHTML=`<div class="dsoon">This window’s story is still being written.</div>`;
   det.classList.add("on");
 }
 function hideInfo(){ document.getElementById("ctitle").style.opacity=0; document.getElementById("card").style.opacity=0; }
