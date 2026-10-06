@@ -398,3 +398,8 @@ html.mob .rmatch .bar{margin-top:4px}
 #intro .istar{transform-box:fill-box;transform-origin:center;animation:istar 5s ease-in-out infinite}
 @keyframes istar{0%,100%{transform:scale(.55);opacity:.45}50%{transform:scale(1.35);opacity:1}}
 @media (prefers-reduced-motion:reduce){#intro .istar{animation:none}}
+/* vote intro sentence on one line (desktop); phones still wrap */
+.vhead p{max-width:none;white-space:nowrap}
+html.mob .vhead p{white-space:normal}
+/* popup hint matches the story text on the right: Inter, weight 200 (size kept) */
+.mhint,.mhsub{font-family:var(--font-body);font-weight:200}
