@@ -19,7 +19,7 @@ header .hsub{margin:8px 0 0;font-size:13px;color:var(--muted)}
 /* intro */
 #intro .box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:900px;text-align:center}
 #intro h1{font:400 32px "IBM Plex Sans",var(--font-sans);margin:0 0 30px}
-#intro p{font-size:17px;line-height:1.6;color:#c9cce0;margin:0 0 28px} /* one sentence per line, centred (see index.html) */
+#intro p{font-size:17px;font-weight:300;line-height:1.6;color:#c9cce0;margin:0 0 28px} /* one sentence per line, centred (see index.html) */
 /* ranking */
 .rsub{position:absolute;left:96px;right:40px;top:150px}
 .rsub .rtitle{margin:0;font:400 20px "IBM Plex Sans",var(--font-sans);letter-spacing:0}
@@ -392,3 +392,9 @@ html.mob .rmatch .bar{margin-top:4px}
 .vlab{font-weight:400}
 /* ranking scores one weight lighter */
 .row .sc{font-weight:500}
+/* landing stars (js/stars.js): each star breathes — grows/shrinks and brightens/dims — on its own rhythm */
+#intro .istars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+#intro .box{z-index:1}
+#intro .istar{transform-box:fill-box;transform-origin:center;animation:istar 5s ease-in-out infinite}
+@keyframes istar{0%,100%{transform:scale(.55);opacity:.45}50%{transform:scale(1.35);opacity:1}}
+@media (prefers-reduced-motion:reduce){#intro .istar{animation:none}}
