@@ -386,3 +386,7 @@ html.mob .rmatch .bar{margin-top:4px}
 /* popup hint: one running sentence in a single style (hint + sub flow together) */
 .mhint,.mhsub{display:inline;margin:0;font:400 15px/1.6 "IBM Plex Sans",var(--font-sans);letter-spacing:0;color:#d8dbec}
 .mhint::after{content:" "}
+/* vote / results: lighter type; the question uses the same style as the View Data page title */
+.v-eye{font-weight:400}
+.vhead h2,.rhead h2{font:400 36px "IBM Plex Sans",var(--font-sans);letter-spacing:0}
+.vlab{font-weight:400}
