@@ -5,6 +5,7 @@ function select(i){
   if(drawn) apply();
 }
 const READER="assets/img/reader.png"; // texture shown behind an opened window
+const WIN_IMG={"tw-overwork":"assets/img/laptop.png"}; // per-story picture (by chart id); everything else shows the reader
 // window layout inside the 226×296 grid — traced from the Figma frame: [type, x, y, w, h]
 //  g:c×r = panes, bars = vertical bars under a top rail, T = sash + upper divider, v2 = narrow two-bar, blue = solid
 const CELLS=[["g:2x2",0,0,53,63],["bars",63,14,66,45],["blue",138,6,47,53],["g:2x2",194,0,32,61],
@@ -240,7 +241,7 @@ function openModal(){
     else b.title=`Window ${k+1}`;
     b.onclick=()=>{ if(pickedWin===k){ backToGlance(); return; } // clicking the open window again turns it off and returns to the country overview
       g.querySelectorAll(".cw").forEach(e=>{e.classList.remove("sel","open");e.style.backgroundImage="";});
-      b.classList.add("open"); b.style.backgroundImage=`url(${READER})`; pickedWin=k;
+      b.classList.add("open"); b.style.backgroundImage=`url(${(ws&&WIN_IMG[ws.chart])||READER})`; pickedWin=k;
       document.getElementById("glance").classList.add("off");
       showDim(k,d);};
     g.appendChild(b);});
