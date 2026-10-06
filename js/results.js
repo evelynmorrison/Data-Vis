@@ -9,6 +9,7 @@ async function showResults() {
   const { n, counts } = await fetchTally();
   if (req !== resultsReq) return; // a newer request superseded this one
   const mine = new Set(loadVote()?.choices || []);
+  renderMatches();
   const rows = VOTE_OPTIONS.map(o => ({ o, pct: n ? Math.round(counts[o.id] / n * 100) : 0, c: counts[o.id] }))
     .sort((a, b) => b.c - a.c || a.o.label.localeCompare(b.o.label));
   document.getElementById("rEye").textContent = `Results · ${n.toLocaleString("en")} ${n === 1 ? "vote" : "votes"} so far`;
