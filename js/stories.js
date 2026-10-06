@@ -201,5 +201,37 @@ const WINDOW_STORIES = {
       ],
       sources: ["Dendup et al."],
     },
+    2: {
+      measure: "Mental health",
+      title: "Cases are climbing, but the language to describe them is thin",
+      paras: [
+        "Documented mental health disorders in Bhutan more than doubled in four years, from 2,878 cases in 2011 to 7,004 in 2015. Anxiety accounted for 45% of those cases and depression for 31%. Stigma keeps the subject largely unspoken, and Dr. Chencho Dorji, the country's first qualified psychiatrist, points to a deeper barrier: the local dialect offers few ways to describe emotional states, which keeps awareness low and leaves many people silent.",
+      ],
+      sources: ["ABC News", "Dorji et al."],
+    },
+    6: {
+      measure: "Death by suicide",
+      title: "Among the leading causes of death",
+      paras: [
+        "Suicide ranks among Bhutan's leading causes of death, at a crude rate of about 13 per 100,000 people in 2024. Rates run highest among rural residents and farmers, followed by students, and among people who are married or partnered, with lower education and income.",
+      ],
+      sources: ["Dendup et al.", "Asia News Network"],
+    },
+    8: {
+      measure: "Emigration and economics",
+      title: "An exodus to Australia",
+      paras: [
+        "In 2023 alone, 1.5% of Bhutan's population left for Australia to work or study. At home, opportunities have narrowed: just over half of women now work, down from 61.2% in 2019, and youth unemployment, rising steadily since 2004, reached 28.6% in 2022.",
+      ],
+      sources: ["The Guardian"],
+    },
+    12: {
+      measure: "Affect",
+      title: "High positive affect",
+      paras: [
+        "Asked how they felt the previous day, Bhutanese ranked sixth of 164 countries on positive affect — a measure combining life satisfaction, enjoyment, laughter, and rest. No country reported feeling more well-rested: 84.1% did. Enjoyment reached 81.6%, ranking 26th, and only 12.4% reported sadness, among the lowest in the world.",
+      ],
+      sources: ["Blanchflower & Bryson (2024), Wellbeing Rankings, Gallup World Poll"],
+    },
   },
 };
