@@ -227,9 +227,9 @@ const WINDOW_STORIES = {
     },
     12: {
       measure: "Affect",
-      title: "High positive affect",
+      title: "A country of strong feeling, in both directions",
       paras: [
-        "Asked how they felt the previous day, Bhutanese ranked sixth of 164 countries on positive affect — a measure combining life satisfaction, enjoyment, laughter, and rest. No country reported feeling more well-rested: 84.1% did. Enjoyment reached 81.6%, ranking 26th, and only 12.4% reported sadness, among the lowest in the world.",
+        "The same Bhutanese who report some of the world's highest enjoyment also report among its highest negative emotion. Nearly 30% felt angry the previous day, ranking 145th of 164 countries. More than a third were in physical pain (117th), and 43.5% felt worried (107th). Asked to rate their lives as a whole, Bhutanese averaged 5.2 out of 10, ranking 86th.",
       ],
       sources: ["Blanchflower & Bryson (2024), Wellbeing Rankings, Gallup World Poll"],
     },
