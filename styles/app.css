@@ -19,7 +19,7 @@ header .hsub{margin:8px 0 0;font-size:13px;color:var(--muted)}
 /* intro */
 #intro .box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:900px;text-align:center}
 #intro h1{font:400 32px "IBM Plex Sans",var(--font-sans);margin:0 0 30px}
-#intro p{font-size:17px;font-weight:300;line-height:1.6;color:#c9cce0;margin:0 0 28px} /* one sentence per line, centred (see index.html) */
+#intro p{font-size:17px;font-weight:300;line-height:1.6;color:#b4b8d2;margin:0 0 28px} /* one sentence per line, centred (see index.html) */
 /* ranking */
 .rsub{position:absolute;left:96px;right:40px;top:150px}
 .rsub .rtitle{margin:0;font:400 20px "IBM Plex Sans",var(--font-sans);letter-spacing:0}
@@ -406,3 +406,5 @@ html.mob .vhead p{white-space:normal}
 /* more breathing room between the title/search block and the chart */
 html.tall #ribbon.on{padding-top:244px}
 .band{top:232px}
+/* landing stars a little dimmer */
+#intro .istars{opacity:.65}
