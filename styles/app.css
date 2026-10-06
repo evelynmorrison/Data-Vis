@@ -241,3 +241,27 @@ html.tall .toast{position:fixed}
 #chart #stars .tw{animation:twinkle 4s ease-in-out infinite}
 @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){#chart #stars .tw{animation:none}}
+
+/* ── phone layout for the vote and results screens (html.mob, set in nav.js below 760px wide) ── */
+html.mob #stage{width:100%;min-height:100vh}
+html.mob #vote.on,html.mob #results.on{padding:76px 0 56px}
+html.mob header{left:16px;right:16px;top:16px}
+html.mob .tabs button{font-size:13px;padding:6px 16px}
+html.mob .vhead,html.mob .rhead{margin:0 20px}
+html.mob .v-eye{font-size:15px}
+html.mob .vhead h2,html.mob .rhead h2{margin:14px 0 10px;font-size:26px;line-height:1.2}
+html.mob .vhead p,html.mob .rhead p{font-size:15px}
+html.mob .vgrid{display:grid;grid-template-columns:1fr 1fr;gap:30px 12px;margin:36px 16px 0}
+html.mob .vopt{width:auto;gap:12px}
+html.mob .vlab{font-size:13px}
+html.mob .vfields{flex-direction:column;align-items:stretch;gap:26px;margin:44px 20px 0}
+html.mob .vwrite input{width:100%;font-size:16px} /* 16px stops iOS zooming in on focus */
+html.mob .vfoot{margin:32px 20px 0}
+html.mob .vdone{width:100%;padding:18px}
+html.mob .rwrap{width:auto;margin:0}
+html.mob .rlist{margin:32px 20px 0;gap:20px}
+html.mob .rrow{grid-template-columns:30px 1fr;column-gap:6px}
+html.mob .rname{font-size:14px;flex-wrap:wrap;gap:8px}
+html.mob .rbar{gap:3px;margin-top:8px}
+html.mob .rbar .cw{flex:1 1 0;min-width:0;width:auto;height:22px}
+html.mob .rpct{margin-left:10px;font-size:16px;min-width:42px;text-align:right}
