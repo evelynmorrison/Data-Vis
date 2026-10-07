@@ -3,8 +3,10 @@
 p{font-family:var(--font-body)} /* all paragraph text is Inter, even inside mono-styled containers */
 html,body{margin:0;height:100%;background:#0a0b1c;color:var(--ink);font-family:var(--font-sans);overflow:hidden}
 #stage{position:absolute;left:50%;top:50%;width:1440px;height:900px;background:var(--bg);transform-origin:center;overflow:hidden}
-.screen{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .5s}
-.screen.on{opacity:1;pointer-events:auto}
+/* the outgoing screen disappears at once and only the incoming one fades in, so two screens never overlap
+   (screens can have different layouts, e.g. the tall chart page) */
+.screen{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:none}
+.screen.on{opacity:1;pointer-events:auto;transition:opacity .5s}
 .mono{font-family:var(--font-heading)}
 header{position:absolute;left:56px;right:40px;top:50px;display:flex;justify-content:space-between;align-items:center}
 header h1{margin:0;font:400 36px "IBM Plex Sans",var(--font-sans)} /* headline: IBM Plex Sans */
