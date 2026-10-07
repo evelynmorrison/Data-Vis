@@ -417,4 +417,7 @@ html.tall #ribbon.on{padding-top:244px}
 .lcwrap figcaption b{color:#aab4f0}
 /* sub-column titles (Overall / Positive / Negative Affect) in the chart lavender */
 .colsub{fill:#aab4f0}
-#chart #focus{transition:opacity .35s}
+.chartbox{position:relative}
+#chartFocus{position:absolute;left:0;top:0;pointer-events:none;transition:opacity .35s}
+#chart{transition:opacity .35s}
+#chart.dim{opacity:.32}

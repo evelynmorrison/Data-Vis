@@ -2,7 +2,10 @@
    Every row fits in the window below the pinned column titles. With nothing hovered, each country is a
    thin line (width/brightness = how much its rankings disagree). The hovered/selected country is redrawn
    on top as a full ribbon with boxes, names and ranks. */
-const NS="http://www.w3.org/2000/svg", svg=document.getElementById("chart"), head=document.getElementById("chartHead");
+// #chartFocus is a second svg laid over #chart that holds only the highlighted ribbon. Keeping it separate means
+// highlighting never redraws the 165 lines: the lines svg is dimmed as a whole (a cheap, GPU-composited opacity
+// change) and the ribbon layer fades on its own.
+const NS="http://www.w3.org/2000/svg", svg=document.getElementById("chart"), fsvg=document.getElementById("chartFocus"), head=document.getElementById("chartHead");
 const X=[40,347.5,655,962.5,1270], W=130, TOP=8, HEAD_H=66, RIBBON_H=17; // RIBBON_H: hovered ribbon thickness
 const ROWS=Math.max(...ORDERS.map(o=>o.length));
 let L={gap:24}; // row spacing, recomputed from the window height in render()
@@ -163,13 +166,14 @@ function headTip(g,info,n,anchor){
 function render(){
   const z=parseFloat(stage.style.zoom)||1;
   L={gap:Math.max(2,(innerHeight/z-HEAD_H-2*TOP)/ROWS)};
-  svg.querySelectorAll("#stars,#grid,#lines,#focus").forEach(e=>e.remove());
-  const ht=TOP*2+ROWS*L.gap; svg.setAttribute("height",ht); svg.setAttribute("viewBox",`0 0 1440 ${ht}`);
+  svg.querySelectorAll("#stars,#grid,#lines").forEach(e=>e.remove()); fsvg.innerHTML="";
+  const ht=TOP*2+ROWS*L.gap;
+  for(const s of [svg,fsvg]){ s.setAttribute("height",ht); s.setAttribute("viewBox",`0 0 1440 ${ht}`); }
   drawStars(ht); drawGrid();
   const lines=mk("g",{id:"lines"});
   // most-disagreeing countries drawn last so their brighter lines sit on top
   COUNTRIES.map((_,ci)=>ci).sort((a,b)=>DIS[a]-DIS[b]).forEach(ci=>{ lineG[ci]=mk("g",{class:"rib","data-ci":ci},lines); drawLine(ci,lineG[ci]); });
-  focus=mk("g",{id:"focus",class:"rib",filter:"url(#sh)"}); // full ribbon of the hovered/selected country
+  focus=mk("g",{id:"focus",class:"rib",filter:"url(#sh)"},fsvg); // full ribbon of the hovered/selected country
   hovered=null; apply();
 }
 
@@ -186,7 +190,8 @@ function paintGroups(gs,state){
 }
 // state: hi (hovered/selected) | dim (everyone else while one is hovered) | idle (nothing hovered).
 // Lines keep their own width/brightness; others fade while a country is hovered, which is drawn in #focus
-function paint(ci,state){ const g=lineG[ci]; if(g) g.style.opacity=state==="dim"?.3:1; }
+// lines are dimmed together (class on the lines svg) while a country is highlighted; see #chart.dim in app.css
+function dimLines(on){ svg.classList.toggle("dim",on); }
 // the highlighted ribbon. Clearing it fades it out over the same .35s the other lines take to fade back in,
 // so the chart cross-fades instead of going briefly empty.
 let focusFade;
@@ -194,16 +199,16 @@ function setFocus(ci){
   if(!focus) return; clearTimeout(focusFade);
   if(ci===null){
     if(!focus.firstChild) return;
-    focus.style.opacity=0; focusFade=setTimeout(()=>{ focus.innerHTML=""; },360); return;
+    fsvg.style.opacity=0; focusFade=setTimeout(()=>{ focus.innerHTML=""; },360); return;
   }
-  focus.innerHTML=""; focus.style.opacity=1;
+  focus.innerHTML=""; fsvg.style.opacity=1;
   focus.dataset.ci=ci;
   const r=mk("g",{},focus), b=mk("g",{},focus);
   drawCountry(ci,r,b,RIBBON_H); paintGroups([r,b],"hi");
 }
-function preview(ci){ hovered=ci; COUNTRIES.forEach((_,i)=>paint(i,i===ci?"hi":"dim")); setFocus(ci); }
+function preview(ci){ hovered=ci; dimLines(true); setFocus(ci); }
 function apply(){
-  if(selected===null){ hovered=null; COUNTRIES.forEach((_,i)=>paint(i,"idle")); setFocus(null); hideInfo(); return; }
+  if(selected===null){ hovered=null; dimLines(false); setFocus(null); hideInfo(); return; }
   preview(selected); showInfo(selected);
 }
 
@@ -214,7 +219,13 @@ function nearest(e){
   let j=0,best=1e9; X.forEach((cx,k)=>{const d=Math.abs(x-(cx+W/2)); if(d<best){best=d;j=k;}});
   if(best>W/2+60) return null; return ORDERS[j][row] ?? null; // shorter columns have empty rows
 }
-const ciAt=e=>{const g=e.target.closest(".rib"); return g?+g.dataset.ci:nearest(e);};
+// the ribbon layer ignores the pointer, so keep the current country while the pointer is over its ribbon
+function onFocusRibbon(e){
+  const body=focus&&focus.querySelector(".ribbon-body"); if(!body||hovered===null) return false;
+  const r=svg.getBoundingClientRect(), k=1440/r.width, p=new DOMPoint((e.clientX-r.left)*k,(e.clientY-r.top)*k);
+  return body.isPointInFill(p)||[...focus.querySelectorAll("rect")].some(b=>b.isPointInFill(p));
+}
+const ciAt=e=>{ if(onFocusRibbon(e)) return hovered; const g=e.target.closest(".rib"); return g?+g.dataset.ci:nearest(e); };
 svg.addEventListener("pointermove",e=>{ if(selected!==null||modalOpen) return; const ci=ciAt(e); if(ci!==null&&ci!==hovered) preview(ci); });
 svg.addEventListener("pointerleave",()=>{ if(selected===null&&!modalOpen) apply(); });
 svg.style.cursor="pointer";
