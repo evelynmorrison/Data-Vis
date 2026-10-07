@@ -111,7 +111,7 @@ const WINDOW_STORIES = {
   "Taiwan": {
     0: {
       measure: "Death by suicide",
-      title: "Suicide is rising, and the reasons shift with age",
+      title: "Death by suicide is high; the reasons shift with age",
       paras: [
         "Suicide returned to Taiwan's ten leading causes of death in 2024",
         "Taiwan's crude rate is 16.9 per 100,000 (2025) — compared to a global average of 9.2 and Western Pacific's average of 9.5",
@@ -132,7 +132,7 @@ const WINDOW_STORIES = {
     },
     5: {
       measure: "Overwork",
-      title: "Long hours carry a measurable risk",
+      title: "Long work hours bring health risk",
       paras: [
         "Taiwanese workers average 2,008 hours a year — about 167 a month — the sixth-longest of 39 economies tracked by the OECD. The toll shows up in the heart and brain: as industry-average monthly hours rise from 169 to 187, the risk of overwork-related cardiovascular and cerebrovascular disease nearly quadruples.",
       ],
