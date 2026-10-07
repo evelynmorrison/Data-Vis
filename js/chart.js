@@ -187,9 +187,16 @@ function paintGroups(gs,state){
 // state: hi (hovered/selected) | dim (everyone else while one is hovered) | idle (nothing hovered).
 // Lines keep their own width/brightness; others fade while a country is hovered, which is drawn in #focus
 function paint(ci,state){ const g=lineG[ci]; if(g) g.style.opacity=state==="dim"?.3:1; }
+// the highlighted ribbon. Clearing it fades it out over the same .35s the other lines take to fade back in,
+// so the chart cross-fades instead of going briefly empty.
+let focusFade;
 function setFocus(ci){
-  if(!focus) return; focus.innerHTML="";
-  if(ci===null) return;
+  if(!focus) return; clearTimeout(focusFade);
+  if(ci===null){
+    if(!focus.firstChild) return;
+    focus.style.opacity=0; focusFade=setTimeout(()=>{ focus.innerHTML=""; },360); return;
+  }
+  focus.innerHTML=""; focus.style.opacity=1;
   focus.dataset.ci=ci;
   const r=mk("g",{},focus), b=mk("g",{},focus);
   drawCountry(ci,r,b,RIBBON_H); paintGroups([r,b],"hi");
