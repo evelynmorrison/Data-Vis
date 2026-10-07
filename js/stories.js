@@ -225,7 +225,7 @@ const WINDOW_STORIES = {
       ],
       sources: ["The Guardian"],
     },
-    12: {
+    1: {
       measure: "Affect",
       title: "A country of strong feeling, in both directions",
       paras: [
@@ -233,7 +233,7 @@ const WINDOW_STORIES = {
       ],
       sources: ["Blanchflower & Bryson (2024), Wellbeing Rankings, Gallup World Poll"],
     },
-    1: {
+    12: {
       measure: "Gross National Happiness",
       title: "Bhutan’s own survey says 94% are happy, or 48%",
       paras: [
