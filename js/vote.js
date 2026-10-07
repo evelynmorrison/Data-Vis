@@ -10,10 +10,10 @@ const VOTE_LABELS = [
   "Feeling your life is under your control", "Rates of depression and anxiety", "Deaths by suicide",
   "Access to mental health care", "Reported loneliness", "Quality of close relationships",
   "Trust in neighbors and strangers", "Time spent with family", "Time for rest and personal enjoyment",
-  "Working hours", "Unpaid care work", "Commute length", "Access to healthcare",
+  "Working hours", "Unpaid care work", "Access to healthcare",
   "Financial security against emergencies", "Housing affordability and quality", "Education access",
   "Care accessible in old age", "Personal safety from violence", "Freedom from discrimination",
-  "Cultural participation and traditions", "Trust in government",
+  "Cultural participation and traditions", "A say in decisions that affect you", "Trust in government",
   "Access to nature and green space", "Air and water quality", "Ecological footprint per person",
   "GDP per person", "Life expectancy", "Employment rate", "Hours of sunlight per year",
 ];
