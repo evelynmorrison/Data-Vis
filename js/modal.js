@@ -229,7 +229,7 @@ function openModal(){
   const d=COUNTRIES[selected]; modalOpen=true; pickedWin=null;
   document.getElementById("mname").textContent=d.c.toUpperCase();
   const mh=document.getElementById("mhint"); mh.textContent="Select a window to explore different measures.";
-  document.getElementById("mhsub").textContent=`Each represents a partial and imperfect window into ${d.c}${d.c.endsWith("s")?"’":"’s"} happiness`;
+  document.getElementById("mhsub").textContent=`Each represents a partial and imperfect glimpse into ${d.c}${d.c.endsWith("s")?"’":"’s"} happiness`;
   fillGlance(selected);
   document.getElementById("det").classList.remove("on");
   document.getElementById("mempty").style.opacity=0;
