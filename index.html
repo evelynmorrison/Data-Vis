@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Untold stories · Prototype</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@200;300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Poppins:ital,wght@1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles/theme.css?v=1791394920">
-<link rel="stylesheet" href="styles/app.css?v=1791394920">
+<link rel="stylesheet" href="styles/theme.css?v=1791560962">
+<link rel="stylesheet" href="styles/app.css?v=1791560962">
 </head>
 <body>
 <div id="stage">
@@ -39,7 +39,7 @@
   <!-- 3 · Ribbons + windows -->
   <section class="screen" id="ribbon">
     <div class="band"></div>
-    <header><div><h1>Untold stories of the “Happiest Countries”</h1><p class="hsub">Hover over a country to compare its rank across reports. Click it for more country data.</p></div><div class="tabs"><button class="on" data-tab="data">View Data</button><button data-tab="vote">Vote</button></div></header>
+    <header><div><h1>Untold stories of the “Happiest Countries”</h1><p class="hsub"><span class="desk">Hover over a country to compare its rank across reports. Click it for more country data.</span><span class="mobonly">Tap a country’s line to compare its rank across reports, then open it for more country data.</span></p></div><div class="tabs"><button class="on" data-tab="data">View Data</button><button data-tab="vote">Vote</button></div></header>
     <div class="csearch"><input id="csearch" list="clist" type="search" placeholder="Search a country" autocomplete="off" aria-label="Search a country"><datalist id="clist"></datalist>
       <div class="clegend"><i></i>Brighter and thicker = disagrees more across the five measures</div></div>
     <svg id="chartHead" width="1440" height="66" viewBox="0 0 1440 66"></svg>
@@ -69,7 +69,9 @@
         <div class="mempty" id="mempty">Select a window on the left<br>to open its story.</div></div>
     </div>
     <div class="card" id="card" style="opacity:0"></div>
-    <nav class="pager"><button class="prev" data-go="ranking"><svg width="8" height="14" viewBox="0 0 8 14"><path d="M7 1 L1 7 L7 13" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Previous</button></nav>
+    <!-- phones: the selected country's ranks, with a button to open it (js/chart.js updateBar) -->
+    <div class="mbar" id="mbar" aria-live="polite"><div class="mb-main"><div class="mb-name" id="mbName"></div><div class="mb-ranks" id="mbRanks"></div></div><button class="mb-open" id="mbOpen">Open</button><button class="mb-x" id="mbX" aria-label="Clear selection">✕</button></div>
+    <nav class="pager"><button class="prev" data-go="ranking"><svg width="8" height="14" viewBox="0 0 8 14"><path d="M7 1 L1 7 L7 13" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Previous</button><button class="prev fwd mobonly" data-go="vote">Vote<svg width="8" height="14" viewBox="0 0 8 14"><path d="M1 1 L7 7 L1 13" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></nav>
   </section>
 
   <!-- 4 · Vote -->
@@ -118,19 +120,19 @@
   <div class="toast" id="toast"></div>
 </div>
 
-<script src="js/countries.js?v=1791394920"></script>
-<script src="js/shapes.js?v=1791394920"></script>
-<script src="js/data.js?v=1791394920"></script>
-<script src="js/flags.js?v=1791394920"></script>
-<script src="js/nav.js?v=1791394920"></script>
-<script src="js/ranking.js?v=1791394920"></script>
-<script src="js/chart.js?v=1791394920"></script>
-<script src="js/search.js?v=1791394920"></script>
-<script src="js/stories.js?v=1791394920"></script>
-<script src="js/modal.js?v=1791394920"></script>
-<script src="js/vote.js?v=1791394920"></script>
-<script src="js/similar.js?v=1791394920"></script>
-<script src="js/results.js?v=1791394920"></script>
-<script src="js/stars.js?v=1791394920"></script>
+<script src="js/countries.js?v=1791560962"></script>
+<script src="js/shapes.js?v=1791560962"></script>
+<script src="js/data.js?v=1791560962"></script>
+<script src="js/flags.js?v=1791560962"></script>
+<script src="js/nav.js?v=1791560962"></script>
+<script src="js/ranking.js?v=1791560962"></script>
+<script src="js/chart.js?v=1791560962"></script>
+<script src="js/search.js?v=1791560962"></script>
+<script src="js/stories.js?v=1791560962"></script>
+<script src="js/modal.js?v=1791560962"></script>
+<script src="js/vote.js?v=1791560962"></script>
+<script src="js/similar.js?v=1791560962"></script>
+<script src="js/results.js?v=1791560962"></script>
+<script src="js/stars.js?v=1791560962"></script>
 </body>
 </html>

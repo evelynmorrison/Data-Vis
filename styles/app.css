@@ -245,7 +245,7 @@ html.tall .toast{position:fixed}
 @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){#chart #stars .tw{animation:none}}
 
-/* ── phone layout for the vote and results screens (html.mob, set in nav.js below 760px wide) ── */
+/* ── phone layout for the vote and results screens (html.mob, set in nav.js below 900px wide; other screens at the end of this file) ── */
 html.mob #stage{width:100%;min-height:100vh}
 html.mob #vote.on,html.mob #results.on{padding:76px 0 56px}
 html.mob header{left:16px;right:16px;top:16px}
@@ -276,7 +276,7 @@ html.mob .rpct{margin-left:10px;font-size:16px;min-width:42px;text-align:right}
 .vclist li:hover,.vclist li.act{background:rgba(238,240,248,.10)}
 .vclist li.none{color:var(--muted);cursor:default}
 .vclist::-webkit-scrollbar{width:6px}.vclist::-webkit-scrollbar-thumb{background:#3a4180;border-radius:3px}
-/* phones only see the vote: no View Data / Vote toggle */
+/* phones: no View Data / Vote toggle (the chart page has a Vote button at the bottom instead) */
 html.mob .tabs{display:none}
 html.mob #vote.on,html.mob #results.on{padding-top:36px}
 html.mob .vcombo{width:100%}
@@ -421,3 +421,97 @@ html.tall #ribbon.on{padding-top:244px}
 #chartFocus{position:absolute;left:0;top:0;pointer-events:none;transition:opacity .35s}
 #chart{transition:opacity .35s}
 #chart.dim{opacity:.32}
+
+/* ═════════ PHONE LAYOUT, all screens (html.mob, set in nav.js below 900px wide) ═════════
+   Every screen becomes an ordinary scrolling page at the device's own width instead of the 1440px stage scaled down.
+   (Vote and results rules are further up.) */
+html.mob{height:auto;overflow-y:auto}
+html.mob body{height:auto;overflow:visible}
+html.mob #stage{position:relative;left:auto;top:auto;width:100%;height:auto;min-height:100vh;min-height:100svh;margin:0;overflow:visible}
+html.mob .screen.on{position:relative;inset:auto}
+html.mob .screen:not(.on){overflow:hidden} /* hidden screens' content mustn't add empty scroll space */
+html.mob .toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+.mobonly{display:none}
+html.mob .prev.mobonly{display:flex}
+html.mob span.mobonly{display:inline}
+html.mob .desk{display:none}
+html.mob .pager{position:static;transform:none;justify-content:center;flex-wrap:wrap;margin:36px 16px 0}
+/* intro */
+html.mob #intro.on{display:flex;flex-direction:column;justify-content:center;min-height:100vh;min-height:100svh;padding:56px 24px 40px}
+html.mob #intro .box{position:relative;left:auto;top:auto;transform:none;width:auto;max-width:560px;margin:0 auto}
+html.mob #intro h1{font-size:27px;line-height:1.25;margin-bottom:24px;text-wrap:balance}
+html.mob #intro p{font-size:16px;margin-bottom:22px}
+html.mob #intro .pager{margin-top:16px}
+/* rankings */
+html.mob #ranking.on{padding:0 0 40px}
+html.mob #ranking header,html.mob #ribbon header{position:static;display:block;padding:28px 20px 0}
+html.mob header h1{font-size:24px;line-height:1.25;text-wrap:balance}
+html.mob .rsub{position:static;margin:18px 20px 0}
+html.mob .ranklists{position:static;flex-direction:column;gap:28px;margin:22px 16px 0}
+html.mob .ranklist{flex:none;overflow:visible;padding:0} /* flex:none, or the column collapses and the rows overflow onto the buttons */
+html.mob .row{height:46px;padding:0 16px;gap:14px}
+/* ribbon chart: drawn at the screen's width (js/chart.js layout()); tap a line to pick a country */
+html.mob #ribbon.on{padding:0 0 calc(110px + env(safe-area-inset-bottom,0px))}
+html.mob .band{display:none}
+html.mob header .hsub{font-size:13px;line-height:1.5}
+html.mob .csearch{position:static;flex-direction:column;align-items:stretch;gap:12px;margin:18px 16px 16px}
+html.mob .csearch input{width:100%;font-size:16px;padding:11px 16px 11px 38px} /* 16px stops iOS zooming in on focus */
+html.mob .clegend{margin-left:0;font-size:12px}
+html.mob .colh{font-size:12px}
+html.mob .colnote{font-size:10px}
+html.mob .colsub{font-size:11px}
+html.mob .htip{max-width:calc(100vw - 32px)}
+html.mob .lbl{font-size:10px}
+/* the selected country's bar */
+.mbar{display:none;position:fixed;z-index:4;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));align-items:center;gap:10px;padding:10px 10px 10px 16px;
+  background:#1b2154;border:1px solid rgba(238,240,248,.22);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+html.mob .mbar.on{display:flex}
+.mb-main{flex:1;min-width:0}
+.mb-name{font:500 16px "IBM Plex Sans",var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-ranks{display:flex;gap:8px;margin-top:4px;font:600 13px var(--font-sans);font-variant-numeric:tabular-nums}
+.mb-ranks span{display:flex;flex-direction:column;min-width:30px}
+.mb-ranks i{font:400 10px var(--font-sans);color:var(--muted)}
+.mb-open{flex:none;border:0;border-radius:999px;background:#e6e7ee;color:var(--bg);font:600 14px var(--font-sans);padding:10px 16px;cursor:pointer}
+.mb-x{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid rgba(238,240,248,.35);background:none;color:var(--ink);font-size:13px;cursor:pointer}
+/* country pop-up: a full-screen sheet that scrolls; windows on top, the overview (or the opened window's story) below */
+html.mob .scrimM{display:none}
+/* no backdrop-filter on phones: it would make the fixed close button scroll away with the sheet */
+html.mob .modal{position:fixed!important;inset:0!important;height:auto!important;display:block;border:0;border-radius:0;overflow-y:auto;overscroll-behavior:contain;
+  background:rgba(11,12,24,.97);-webkit-backdrop-filter:none;backdrop-filter:none;padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
+html.mob .mleft{position:relative;margin:64px 16px 0;padding:22px 20px 24px}
+html.mob .mname{position:static;font-size:30px;line-height:1.15}
+html.mob .wgrid{position:relative;left:auto;top:auto;margin:22px auto 0;--wscale:1}
+html.mob .mtext{position:static;margin-top:22px}
+html.mob .wtip{display:none}
+html.mob .mright{position:static;margin:0 16px}
+html.mob .mclose{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));right:14px;width:40px;height:40px;background:rgba(11,12,24,.85);z-index:3}
+html.mob .glance{position:static}
+html.mob .g-body{position:static;display:flex;flex-direction:column;gap:26px;margin-top:28px}
+html.mob .g-stats{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+html.mob .g-stat,html.mob .g-stat:first-child,html.mob .g-stat:last-child{width:auto;padding:0 0 0 12px;border-left:1px solid rgba(238,240,248,.18)}
+html.mob .g-stat:first-child{padding-left:0;border-left:0}
+html.mob .g-big{font-size:22px;margin-top:0}
+html.mob .g-big small{display:block;font-size:12px;margin:4px 0 0}
+html.mob .g-lab{margin-top:6px;font-size:12px;line-height:1.35;white-space:normal}
+html.mob .g-geo{margin:0;gap:20px}
+html.mob .g-geo svg{width:120px;height:86px}
+html.mob .g-story{max-height:none;overflow:visible;padding-right:0;-webkit-mask-image:none;mask-image:none}
+html.mob .g-story p{font-size:14px}
+html.mob .g-src{position:static;margin-top:22px}
+html.mob .glance.off .g-geo,html.mob .glance.off .g-story,html.mob .glance.off .g-src{display:none}
+html.mob .det{position:static;display:none}
+html.mob .det.on{display:block}
+html.mob .dtag{display:block;position:static;margin-top:30px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+html.mob .dhead{position:static;margin-top:6px;font-size:21px;line-height:1.35}
+html.mob .dctx{position:static}
+html.mob .dctx:empty{display:none}
+html.mob .dstory{position:static;overflow:visible;padding-right:0;margin-top:14px;-webkit-mask-image:none;mask-image:none}
+html.mob .dstory p,html.mob .dbullets li{font-size:14px}
+html.mob .dsrc{position:static;margin-top:20px}
+html.mob .dsoon{position:static;margin-top:12px}
+html.mob .mempty{display:none}
+html.mob .lc-axlab{padding-right:calc(52 / 360 * 100%)}
+html.mob .lc-legend{flex-wrap:wrap;gap:6px 14px}
+/* nothing may be wider than the phone: a too-wide page makes phones zoom out (and report a huge window height) */
+html.mob #chart,html.mob #chartFocus,html.mob #chartHead{max-width:100%}
+html.mob .card,html.mob .ctitle{display:none}

@@ -2,13 +2,13 @@
 const stage=document.getElementById("stage");
 // fixed 1440x900 screens scale to fit the window; the ribbon screen (html.tall) scales to the
 // window's width only and scrolls as a normal page. zoom (not transform) so its height drives the scroll.
-// On a phone-width window the vote and results screens get a real mobile layout (html.mob, see app.css)
+// On a phone- or small-tablet-width window every screen gets a real mobile layout (html.mob, see app.css)
 // instead of the whole 1440px desktop page shrunk to fit.
-const MOBILE_SCREENS=["vote","results"];
+const MOBILE_MAX=900;
 function fit(){
-  const h=document.documentElement, on=document.querySelector(".screen.on")?.id;
+  const h=document.documentElement;
   // clientWidth, not innerWidth: phones widen innerWidth to fit a too-wide page
-  const mob=h.clientWidth<760 && MOBILE_SCREENS.includes(on); h.classList.toggle("mob",mob);
+  const mob=h.clientWidth<MOBILE_MAX; h.classList.toggle("mob",mob);
   if(mob){ stage.style.transform="none"; stage.style.zoom=""; return; }
   if(h.classList.contains("tall")){ stage.style.transform="none"; stage.style.zoom=document.documentElement.clientWidth/1440; return; }
   const s=Math.min(innerWidth/1440,innerHeight/900); stage.style.zoom=""; stage.style.transform=`translate(-50%,-50%) scale(${s})`;

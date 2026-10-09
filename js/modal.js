@@ -121,7 +121,9 @@ const WINDOW_CHARTS={
     note:"The index counts only extensively and deeply happy people as happy (sufficiency in two-thirds of indicators): 41% in 2010, 43% in 2015, 48% in 2022."},
 };
 const SERIES_COLORS=["#aab4f0","#e9d27a","#ff8a8a","#6fd39a"]; // lavender, window yellow, coral, green
-const LC={W:640,H:210,L:34,R:132,T:14,B:26};
+// chart box: desktop, and a narrower phone version (end labels show values only; the legend names the lines)
+const LC_D={W:640,H:210,L:34,R:132,T:14,B:26}, LC_M={W:360,H:220,L:30,R:52,T:14,B:26};
+let LC=LC_D;
 // x positions follow the values in c.yrs (years, or any number such as hours), so uneven steps are fine.
 // Options: xTicks (axis labels), xLabel(v) (tooltip heading), fmt(v) (value text), ref {y,label} (dashed reference line)
 function lcScale(c){
@@ -145,7 +147,7 @@ function lineChart(c){
       o+=`<path class="lc-line lc-faint" style="stroke:${col}" d="${d}"/><path class="lc-line" style="stroke:${col}" clip-path="url(#${uid}${k})" d="${d}"/>`;
     } else o+=`<path class="lc-line" style="stroke:${col}" d="${d}"/>`;
     o+=`<circle class="lc-end" style="fill:${col}" cx="${x(0)}" cy="${y(s.vals[0])}" r="4"/><circle class="lc-end" style="fill:${col}" cx="${x(n-1)}" cy="${y(s.vals[n-1])}" r="4"/>`; });
-  ends.forEach(e=>o+=`<text class="lc-val" x="${x(n-1)+10}" y="${e.y+4}">${fmt(e.v)}${multi?`<tspan class="lc-name"> ${e.s.name}</tspan>`:""}</text>`);
+  ends.forEach(e=>o+=`<text class="lc-val" x="${x(n-1)+10}" y="${e.y+4}">${fmt(e.v)}${multi&&LC===LC_D?`<tspan class="lc-name"> ${e.s.name}</tspan>`:""}</text>`);
   if(!multi) o+=`<text class="lc-val" x="${x(0)+8}" y="${y(c.series[0].vals[0])+16}">${fmt(c.series[0].vals[0])}</text>`;
   o+=`<line class="lc-x" y1="${T}" y2="${H-B}" style="opacity:0"/>${c.series.map(()=>'<circle class="lc-dot" r="5" style="opacity:0"/>').join("")}<rect class="lc-hit" x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}"/></svg>`;
   const legend=multi?`<div class="lc-legend">${c.series.map((s,k)=>`<span><i style="background:${SERIES_COLORS[k]}"></i>${s.name}</span>`).join("")}</div>`:"";
@@ -155,7 +157,7 @@ function lineChart(c){
 function stackChart(c){
   const legend=`<div class="lc-legend">${c.cats.map((n,k)=>`<span><i style="background:${c.colors[k]}"></i>${n}</span>`).join("")}</div>`;
   const rows=c.rows.map(r=>`<div class="sc-row"><span class="sc-lab">${r.label}</span><div class="sc-bar">${r.vals.map((v,k)=>
-    `<span class="sc-seg" style="flex:${v} 1 0;background:${c.colors[k]};color:${c.dark[k]?"#11132b":"#eef0f8"}" title="${r.label} · ${c.cats[k]}: ${v}%">${v>=6?v.toFixed(1)+"%":""}</span>`).join("")}</div></div>`).join("");
+    `<span class="sc-seg" style="flex:${v} 1 0;background:${c.colors[k]};color:${c.dark[k]?"#11132b":"#eef0f8"}" title="${r.label} · ${c.cats[k]}: ${v}%">${v>=(isMob()?12:6)?v.toFixed(1)+"%":""}</span>`).join("")}</div></div>`).join("");
   return `<figure class="lcwrap"><figcaption><b>${c.title}</b><span>${c.unit}</span></figcaption>${legend}<div class="sc">${rows}</div>${c.note?`<div class="lc-note">${c.note}</div>`:""}</figure>`;
 }
 const chartHTML=c=>c.kind==="stack"?stackChart(c):lineChart(c);
@@ -179,7 +181,7 @@ function showDim(k,d){
     document.getElementById("dtag").textContent=st.measure;
     document.getElementById("dhead").textContent=st.title;
     document.getElementById("dctx").innerHTML="";
-    const c=st.chart&&WINDOW_CHARTS[st.chart];
+    const c=st.chart&&WINDOW_CHARTS[st.chart]; LC=isMob()?LC_M:LC_D;
     const text=st.bullets?`<ul class="dbullets">${st.paras.map(p=>`<li>${p}</li>`).join("")}</ul>`:st.paras.map(p=>`<p>${p}</p>`).join("");
     // source pinned to the bottom of the panel, same place and style as on the country overview
     body.innerHTML=`<div class="dstory">${text}${c?chartHTML(c):""}</div>${st.sources?`<div class="dsrc">Source: ${st.sources.join(" · ")}</div>`:""}`;
@@ -206,6 +208,8 @@ function showInfo(i){
 // line the hint + subtitle up under the windows: same left edge and width as the window group,
 // vertically centred in the space between the lowest window and the bottom of the panel
 function placeModalText(){
+  const mt=document.getElementById("mtext");
+  if(isMob()){ mt.style.left=mt.style.top=mt.style.width=""; return; } // phones: the text simply follows the windows
   const g=document.getElementById("wgrid"), t=document.getElementById("mtext"), panel=g.parentElement, ws=[...g.children];
   if(!ws.length) return;
   const l=Math.min(...ws.map(e=>e.offsetLeft)), r=Math.max(...ws.map(e=>e.offsetLeft+e.offsetWidth)), b=Math.max(...ws.map(e=>e.offsetTop+e.offsetHeight));
@@ -217,7 +221,7 @@ function placeModalText(){
 }
 // black hover label above a window that has a story, naming what it opens
 const winTip=document.getElementById("wtip");
-function showWinTip(b,text){ const g=b.offsetParent, sc=parseFloat(getComputedStyle(g).getPropertyValue("--wscale"))||1, cx=g.offsetWidth/2; winTip.textContent=text; // account for the grid scale (origin: top centre)
+function showWinTip(b,text){ if(isMob()) return; const g=b.offsetParent, sc=parseFloat(getComputedStyle(g).getPropertyValue("--wscale"))||1, cx=g.offsetWidth/2; winTip.textContent=text; // account for the grid scale (origin: top centre)
   winTip.style.left=(g.offsetLeft+cx+(b.offsetLeft+b.offsetWidth/2-cx)*sc)+"px"; winTip.style.top=(g.offsetTop+b.offsetTop*sc)+"px"; winTip.classList.add("on"); }
 function hideWinTip(){ winTip.classList.remove("on"); }
 function openModal(){
@@ -243,12 +247,14 @@ function openModal(){
       g.querySelectorAll(".cw").forEach(e=>{e.classList.remove("sel","open");e.style.backgroundImage="";});
       b.classList.add("open"); b.style.backgroundImage=`url(${(ws&&WIN_IMG[ws.chart])||READER})`; pickedWin=k;
       document.getElementById("glance").classList.add("off");
-      showDim(k,d);};
+      showDim(k,d);
+      // phones: the story opens below the windows, so bring it into view
+      if(isMob()) document.getElementById("modal").scrollTo({top:Math.max(0,document.getElementById("det").offsetTop-70),behavior:"smooth"});};
     g.appendChild(b);});
   // the ribbon screen scrolls, so open the modal centred on the current view and freeze scrolling
   const z=parseFloat(stage.style.zoom)||1, m=document.getElementById("modal");
   Object.assign(m.style,{top:(scrollY/z+Math.max(0,(innerHeight/z-677)/2))+"px",bottom:"auto",height:"677px"});
-  m._y=scrollY; document.documentElement.style.overflow="hidden";
+  m._y=scrollY; m.scrollTop=0; document.documentElement.style.overflow="hidden"; updateBar();
   document.getElementById("scrimM").classList.add("on"); m.classList.add("on");
   placeModalText();
   document.querySelector("#ribbon .pager").style.opacity=0;
@@ -263,6 +269,7 @@ function backToGlance(){
   document.querySelectorAll("#wgrid .cw").forEach(e=>{e.classList.remove("sel","open");e.style.backgroundImage="";});
   document.getElementById("det").classList.remove("on");
   document.getElementById("glance").classList.remove("off");
+  if(isMob()) document.getElementById("modal").scrollTo({top:0,behavior:"smooth"});
 }
 const mnameEl=document.getElementById("mname");
 mnameEl.onclick=backToGlance; mnameEl.setAttribute("role","button"); mnameEl.tabIndex=0; mnameEl.title="Back to overview";
